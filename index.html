@@ -32,8 +32,15 @@ nav{height:64px;display:flex;align-items:center;justify-content:space-between;pa
 main{padding:28px 4% 64px;max-width:1280px;margin:0 auto}
 .view{display:none}
 .view.on{display:block}
-.kicker{display:flex;align-items:center;gap:10px;font-size:10px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--w3);margin-bottom:12px}
-.kicker:before{content:"";width:28px;height:1px;background:var(--w4)}
+.kicker{display:flex;align-items:center;gap:10px;font-size:10px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--w3);margin-bottom:12px;width:100%}
+.kicker:before{content:"";width:28px;height:1px;background:var(--w4);flex:0 0 28px}
+.sheet-link{margin-left:auto;margin-bottom:0;width:auto;padding:5px 10px;letter-spacing:.1em}
+.sheet{display:none;position:fixed;inset:0;background:rgba(6,15,28,.92);z-index:40;padding:28px 4%;overflow:auto}
+.sheet.on{display:block}
+.sheet-card{background:var(--paper);color:var(--ink);padding:22px 24px;border-radius:1px;min-height:60%}
+.sheet-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.sheet-bar h2{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:0}
+.btn.voice.live{background:var(--danger);color:#fff;border-color:transparent}
 h1{font-size:clamp(22px,3vw,34px);font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:.97;margin-bottom:8px}
 h1 em{font-style:normal;display:block;color:var(--w2)}
 .sub{color:var(--w3);font-weight:300;max-width:720px;margin-bottom:28px;line-height:1.7}
@@ -50,7 +57,7 @@ h1 em{font-style:normal;display:block;color:var(--w2)}
 .band{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);margin:18px 0 10px}
 .cols{display:grid;gap:10px}
 .cols.c2{grid-template-columns:280px 1fr}
-.cols.c4{grid-template-columns:repeat(4,1fr)}
+.cols.c5{grid-template-columns:repeat(5,1fr)}
 .cols.c6{grid-template-columns:repeat(6,1fr)}
 .col h3{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--w3);font-weight:700;margin-bottom:8px}
 .card{border:1px solid var(--w5);background:var(--n2);padding:10px 12px;border-radius:1px;margin-bottom:8px;cursor:pointer}
@@ -87,12 +94,14 @@ textarea{min-height:72px;resize:vertical}
 .paper .heat th{color:#5C6570;border:none;text-align:center;font-size:8.5px;letter-spacing:.06em;padding:4px 2px;font-weight:600}
 .paper .heat td{text-align:center;font-size:9px;font-weight:600;padding:5px 2px;border:1px solid rgba(11,28,48,.08)}
 .paper .heat td.lab{text-align:left;border:none;padding-left:0;font-size:10px;color:#0B1C30}
+.sheet-card table th{color:#5C6570;border-bottom-color:rgba(11,28,48,.25)}
+.sheet-card table td{color:#0B1C30;border-bottom-color:rgba(11,28,48,.12);font-weight:400}
 .kpi{cursor:default}
 .fb{border-top:1px solid var(--w5);padding:10px 0}
 .fb .who{color:var(--amber);margin-bottom:4px}
 .fb p{color:var(--w2);font-size:13px;font-weight:400}
 @media(max-width:900px){
-  .row.k2,.row.k3,.row.k4,.row.k5,.cols.c2,.cols.c4,.cols.c6,.road{grid-template-columns:1fr}
+  .row.k2,.row.k3,.row.k4,.row.k5,.cols.c2,.cols.c4,.cols.c5,.cols.c6,.road{grid-template-columns:1fr}
   .tabs{display:none}
   .mtabs{display:flex;overflow-x:auto;gap:4px;padding:8px 4%;border-bottom:1px solid var(--w5)}
 }
@@ -102,7 +111,7 @@ textarea{min-height:72px;resize:vertical}
 <body>
 <div class="topbar">
   <a href="https://www.padel-craft.com/">padel-craft.com</a>
-  <span>Internal OS · v0.6</span>
+  <span>Internal OS · v0.8</span>
 </div>
 <nav>
   <a class="logo" href="#"><span class="lp">Padel</span><span class="ls">·</span><span class="lc">Craft</span></a>
@@ -113,6 +122,7 @@ textarea{min-height:72px;resize:vertical}
 <main>
   <section class="view on" id="v-road"></section>
   <section class="view" id="v-command"></section>
+  <section class="view" id="v-leads"></section>
   <section class="view" id="v-tenders"></section>
   <section class="view" id="v-blockers"></section>
   <section class="view" id="v-install"></section>
@@ -121,10 +131,24 @@ textarea{min-height:72px;resize:vertical}
   <section class="view" id="v-club"></section>
 </main>
 <div class="toast" id="toast"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-card">
+    <div class="sheet-bar">
+      <h2 id="sheet-title">Sheet</h2>
+      <div>
+        <button class="btn sm pri" type="button" onclick="downloadOpenSheet()">Download Excel (.csv)</button>
+        <button class="btn sm" type="button" onclick="closeSheet()">Close</button>
+      </div>
+    </div>
+    <p id="sheet-note" style="color:#5C6570;font-size:12px;margin:0 0 14px"></p>
+    <div id="sheet-body"></div>
+  </div>
+</div>
 <script>
 const VIEWS = [
   ["road","Road"],
   ["command","Command"],
+  ["leads","Leads"],
   ["tenders","Tenders"],
   ["blockers","Blockers"],
   ["install","Install 90"],
@@ -140,7 +164,10 @@ const RATE_CARD = [
   { sku: "PC-M12", name: "Maintenance 12 months", unit: "court", price: 1800 },
   { sku: "PC-M24", name: "Maintenance 24 months", unit: "court", price: 3200 }
 ];
-const CREW = ["Michael","Paul","Tech 2","Tech 3","Third party"];
+const LEAD_TYPES = ["Intern outbound","Inbound","Portal","Referral","Repeat"];
+const QUAL_STAGES = ["Outreach","Conversation","Qualifying","Qualified"];
+const TENDER_STAGES = ["Initial contact","Qualifying","Bid / no-bid","Initial document out","Secondary document out","Award"];
+const WEEKS = ["17 Aug","24 Aug","31 Aug","7 Sep","14 Sep","21 Sep","28 Sep","5 Oct","12 Oct","19 Oct","26 Oct","2 Nov"];
 
 const defaults = {
   sold: { lastQ: 18, lastWeek: 2, thisWeek: 1, projectedQ: 9, weekly: [1,0,2,1,0,2,1,1] },
@@ -157,14 +184,20 @@ const defaults = {
     { id: 4, t: "Crew partial · week 38", m: "Crew · flex Paul?", type: "Crew", sev: "Amber", status: "Open", founder: false },
     { id: 5, t: "Club D undated close", m: "Date Expected close or park", type: "Sales", sev: "Amber", status: "Open", founder: true }
   ],
-  tenders: {
-    "Initial contact": [{ t: "County leisure · 6", m: "Portal notice · qualify this week" }],
-    "Qualifying": [{ t: "Hotel group · 4", m: "Site + budget · visit Wed" }],
-    "Bid / no-bid": [{ t: "Council framework", m: "Closes 9 days · Founder A", cls: "red" }],
-    "Initial document out": [{ t: "Local authority · 8", m: "Pack due Thu · Carys", cls: "amber" }],
-    "Secondary document out": [{ t: "Leisure chain · 12", m: "BAFO due 22 Sep · Founder B" }],
-    "Award": [{ t: "Won → Verbal then Booked", m: "Lost keeps the pack" }]
-  },
+  leads: [
+    { id:"l1", account:"Gym chain Cork", courts:2, type:"Intern outbound", path:"Direct", qual:"Outreach", tender:"", age:2, ageTotal:2, owner:"Intern", next:"First touch Fri" },
+    { id:"l2", account:"eTenders school", courts:4, type:"Portal", path:"Tender", qual:"Outreach", tender:"Initial contact", age:1, ageTotal:1, owner:"Intern", next:"Notice review" },
+    { id:"l3", account:"LinkedIn hotel", courts:3, type:"Intern outbound", path:"Direct", qual:"Conversation", tender:"", age:8, ageTotal:14, owner:"Intern", next:"Budget question" },
+    { id:"l4", account:"Club D", courts:4, type:"Intern outbound", path:"Direct", qual:"Conversation", tender:"", age:16, ageTotal:22, owner:"Founder A", next:"Date Expected close or park" },
+    { id:"l5", account:"Hotel group", courts:4, type:"Inbound", path:"Direct", qual:"Qualifying", tender:"", age:3, ageTotal:9, owner:"Intern", next:"Site + budget Wed" },
+    { id:"l6", account:"County leisure", courts:6, type:"Portal", path:"Tender", qual:"Qualifying", tender:"Initial contact", age:5, ageTotal:12, owner:"Intern", next:"Qualify this week" },
+    { id:"l7", account:"Member · Dublin", courts:2, type:"Referral", path:"Direct", qual:"Qualifying", tender:"", age:6, ageTotal:10, owner:"Founder B", next:"Visit window" },
+    { id:"l8", account:"Council framework", courts:8, type:"Portal", path:"Tender", qual:"Qualified", tender:"Bid / no-bid", age:9, ageTotal:21, owner:"Founder A", next:"Bid/no-bid · 9 days" },
+    { id:"l9", account:"Local authority", courts:8, type:"Portal", path:"Tender", qual:"Qualified", tender:"Initial document out", age:4, ageTotal:28, owner:"Carys", next:"Pack due Thu" },
+    { id:"l10", account:"Leisure chain", courts:12, type:"Referral", path:"Tender", qual:"Qualified", tender:"Secondary document out", age:11, ageTotal:40, owner:"Founder B", next:"BAFO 22 Sep" },
+    { id:"l11", account:"Club H expansion", courts:2, type:"Repeat", path:"Direct", qual:"Qualified", tender:"", age:7, ageTotal:7, owner:"Founder A", next:"Proposal this week" },
+    { id:"l12", account:"Operator A site 3", courts:4, type:"Repeat", path:"Direct", qual:"Qualified", tender:"", age:12, ageTotal:30, owner:"Founder A", next:"Proposal follow-up" }
+  ],
   jobs: [
     { name: "Club H", courts: 2, start: 0, dur: 1, crew: ["Michael","Tech 2","Tech 3"], kit: "On site", risk: "" },
     { name: "Hotel F", courts: 1, start: 1, dur: 1, crew: ["Paul"], kit: "Ordered", risk: "" },
@@ -211,6 +244,9 @@ const defaults = {
   ],
   selectedDraft: "la-rft",
   form: { account: "", kind: "Client inbound", said: "", raise: false },
+  inbox: [
+    { id: 1, when: "13 Aug 09:18", by: "Founder A", text: "Tell Michael on Slack that Site X MANZA still isn't on site", account: "Site X", kind: "Site update", channel: "slack", slackTo: "#ops-michael", raise: true, why: "Team ping plus a material risk. Carys posts Slack and raises a blocker.", status: "With Carys" }
+  ],
   xero: {
     asOf: "13 Aug 2026",
     courtsNow: 60,
@@ -304,17 +340,185 @@ try {
     if (saved.blockers) state.blockers = saved.blockers;
     if (saved.calls) state.calls = saved.calls;
     if (saved.selectedDraft) state.selectedDraft = saved.selectedDraft;
+    if (saved.inbox) state.inbox = saved.inbox;
     if (saved.horizon === 6 || saved.horizon === 12) horizon = saved.horizon;
   }
 } catch (e) {}
 
-function persist(){ localStorage.setItem("pcos-v2", JSON.stringify({ drafts: state.drafts, blockers: state.blockers, calls: state.calls, selectedDraft: state.selectedDraft, horizon })); }
+function persist(){ localStorage.setItem("pcos-v2", JSON.stringify({ drafts: state.drafts, blockers: state.blockers, calls: state.calls, selectedDraft: state.selectedDraft, horizon, inbox: state.inbox })); }
 function el(id){ return document.getElementById(id); }
 function esc(s){ return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c])); }
 function eur(n){ const s = n<0?"−":""; return s+"€"+Math.abs(Math.round(n)).toLocaleString("en-IE"); }
 function eurk(n){ const s = n<0?"−":""; return s+"€"+Math.abs(Math.round(n/1000))+"k"; }
 function toast(msg){ const t=el("toast"); t.textContent=msg; t.classList.add("on"); setTimeout(()=>t.classList.remove("on"),2200); }
 function cards(list){ return list.length ? list.map(c=>`<div class="card ${c.cls||""}"><div class="t">${esc(c.t)}</div><div class="m">${esc(c.m)}</div></div>`).join("") : `<div class="empty">None</div>`; }
+function kickerHtml(code, label, sheet){
+  return `<div class="kicker">${code} · ${label}<button class="btn sm sheet-link" type="button" onclick="openSheet('${sheet}')">Sheet · Excel</button></div>`;
+}
+
+let listening = false, recHandle = null, openSheetData = null;
+function routeVoice(text){
+  const t = (text||"").toLowerCase();
+  let account = "Unspecified", kind = "Client inbound", channel = "os", slackTo = "", raise = false;
+  const names = [["site x","Site X"],["club g","Club G"],["club h","Club H"],["club b","Club B"],["club d","Club D"],["hotel f","Hotel F"],["operator a","Operator A"],["leisure","Leisure chain"],["local authority","Local authority"],["council","Council framework"]];
+  names.forEach(([k,v])=>{ if (t.includes(k)) account = v; });
+  if (/\bslack\b|ping |tell michael|tell paul|message the team|whatsapp the crew|message michael|message paul/.test(t)) {
+    channel = "slack";
+    slackTo = t.includes("paul") ? "#ops-paul" : t.includes("carys") ? "#ea-carys" : "#ops-michael";
+  }
+  if (/\bon site|install|crew|kit|manza|groundworks|window/.test(t)) kind = "Site update";
+  if (/\bcall|they said|client|price|proposal|deposit/.test(t) && kind!=="Site update") kind = "Client inbound";
+  if (/\bblock|stuck|overdue|unpaid|can't|cannot|isn't on site|not ordered|issue|problem/.test(t)) raise = true;
+  const why = channel==="slack"
+    ? (raise ? "Team ping plus a risk. Carys posts Slack, logs Activity, and raises a Blocker." : "Team ping. Carys posts Slack and logs Activity.")
+    : (raise ? "Sounds like a blocker. Carys logs Activity and raises Blocker." : "Standard update. Carys logs Activity on the account.");
+  return { account, kind, channel, slackTo, raise, why, text };
+}
+function startVoice(){
+  if (listening && recHandle) { recHandle.stop(); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const box = el("voice-out");
+  if (!SR) {
+    if (box) box.style.display = "block";
+    toast("Mic not in this browser — type it, or tap a sample");
+    return;
+  }
+  const rec = new SR();
+  recHandle = rec;
+  rec.lang = "en-IE";
+  rec.interimResults = true;
+  rec.continuous = false;
+  listening = true;
+  const btn = el("voice-btn");
+  if (btn) { btn.classList.add("live"); btn.textContent = "Listening… tap to stop"; }
+  rec.onresult = e => {
+    let said = "";
+    for (let i=0;i<e.results.length;i++) said += e.results[i][0].transcript;
+    const ta = el("v-said");
+    if (ta) ta.value = said;
+    if (e.results[e.results.length-1].isFinal) showRoute(said);
+  };
+  rec.onerror = () => { listening = false; if (btn) { btn.classList.remove("live"); btn.textContent = "Voice"; } toast("Mic didn't catch that — try again or type"); };
+  rec.onend = () => { listening = false; recHandle = null; if (btn) { btn.classList.remove("live"); btn.textContent = "Voice"; } };
+  rec.start();
+}
+function showRoute(text){
+  const r = routeVoice(text);
+  const hold = el("route-box");
+  if (!hold) return;
+  hold.style.display = "block";
+  hold.innerHTML = `
+    <div class="kicker" style="margin-bottom:8px">Route · always to Carys first</div>
+    <p class="sub" style="margin-bottom:10px">${esc(r.why)}</p>
+    <p class="sub" style="margin-bottom:12px"><span class="tag">${esc(r.kind)}</span> <span class="tag">${r.channel==="slack"?"Slack "+r.slackTo:"OS Activity"}</span> ${r.raise?`<span class="tag" style="color:var(--danger);border-color:rgba(224,122,106,.45)">Blocker</span>`:""} · ${esc(r.account)}</p>
+    <button class="btn pri" onclick="sendCarys()">Send to Carys</button>`;
+  hold.dataset.payload = JSON.stringify(r);
+}
+function useSample(text){
+  const ta = el("v-said");
+  if (ta) ta.value = text;
+  showRoute(text);
+}
+function sendCarys(){
+  const hold = el("route-box");
+  const ta = el("v-said");
+  const typed = (ta && ta.value.trim()) || "";
+  let r;
+  try { r = JSON.parse(hold && hold.dataset.payload || "null"); } catch(e){ r = null; }
+  if (!r) r = routeVoice(typed);
+  if (typed) r.text = typed;
+  if (!r.text) { toast("Say or type something first"); return; }
+  state.inbox.unshift({
+    id: Date.now(), when: "13 Aug", by: "Founder A",
+    text: r.text, account: r.account, kind: r.kind, channel: r.channel,
+    slackTo: r.slackTo, raise: r.raise, why: r.why, status: "With Carys"
+  });
+  persist(); toast("With Carys"); renderAll(); show("road");
+}
+function carysAct(id, how){
+  const item = state.inbox.find(x => x.id===id);
+  if (!item || item.status!=="With Carys") return;
+  if (how==="log" || how==="slack" || how==="all") {
+    state.calls.unshift({ t: item.account+" · "+item.kind, m: item.text, cls: item.raise?"red":"amber" });
+  }
+  if ((how==="blocker" || how==="all") && item.raise) {
+    state.blockers.unshift({ id: Date.now(), t: item.account+" · from voice", m: item.text, type: item.kind==="Site update"?"Install":"Sales", sev: "Red", status: "Open", founder: true });
+  }
+  item.status = how==="slack" ? "Slack queued · logged" : how==="blocker" ? "Blocker raised" : how==="all" ? (item.channel==="slack"?"Slack + log + blocker":"Logged") : "Logged by Carys";
+  persist(); toast(item.status); renderAll(); show("road");
+}
+function csvEscape(v){
+  const s = String(v==null?"":v);
+  return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+}
+function sheetTable(headers, rows){
+  return `<table><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${
+    rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")
+  }</tbody></table>`;
+}
+function buildSheet(id){
+  if (id==="activity") {
+    const headers = ["Date","Kind","Direction","Logged by","Account","Channel","Outcome","What they said","Raise blocker?","Owner next"];
+    const rows = [];
+    state.inbox.forEach(i => rows.push([i.when, i.kind, "In", i.by, i.account, i.channel==="slack"?"Slack → Carys":"Voice → Carys", i.status, i.text, i.raise?"Yes":"No", "Carys"]));
+    state.calls.forEach(c => rows.push(["13 Aug", "Client inbound", "In", "Founder A", c.t, "Phone", "Update logged", c.m, c.cls==="red"?"Yes":"No", "Carys"]));
+    return { title: "Activity", file: "PadelCraft-Activity.csv", note: "Same columns as schema/03-activity.csv. Voice notes land here via Carys. Airtable / Sheets tab: Activity.", headers, rows };
+  }
+  if (id==="scorecard") {
+    const s = state.sold, f = state.forecast;
+    return { title: "Weekly scorecard", file: "PadelCraft-WeeklyScorecard.csv", note: "schema/04-weekly-scorecard.csv — Friday rollup for Command.", headers: ["Week starting","Courts booked","Cumulative courts","Pace vs 180","Courts last week","Weighted next 12 mo","Red flags"], rows: [["11 Aug 2026", s.thisWeek, 60, "Behind", s.lastWeek, f.y12, openBlockers().filter(b=>b.sev==="Red").length+" red blockers"]] };
+  }
+  if (id==="leads") {
+    const headers = ["Account","Lead type","Path","Qualification","Tender stage","Courts","Est. value €","Age in stage (days)","Age total","Owner","Next action","Stuck?"];
+    const rows = state.leads.map(l => [l.account, l.type, l.path, l.qual, l.tender||"—", l.courts, l.courts*46000, l.age, l.ageTotal, l.owner, l.next, l.age>14?"Yes":"No"]);
+    return { title: "Leads · opportunity", file: "PadelCraft-Leads.csv", note: "schema/02-opportunity.csv — intern view before a commercial exists. Stuck = more than 14 days in the current stage.", headers, rows };
+  }
+  if (id==="tender") {
+    const headers = ["Account","Stage","Status","Courts","Card €","Quoted €","Discount %","GP %","Floor 24%","Pack owner"];
+    const rows = state.drafts.map(d => {
+      const c = dealCommercial(d);
+      return c ? [d.account, d.stage, d.status, c.qty, c.card, c.quoted, Math.round(c.disc*100)+"%", Math.round(c.gpPct*100)+"%", c.gpPct<GP_FLOOR?"Below":"Ok", d.uploadedBy] : [d.account, d.stage, d.status, "—","—","—","—","—","No commercial", d.uploadedBy];
+    });
+    return { title: "Tender commercial", file: "PadelCraft-TenderCommercial.csv", note: "Founder-facing slice of Opportunity + quoted lines. Full Opportunity headers live in schema/02-opportunity.csv.", headers, rows };
+  }
+  if (id==="blocker") {
+    return { title: "Blocker", file: "PadelCraft-Blocker.csv", note: "schema/08-blocker.csv", headers: ["Title","Type","Severity","Owner","Founder action?","Status","Next move"], rows: openBlockers().map(b => [b.t, b.type, b.sev, b.founder?"Founder A":"Michael", b.founder?"Yes":"No", b.status, b.m]) };
+  }
+  if (id==="project") {
+    return { title: "Project · Install 90", file: "PadelCraft-Project.csv", note: "schema/05-project.csv plus crew. This is the Gantt source.", headers: ["Project","Courts","Window start","Window end","Crew lead","Crew","MANZA","Issues / risks","Owner"], rows: state.jobs.map(j => [j.name, j.courts, WEEKS[j.start], WEEKS[Math.min(j.start+j.dur-1,11)], j.crew[0]||"Unassigned", j.crew.join("; ")||"Unassigned", j.kit, j.risk||"—", "Michael"]) };
+  }
+  if (id==="pipeline") {
+    return { title: "Opportunity · forecast", file: "PadelCraft-Opportunity.csv", note: "schema/02-opportunity.csv — weighted courts. Undated stays out of the 12-month number.", headers: ["Opportunity","Path","Stage","Courts (n)","Win weight","Weighted courts","Expected close"], rows: state.pipeline.map(p => [p.deal, p.path, p.stage, p.courts, p.close==="Undated"?"—":Math.round(p.w*100)+"%", p.close==="Undated"?"—":(p.courts*p.w).toFixed(1), p.close]) };
+  }
+  if (id==="xero") {
+    const x = state.xero;
+    const headers = ["Stream","Last 6m revenue","Next 6m revenue","GM next %","Status"];
+    const rows = x.streams.map(s => [s.name, s.last, s.next, Math.round(s.gm*100)+"%", s.state]);
+    rows.push(["US entry","","","","18–24 months · not in P&L"]);
+    return { title: "Xero · revenue by stream", file: "PadelCraft-XeroStreams.csv", note: "schema/14-xero-snapshot.csv + 15-revenue-stream.csv. Carys pastes Friday. Not a second ledger.", headers, rows };
+  }
+  if (id==="club") {
+    const m = clubMetrics();
+    return { title: "Club day", file: "PadelCraft-ClubDay.csv", note: "schema/16-club-day.csv — Playtomic (or equivalent) rollup for the owned flagship.", headers: ["Day","Utilisation %","Court revenue","ADR","Players per court","FOH per used court","Waitlist parties"], rows: m.byDay.map(d => [d.day, Math.round(d.util*100)+"%", Math.round(d.rev), Math.round(d.adr), d.ppc.toFixed(1), d.staff.toFixed(2), d.wait]) };
+  }
+  return { title: "Sheet", file: "PadelCraft.csv", note: "", headers: ["Field"], rows: [] };
+}
+function openSheet(id){
+  const s = buildSheet(id);
+  openSheetData = s;
+  el("sheet-title").textContent = s.title;
+  el("sheet-note").textContent = s.note;
+  el("sheet-body").innerHTML = sheetTable(s.headers, s.rows);
+  el("sheet").classList.add("on");
+}
+function closeSheet(){ el("sheet").classList.remove("on"); }
+function downloadOpenSheet(){
+  if (!openSheetData) return;
+  const s = openSheetData;
+  const csv = [s.headers].concat(s.rows).map(r => r.map(csvEscape).join(",")).join("\n");
+  downloadBlob(s.file, "\uFEFF"+csv);
+  toast("Opens in Excel or Google Sheets");
+}
 
 function renderNav(){
   const html = VIEWS.map(([id,l])=>`<button data-v="${id}">${l}</button>`).join("");
@@ -567,30 +771,58 @@ function svgGantt(rows, title){
 }
 
 function renderRoad(){
+  const pending = state.inbox.filter(i => i.status==="With Carys");
+  const inbox = state.inbox.map(i => `
+    <div class="card ${i.raise?"red":i.channel==="slack"?"amber":""}">
+      <div class="t">${esc(i.account)} · ${esc(i.kind)}</div>
+      <div class="m">${esc(i.text)}</div>
+      <div class="m" style="margin-top:6px">${esc(i.why)}</div>
+      <div class="m" style="margin-top:6px"><span class="tag">${esc(i.status)}</span> ${i.channel==="slack"?`<span class="tag">${esc(i.slackTo)}</span>`:""}</div>
+      ${i.status==="With Carys"?`
+        <button class="btn sm pri" onclick="carysAct(${i.id},'all')">Carys: do the route</button>
+        <button class="btn sm" onclick="carysAct(${i.id},'log')">Log only</button>
+        ${i.channel==="slack"?`<button class="btn sm" onclick="carysAct(${i.id},'slack')">Queue Slack</button>`:""}
+        ${i.raise?`<button class="btn sm" onclick="carysAct(${i.id},'blocker')">Raise blocker</button>`:""}
+      `:""}
+    </div>`).join("") || `<div class="empty">Nothing for Carys</div>`;
   el("v-road").innerHTML = `
-    <div class="kicker">00 · Between sites</div>
-    <h1>The phone holds the day<em>Three cards. Four buttons. Then drive.</em></h1>
-    <p class="sub">Log the call, take the client update, triage your red blockers, see the next site. Desk Command waits for Monday.</p>
+    ${kickerHtml("00","Between sites","activity")}
+    <h1>Speak it. Carys gets it.<em>Voice first. Type if you must.</em></h1>
+    <p class="sub">One Voice button. The OS guesses Slack vs a client or site update, then everything still goes to Carys. She logs it, pings Slack, or raises a blocker. You drive.</p>
     <div class="road">
       <div class="phone">
         <div class="pbar"><span>Padel-Craft · Road</span><span>Founder A</span></div>
         <div class="pbody">
+          <button class="btn pri voice" id="voice-btn" onclick="startVoice()">Voice</button>
           <div class="col"><h3>Next site</h3>${cards([state.nextSite])}</div>
-          <div class="col"><h3>Calls to return</h3>${cards(state.calls)}</div>
+          <div class="col"><h3>Calls to return</h3>${cards(state.calls.slice(0,3))}</div>
           <div class="col"><h3>My red blockers</h3>${cards(myRed().map(b=>({t:b.t,m:b.m,cls:"red"})))}</div>
-          <button class="btn pri" onclick="show('blockers')">Triage blockers</button>
+          <button class="btn" onclick="show('blockers')">Triage blockers</button>
         </div>
       </div>
-      <div class="panel">
-        <div class="kicker" style="margin-bottom:8px">Log in 20 seconds</div>
-        <label>Account</label>
-        <input id="f-acc" placeholder="Club, operator, council…">
-        <label>Kind</label>
-        <select id="f-kind"><option>Client inbound</option><option>Founder call</option><option>Site update</option></select>
-        <label>What they said</label>
-        <textarea id="f-said" placeholder="Two sentences max"></textarea>
-        <label><input type="checkbox" id="f-raise" style="width:auto;margin-right:8px"> Raise a sales blocker</label>
-        <button class="btn pri" style="margin-top:16px" onclick="logCall()">Log it</button>
+      <div>
+        <div class="panel">
+          <div class="kicker" style="margin-bottom:8px">After you speak</div>
+          <label>Transcript</label>
+          <textarea id="v-said" placeholder="Tap Voice and speak, or type the same words"></textarea>
+          <div id="voice-out" style="margin-top:8px">
+            <button class="btn sm" onclick="useSample('Tell Michael on Slack that Site X MANZA still is not on site')">Sample · Slack Michael</button>
+            <button class="btn sm" onclick="useSample('Club G said the deposit goes Friday. Log it as a client update.')">Sample · client log</button>
+            <button class="btn sm" onclick="useSample('We are blocked on Hotel F groundworks. Raise it.')">Sample · blocker</button>
+          </div>
+          <div id="route-box" style="display:none;margin-top:12px"></div>
+          <p class="sub" style="margin:14px 0 0">Or the 20-second typed log:</p>
+          <label>Account</label>
+          <input id="f-acc" placeholder="Club, operator, council…">
+          <label>Kind</label>
+          <select id="f-kind"><option>Client inbound</option><option>Founder call</option><option>Site update</option></select>
+          <label>What they said</label>
+          <textarea id="f-said" placeholder="Two sentences max"></textarea>
+          <label><input type="checkbox" id="f-raise" style="width:auto;margin-right:8px"> Raise a sales blocker</label>
+          <button class="btn" style="margin-top:16px" onclick="logCall()">Log it · still goes to Carys</button>
+        </div>
+        <div class="band">Carys inbox · ${pending.length} waiting</div>
+        ${inbox}
       </div>
     </div>`;
 }
@@ -601,14 +833,15 @@ function logCall(){
   const raise = el("f-raise").checked;
   state.calls.unshift({ t: acc + " · " + kind, m: said, cls: raise ? "red" : "amber" });
   if (raise) state.blockers.unshift({ id: Date.now(), t: acc + " · from call", m: said, type: "Sales", sev: "Red", status: "Open", founder: true });
-  persist(); toast(raise ? "Logged · blocker raised" : "Call logged"); renderAll(); show("road");
+  state.inbox.unshift({ id: Date.now()+1, when: "13 Aug", by: "Founder A", text: said, account: acc, kind, channel: "os", slackTo: "", raise, why: "Typed from the road. Carys still owns the log.", status: "Logged by Carys" });
+  persist(); toast(raise ? "Logged to Carys · blocker raised" : "Logged to Carys"); renderAll(); show("road");
 }
 
 function renderCommand(){
   const s = state.sold, f = state.forecast;
   const red = openBlockers().filter(b=>b.sev==="Red").length;
   el("v-command").innerHTML = `
-    <div class="kicker">01 · Monday desk</div>
+    ${kickerHtml("01","Monday desk","scorecard")}
     <h1>Command<em>See the numbers. Then act.</em></h1>
     <p class="sub">Charts follow Tufte: data ink only, labels on the points, no decoration. Paper well is for reading; navy is for action.</p>
     <div class="row k2">
@@ -636,7 +869,7 @@ function renderCommand(){
       <div class="kpi bad"><div class="v">${red}</div><div class="l">Red blockers</div></div>
       <div class="kpi warn"><div class="v">${state.drafts.filter(d=>{const x=dealCommercial(d); return x && x.gpPct<GP_FLOOR && d.status!=="Commercial approved";}).length}</div><div class="l">Commercials below 24% GP</div></div>
       <div class="kpi bad"><div class="v">${state.jobs.filter(j=>!j.crew.length).length}</div><div class="l">Unresourced installs</div></div>
-      <div class="kpi warn"><div class="v">${state.jobs.filter(j=>j.kit==="Not ordered").length}</div><div class="l">Kit not ordered</div></div>
+      <div class="kpi warn" style="cursor:pointer" onclick="show('road')"><div class="v">${state.inbox.filter(i=>i.status==="With Carys").length}</div><div class="l">With Carys · voice inbox</div></div>
       <div class="kpi bad" style="cursor:pointer" onclick="show('report')"><div class="v">${eurk(state.xero.chase.filter(i=>i.age>0).reduce((a,i)=>a+i.amount,0))}</div><div class="l">Xero overdue · chase</div></div>
     </div>
     <div class="cols c4">
@@ -748,8 +981,78 @@ function uploadDraft(){
   persist(); toast("Commercial in for approval"); renderAll(); show("tenders");
 }
 
+function leadValue(l){ return l.courts * 46000; }
+function leadWeight(l){
+  if (l.path==="Tender") {
+    if (l.tender==="Award") return 0.55;
+    if (l.tender==="Secondary document out") return 0.45;
+    if (l.tender==="Initial document out") return 0.25;
+    if (l.tender==="Bid / no-bid") return 0.10;
+    if (l.tender==="Qualifying") return 0.10;
+    return 0.05;
+  }
+  if (l.qual==="Qualified") return 0.25;
+  if (l.qual==="Qualifying") return 0.10;
+  if (l.qual==="Conversation") return 0.05;
+  return 0;
+}
+function leadCard(l){
+  const stuck = l.age>14;
+  return `<div class="card ${stuck?"red":l.age>9?"amber":""}">
+    <div class="t">${esc(l.account)} · ${l.courts}</div>
+    <div class="m">${esc(l.type)} · ${eurk(leadValue(l))} · ${l.age}d</div>
+    <div class="m">${esc(l.next)}</div>
+  </div>`;
+}
+function leadBoard(keys, pick){
+  return keys.map(name => {
+    const list = state.leads.filter(l => pick(l)===name);
+    return `<div class="col"><h3>${name} · ${list.length}</h3>${list.length?list.map(leadCard).join(""):`<div class="empty">None</div>`}</div>`;
+  }).join("");
+}
+function renderLeads(){
+  const n = state.leads.length;
+  const value = state.leads.reduce((a,l)=>a+leadValue(l),0);
+  const wtd = state.leads.reduce((a,l)=>a+leadValue(l)*leadWeight(l),0);
+  const avgAge = Math.round(state.leads.reduce((a,l)=>a+l.age,0)/n);
+  const stuck = state.leads.filter(l=>l.age>14);
+  const rows = state.leads.map(l => `<tr>
+    <td>${esc(l.account)}</td>
+    <td>${esc(l.type)}</td>
+    <td>${esc(l.path)}</td>
+    <td>${esc(l.qual)}</td>
+    <td>${esc(l.tender||"—")}</td>
+    <td>${l.courts}</td>
+    <td>${eurk(leadValue(l))}</td>
+    <td style="color:${l.age>14?"var(--danger)":l.age>9?"var(--amber)":"var(--w2)"};font-weight:700">${l.age}d</td>
+    <td>${l.ageTotal}d</td>
+    <td>${esc(l.owner)}</td>
+    <td>${esc(l.next)}</td>
+  </tr>`).join("");
+  el("v-leads").innerHTML = `
+    ${kickerHtml("02","Qualified leads","leads")}
+    <h1>Source. Qualify. Then a pack.<em>Intern owns the left. Founders take Qualified.</em></h1>
+    <p class="sub">Lead gen type, qualification, then the tender gates. Value is courts × rate card. Age is days in the current stage — over 14 is stuck. Commercials live on Tenders.</p>
+    <div class="row k5">
+      <div class="kpi"><div class="v">${n}</div><div class="l">Live leads</div></div>
+      <div class="kpi"><div class="v">${eurk(value)}</div><div class="l">Est. pipeline value</div></div>
+      <div class="kpi"><div class="v">${eurk(wtd)}</div><div class="l">Weighted value</div></div>
+      <div class="kpi ${avgAge>10?"warn":""}"><div class="v">${avgAge}d</div><div class="l">Avg age in stage</div></div>
+      <div class="kpi ${stuck.length?"bad":""}"><div class="v">${stuck.length}</div><div class="l">Stuck &gt; 14 days</div></div>
+    </div>
+    <div class="band">Lead gen type</div>
+    <div class="cols c5">${leadBoard(LEAD_TYPES, l=>l.type)}</div>
+    <div class="band">Qualification</div>
+    <div class="cols c4">${leadBoard(QUAL_STAGES, l=>l.qual)}</div>
+    <div class="band">Tender process · path = tender only</div>
+    <div class="cols c6">${leadBoard(TENDER_STAGES, l=>l.tender)}</div>
+    <div class="band">Pipeline · value and age</div>
+    <table>
+      <thead><tr><th>Account</th><th>Type</th><th>Path</th><th>Qual</th><th>Tender</th><th>Courts</th><th>Est. value</th><th>Age</th><th>Total</th><th>Owner</th><th>Next</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
 function renderTenders(){
-  const cols = Object.entries(state.tenders).map(([name,list]) => `<div class="col"><h3>${name}</h3>${cards(list)}</div>`).join("");
   const d = draftById();
   const c = dealCommercial(d);
   const list = state.drafts.map(x => {
@@ -778,10 +1081,9 @@ function renderTenders(){
       <div class="kpi ${c.gpPct<GP_FLOOR?"bad":""}"><div class="v">${eurk(c.gp)}</div><div class="l">Est. GP · ${Math.round(c.gpPct*100)}%${c.gpPct<GP_FLOOR?" · below 24% floor":""}</div></div>
     </div>` : `<p class="sub">No commercial. Take bid/no-bid before a pack.</p>`;
   el("v-tenders").innerHTML = `
-    <div class="kicker">03 · Tender desk</div>
+    ${kickerHtml("03","Tender desk","tender")}
     <h1>Approve the commercial<em>Rate card. Discount. Gross profit.</em></h1>
-    <p class="sub">Once spec is locked, the pack is the standard template. You are not reviewing prose. Download the one-pager, check the three numbers, approve or send back.</p>
-    <div class="cols c6">${cols}</div>
+    <p class="sub">Qualified leads and the tender gates sit on Leads. Here you only approve the commercial. Download the one-pager, check the three numbers, approve or send back.</p>
     <div class="band">Commercials in for approval</div>
     <div class="cols c2">
       <div>
@@ -843,7 +1145,7 @@ function renderBlockers(){
       </td>
     </tr>`).join("");
   el("v-blockers").innerHTML = `
-    <div class="kicker">04 · Triage</div>
+    ${kickerHtml("04","Triage","blocker")}
     <h1>Identify. Assign. Clear.</h1>
     <p class="sub">Red with founder action first. Clearing is a status change, not a chat message.</p>
     <table>
@@ -896,7 +1198,7 @@ function renderInstall(){
   </tr>`).join("");
   const endLabel = WEEKS[horizon-1];
   el("v-install").innerHTML = `
-    <div class="kicker">05 · Next ${horizon} weeks</div>
+    ${kickerHtml("05","Next "+horizon+" weeks","project")}
     <h1>Installations and resources<em>Same time axis. Projects, then people.</em></h1>
     <p class="sub">Gantt for the next six or twelve weeks. Darker overlap on a resource row is overbooking. Fainter bars are at risk (kit, crew, or cash). Labels sit on the bars.</p>
     <div style="margin-bottom:14px">
@@ -923,7 +1225,7 @@ function renderForecast(){
   const thisQ = state.pipeline.filter(p => p.close==="This Q").reduce((a,p)=>a+p.courts*p.w,0);
   const nextQ = state.pipeline.filter(p => p.close==="Next Q").reduce((a,p)=>a+p.courts*p.w,0);
   el("v-forecast").innerHTML = `
-    <div class="kicker">02 · Pipeline</div>
+    ${kickerHtml("02","Pipeline","pipeline")}
     <h1>What will sell<em>Weighted courts, labelled on the data.</em></h1>
     <p class="sub">Dot is expected courts (volume × win weight). Stem is unweighted size. Club D has no Expected close, so it is excluded from the 12-month number.</p>
     <div class="paper">
@@ -987,7 +1289,7 @@ function renderReport(){
     <td>18–24 months · not in this P&amp;L</td>
   </tr>`;
   el("v-report").innerHTML = `
-    <div class="kicker">06 · Xero · rec ${esc(x.asOf)}</div>
+    ${kickerHtml("06","Xero · rec "+x.asOf,"xero")}
     <h1>Cash, courts, and the other streams<em>Install is the engine. The rest was starved of time.</em></h1>
     <p class="sub">From the operating model: academy, tours, maintenance, showroom offset, then more sales capacity. US is later. Directional until Carys pastes the Friday rec. Ledger stays in Xero.</p>
     <div class="row k5">
@@ -1057,7 +1359,7 @@ function renderClub(){
     <td>${d.wait ? d.wait : "—"}</td>
   </tr>`).join("");
   el("v-club").innerHTML = `
-    <div class="kicker">07 · Owned club · ${esc(c.weekOf)}</div>
+    ${kickerHtml("07","Owned club · "+c.weekOf,"club")}
     <h1>${esc(c.name)}<em>The court-hour engine. Not court count.</em></h1>
     <p class="sub">${c.courts} courts (${c.indoor} indoor). Open 08:00–22:00. Playtomic 2026: GMV = hours × utilisation × rate, or players per court × frequency × ticket. Top clubs beat the bottom 5× on that system, not on more courts. Ireland sits in the UK hotspot: peak is full; expand indoor, fill mornings with programming.</p>
     <div class="row k5">
@@ -1106,7 +1408,7 @@ function renderClub(){
 }
 
 function renderAll(){
-  renderRoad(); renderCommand(); renderTenders(); renderBlockers(); renderInstall(); renderForecast(); renderReport(); renderClub();
+  renderRoad(); renderCommand(); renderLeads(); renderTenders(); renderBlockers(); renderInstall(); renderForecast(); renderReport(); renderClub();
 }
 renderNav();
 renderAll();
