@@ -3,1126 +3,346 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Padel-Craft — Internal Operating System</title>
+<title>Padel-Craft OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --n0:#060F1C;
-    --n1:#0B1C30;
-    --n2:#0F2540;
-    --n3:#163050;
-    --n4:#1E3D62;
-    --w:#FFFFFF;
-    --w2:rgba(255,255,255,.85);
-    --w3:rgba(255,255,255,.55);
-    --w4:rgba(255,255,255,.25);
-    --w5:rgba(255,255,255,.08);
-    --f:'Montserrat',sans-serif;
-    --paper:var(--n1);
-    --ink:var(--w);
-    --muted:var(--w3);
-    --faint:var(--w4);
-    --line:var(--w5);
-    --line2:var(--w4);
-    --green:#8FB8E8;
-    --green-soft:rgba(31,61,98,.55);
-    --green-line:var(--n4);
-    --amber:#E8C07A;
-    --amber-soft:rgba(232,192,122,.12);
-    --amber-line:rgba(232,192,122,.35);
-    --panel:var(--n2);
-    --sales:#7BA3D4;
-    --deliver:#8FB8E8;
-    --maint:var(--w3);
-    --people:var(--amber);
-    --found:var(--w4);
-    --danger:#E07A6A;
-    --danger-soft:rgba(224,122,106,.14);
-  }
-  *{box-sizing:border-box;}
-  html{-webkit-text-size-adjust:100%;}
-  body{
-    margin:0;
-    background:var(--n1);
-    color:var(--w);
-    font-family:var(--f);
-    font-size:16px;
-    font-weight:300;
-    line-height:1.7;
-  }
-  .wrap{max-width:1120px;margin:0 auto;padding:0 5% 96px;}
-  .sans{font-family:var(--f);}
-  .topbar{background:var(--n0);border-bottom:1px solid var(--w5);height:36px;display:flex;align-items:center;justify-content:flex-end;gap:20px;padding:0 5%;}
-  .topbar span,.topbar a{font-size:10.5px;font-weight:500;letter-spacing:.08em;color:var(--w3);text-decoration:none;}
-  .logo{display:inline-flex;align-items:baseline;text-decoration:none;margin:0 0 18px;}
-  .lp{font-weight:300;font-size:18px;letter-spacing:.22em;text-transform:uppercase;color:var(--w);}
-  .ls{font-weight:300;font-size:18px;color:var(--w4);margin:0 4px;}
-  .lc{font-weight:800;font-size:18px;letter-spacing:.14em;text-transform:uppercase;color:var(--w);}
-
-  header.masthead{border-bottom:1px solid var(--w5);padding:40px 0 28px;margin-bottom:8px;}
-  .eyebrow{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--w3);font-weight:700;margin:0 0 18px;display:flex;align-items:center;gap:12px;}
-  .eyebrow:before{content:"";width:36px;height:1px;background:var(--w4);}
-  h1{font-size:clamp(26px,3.5vw,42px);line-height:.95;margin:0 0 20px;font-weight:800;letter-spacing:-.025em;text-transform:uppercase;}
-  h1 em{font-style:normal;display:block;color:var(--w2);}
-  .subtitle{font-size:16px;font-weight:300;color:var(--w3);margin:0;max-width:640px;line-height:1.88;font-style:normal;}
-  .meta-row{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-top:22px;font-size:10.5px;letter-spacing:.08em;color:var(--w4);text-transform:uppercase;font-weight:500;}
-
-  section{margin-top:72px;}
-  .kicker{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--w3);font-weight:700;margin:0 0 14px;display:flex;align-items:center;gap:10px;}
-  .kicker .num{color:var(--w);}
-  .kicker:before{content:"";width:28px;height:1px;background:var(--w4);}
-  h2{font-size:clamp(22px,2.8vw,32px);margin:0 0 18px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;line-height:.97;}
-  h3{font-size:14px;margin:28px 0 10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
-  p{margin:0 0 16px;color:var(--w2);}
-  .lead{font-size:16px;font-weight:300;color:var(--w3);line-height:1.88;}
-
-  .apex{background:var(--n0);color:var(--w);border:1px solid var(--w5);border-radius:1px;padding:32px 36px;margin-top:28px;}
-  .apex .lbl{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--w3);font-weight:700;margin:0 0 14px;}
-  .apex p{font-size:20px;line-height:1.45;margin:0;color:var(--w);font-weight:300;}
-  .apex strong{color:var(--w);font-weight:700;border-bottom:1px solid var(--w4);}
-
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--n2);border:1px solid var(--w5);border-radius:1px;overflow:hidden;}
-  .stat{background:transparent;padding:28px 20px;border-right:1px solid var(--w5);text-align:center;}
-  .stat:last-child{border-right:none;}
-  .stat .n{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--w);}
-  .stat .l{font-size:10px;color:var(--w3);margin-top:8px;line-height:1.4;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
-
-  .answer{background:var(--n3);border-left:2px solid var(--amber);padding:20px 24px;margin:0 0 22px;}
-  .answer p{margin:0;font-size:16px;line-height:1.7;color:var(--w);font-weight:400;}
-  .callout{background:var(--n2);border-left:2px solid var(--w);padding:16px 20px;margin:18px 0 0;}
-  .callout p{margin:0;font-size:14.5px;color:var(--w2);}
-  .warn{background:var(--danger-soft);border-left:2px solid var(--danger);padding:16px 20px;margin:18px 0 0;}
-  .warn p{margin:0;font-size:14.5px;color:var(--w2);}
-
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-  .cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-  .tool{border:1px solid var(--w5);border-radius:1px;padding:18px 18px;background:var(--n2);}
-  .tool h3{font-size:13px;margin:0 0 8px;letter-spacing:.08em;}
-  .tool p{font-size:13px;color:var(--w3);line-height:1.65;margin:0;}
-  .tool .tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);font-weight:700;margin-bottom:10px;}
-
-  table.data{width:100%;border-collapse:collapse;margin:8px 0 16px;font-size:13px;}
-  table.data th{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);font-weight:700;padding:10px 10px 10px 0;border-bottom:1px solid var(--w4);vertical-align:bottom;}
-  table.data td{font-size:13px;font-weight:400;color:var(--w2);padding:10px 10px 10px 0;border-bottom:1px solid var(--w5);vertical-align:top;line-height:1.45;}
-  table.data tr:last-child td{border-bottom:none;}
-  table.data .grp td{background:var(--n3);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);font-weight:700;padding-top:12px;padding-bottom:8px;padding-left:10px;}
-  table.data .req{font-weight:700;color:var(--w);}
-  table.data .opt{color:var(--w4);}
-  table.data code{font-size:12px;background:var(--n0);padding:1px 6px;border-radius:1px;border:1px solid var(--w5);color:var(--w);font-family:var(--f);font-weight:500;}
-
-  .own{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:1px;display:inline-block;white-space:nowrap;border:1px solid var(--w5);color:var(--w3);}
-  .o-fd{background:var(--w);color:var(--n0);border-color:transparent;}
-  .o-mi{background:transparent;color:var(--w);border-color:var(--w4);}
-  .o-lg{background:var(--n4);color:var(--w);border-color:var(--n4);}
-  .o-mt{background:transparent;color:var(--w3);}
-  .o-ca{background:transparent;color:var(--w3);}
-  .o-ag{background:var(--amber-soft);color:var(--amber);border-color:var(--amber-line);}
-
-  /* spine */
-  .spine{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0;}
-  .spine-node{border:1px solid var(--w5);border-radius:1px;padding:16px 16px;background:var(--n2);}
-  .spine-node .sn{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);font-weight:700;}
-  .spine-node h4{margin:6px 0 6px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;}
-  .spine-node p{margin:0;font-size:12.5px;color:var(--w3);}
-  .spine-node.a,.spine-node.b,.spine-node.c,.spine-node.d,.spine-node.e{border-top:2px solid var(--w);}
-
-  /* screens */
-  .screen{border:1px solid var(--w5);border-radius:1px;overflow:hidden;background:var(--n2);margin:16px 0 22px;}
-  .screen-bar{background:var(--n0);color:var(--w);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
-  .screen-bar .who{color:var(--w3);font-size:10px;letter-spacing:.14em;font-weight:600;}
-  .screen-body{padding:18px 18px;}
-  .mod-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 8px;}
-  .mod{border:1px solid var(--w5);border-radius:1px;padding:16px 16px;background:var(--n2);border-top:2px solid var(--w);}
-  .mod .tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);font-weight:700;margin-bottom:8px;}
-  .mod h3{margin:0 0 6px;font-size:13px;}
-  .mod p{margin:0;font-size:12.5px;color:var(--w3);}
-  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
-  .kpi-row.five{grid-template-columns:repeat(5,1fr);}
-  .kpi{border:1px solid var(--w5);border-radius:1px;padding:14px 14px;background:var(--n0);}
-  .kpi .v{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--w);}
-  .kpi .k{font-size:10px;color:var(--w3);margin-top:6px;text-transform:uppercase;letter-spacing:.12em;font-weight:600;}
-  .kpi.red .v{color:var(--danger);}
-  .kpi.ok .v{color:var(--w);}
-  .kpi.warn .v{color:var(--amber);}
-  .board{display:grid;gap:8px;}
-  .board.cols4{grid-template-columns:repeat(4,1fr);}
-  .board.cols5{grid-template-columns:repeat(5,1fr);}
-  .board.cols6{grid-template-columns:repeat(6,1fr);}
-  .phone{max-width:340px;margin:12px auto 8px;border:1px solid var(--w4);border-radius:2px;overflow:hidden;background:var(--n0);}
-  .phone .screen-bar{border-radius:0;}
-  .phone .screen-body{padding:12px 14px;}
-  .big-btn{display:block;font-family:var(--f);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-align:center;border:1px solid var(--w5);border-radius:1px;padding:12px 8px;margin-bottom:6px;background:transparent;color:var(--w3);text-decoration:none;}
-  .big-btn.pri{background:var(--w);color:var(--n0);border-color:transparent;}
-  .colh{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);font-weight:700;margin-bottom:8px;}
-  .card{border:1px solid var(--w5);border-radius:1px;padding:10px 12px;margin-bottom:6px;background:var(--n1);font-size:12px;}
-  .card .t{font-weight:700;color:var(--w);}
-  .card .m{color:var(--w3);font-size:11px;margin-top:3px;}
-  .stuck{border-color:var(--amber-line);background:var(--amber-soft);}
-  .block{border-color:rgba(224,122,106,.45);background:var(--danger-soft);}
-
-  .agenda{counter-reset:ag;list-style:none;padding:0;margin:0;}
-  .agenda li{font-size:13.5px;font-weight:400;padding:10px 0 10px 38px;border-bottom:1px solid var(--w5);position:relative;color:var(--w2);}
-  .agenda li:before{counter-increment:ag;content:counter(ag);position:absolute;left:0;top:8px;width:22px;height:22px;border:1px solid var(--w4);border-radius:1px;text-align:center;line-height:22px;font-size:10px;font-weight:700;color:var(--w3);}
-
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px;}
-  .chip{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:1px solid var(--w5);border-radius:1px;padding:6px 12px;color:var(--w3);}
-  .chip.req{border-color:var(--w4);color:var(--w);}
-
-  .gantt{font-size:12px;margin-top:12px;}
-  .g-row{display:grid;grid-template-columns:220px repeat(9,1fr);align-items:center;min-height:28px;border-top:1px solid var(--w5);}
-  .g-name{padding:6px 10px 6px 0;color:var(--w2);font-weight:500;}
-  .g-barwrap{grid-column:2 / -1;display:grid;grid-template-columns:repeat(9,1fr);align-items:center;}
-  .bar{height:8px;margin:8px 0;border-radius:1px;}
-  .g-head{display:grid;grid-template-columns:220px repeat(9,1fr);font-size:10px;color:var(--w3);text-transform:uppercase;letter-spacing:.1em;font-weight:700;padding-bottom:8px;border-bottom:1px solid var(--w4);}
-
-  .no{text-decoration:line-through;color:var(--w4);}
-  ul.tight{margin:0 0 14px;padding-left:20px;}
-  ul.tight li{margin:0 0 8px;color:var(--w2);}
-  .legend{font-size:12px;color:var(--w3);margin-top:8px;font-weight:300;}
-  footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--w5);font-size:10.5px;color:var(--w4);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;}
-
-  .monday{border:1px solid var(--w5);border-radius:1px;padding:24px 26px;background:var(--n2);}
-  .monday h3{margin-top:0;}
-  .role-open{display:grid;grid-template-columns:160px 1fr;gap:8px 16px;font-size:14px;}
-  .role-open .r{font-weight:700;color:var(--w);text-transform:uppercase;font-size:11px;letter-spacing:.1em;padding-top:4px;}
-  .role-open .d{color:var(--w3);font-weight:300;}
-
-  .funnel{margin:8px 0 16px;}
-  .fn-row{display:grid;grid-template-columns:220px 90px 1fr 150px;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--w5);font-size:13px;}
-  .fn-row.head{border-bottom:1px solid var(--w4);color:var(--w3);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;}
-  .fn-bar{height:8px;background:var(--w);border-radius:1px;opacity:.85;}
-  .handoff{display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--w3);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;}
-  .handoff .line{flex:1;height:1px;background:var(--w5);}
-  .band-lbl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);font-weight:700;margin:8px 0 10px;}
-
-  @media (max-width:760px){
-    .wrap{padding:0 22px 60px;}
-    h1{font-size:26px;}
-    .stats,.cols,.cols3,.spine,.kpi-row,.kpi-row.five,.mod-strip,.board.cols4,.board.cols5,.board.cols6,.role-open,.fn-row{grid-template-columns:1fr;}
-    .stat{border-right:none;border-bottom:1px solid var(--w5);}
-    .g-row,.g-head{grid-template-columns:1fr;}
-    .g-barwrap{display:none;}
-  }
-  @media print{
-    body{background:var(--n1);font-size:12px;}
-    .wrap{max-width:none;padding:0 12px 24px;}
-    section{margin-top:26px;page-break-inside:avoid;}
-    .apex,.screen-bar,.stat,.answer,.callout,.kpi,.mod,.tool,.screen{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  }
+:root{
+  --n0:#060F1C;--n1:#0B1C30;--n2:#0F2540;--n3:#163050;--n4:#1E3D62;
+  --w:#fff;--w2:rgba(255,255,255,.85);--w3:rgba(255,255,255,.55);--w4:rgba(255,255,255,.25);--w5:rgba(255,255,255,.08);
+  --f:'Montserrat',sans-serif;--amber:#E8C07A;--danger:#E07A6A;--ok:#8FB8E8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--n1);color:var(--w);font-family:var(--f);font-size:15px;font-weight:300;line-height:1.5;min-height:100%}
+a{color:inherit}
+button,select,input,textarea{font-family:var(--f)}
+.topbar{height:34px;background:var(--n0);border-bottom:1px solid var(--w5);display:flex;align-items:center;justify-content:flex-end;gap:18px;padding:0 4%;font-size:10.5px;letter-spacing:.08em;color:var(--w3);font-weight:500}
+.topbar a{color:var(--w3);text-decoration:none}
+nav{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 4%;border-bottom:1px solid var(--w5);background:rgba(6,15,28,.97);position:sticky;top:0;z-index:20}
+.logo{display:flex;align-items:baseline;text-decoration:none}
+.lp{font-weight:300;letter-spacing:.22em;text-transform:uppercase;font-size:15px}
+.ls{color:var(--w4);margin:0 4px;font-size:15px}
+.lc{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:15px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{background:transparent;border:1px solid transparent;color:var(--w3);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;border-radius:1px;cursor:pointer}
+.tabs button.on,.tabs button:hover{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.06)}
+.who{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);font-weight:600}
+main{padding:28px 4% 64px;max-width:1280px;margin:0 auto}
+.view{display:none}
+.view.on{display:block}
+.kicker{display:flex;align-items:center;gap:10px;font-size:10px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--w3);margin-bottom:12px}
+.kicker:before{content:"";width:28px;height:1px;background:var(--w4)}
+h1{font-size:clamp(22px,3vw,34px);font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:.97;margin-bottom:8px}
+h1 em{font-style:normal;display:block;color:var(--w2)}
+.sub{color:var(--w3);font-weight:300;max-width:640px;margin-bottom:28px;line-height:1.7}
+.row{display:grid;gap:10px;margin-bottom:16px}
+.row.k4{grid-template-columns:repeat(4,1fr)}
+.row.k5{grid-template-columns:repeat(5,1fr)}
+.kpi{background:var(--n0);border:1px solid var(--w5);padding:16px 16px;border-radius:1px}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.kpi .l{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--w3);margin-top:6px}
+.kpi.warn .v{color:var(--amber)}
+.kpi.bad .v{color:var(--danger)}
+.band{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);margin:18px 0 10px}
+.cols{display:grid;gap:10px}
+.cols.c4{grid-template-columns:repeat(4,1fr)}
+.cols.c6{grid-template-columns:repeat(6,1fr)}
+.col h3{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--w3);font-weight:700;margin-bottom:8px}
+.card{border:1px solid var(--w5);background:var(--n2);padding:10px 12px;border-radius:1px;margin-bottom:8px;cursor:pointer}
+.card:hover{border-color:var(--w4)}
+.card .t{font-weight:700;font-size:13px}
+.card .m{font-size:11px;color:var(--w3);margin-top:3px}
+.card.red{border-color:rgba(224,122,106,.45);background:rgba(224,122,106,.1)}
+.card.amber{border-color:rgba(232,192,122,.35);background:rgba(232,192,122,.08)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--w3);font-weight:700;padding:8px 8px 8px 0;border-bottom:1px solid var(--w4)}
+td{padding:10px 8px 10px 0;border-bottom:1px solid var(--w5);vertical-align:top;font-weight:400;color:var(--w2)}
+.tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--w5);padding:3px 8px;border-radius:1px;color:var(--w3)}
+.road{display:grid;grid-template-columns:360px 1fr;gap:32px;align-items:start}
+.phone{border:1px solid var(--w4);background:var(--n0);border-radius:2px;overflow:hidden;max-width:360px}
+.pbar{background:var(--n0);border-bottom:1px solid var(--w5);padding:12px 14px;display:flex;justify-content:space-between;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.pbody{padding:14px}
+.btn{display:block;width:100%;text-align:center;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:12px 8px;margin-bottom:6px;border-radius:1px;border:1px solid var(--w5);background:transparent;color:var(--w3);cursor:pointer}
+.btn.pri{background:var(--w);color:var(--n0);border-color:transparent}
+.btn.sm{display:inline-block;width:auto;padding:6px 10px;margin:6px 6px 0 0;font-size:9px}
+.panel{background:var(--n2);border:1px solid var(--w5);padding:18px;border-radius:1px}
+label{display:block;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);margin:12px 0 6px}
+input,select,textarea{width:100%;background:var(--n0);border:1px solid var(--w5);color:var(--w);padding:10px 12px;border-radius:1px;font-size:13px}
+textarea{min-height:72px;resize:vertical}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--w);color:var(--n0);padding:12px 18px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:1px;display:none;z-index:50}
+.toast.on{display:block}
+.empty{color:var(--w4);font-size:12px;padding:8px 0}
+@media(max-width:900px){
+  .row.k4,.row.k5,.cols.c4,.cols.c6,.road{grid-template-columns:1fr}
+  .tabs{display:none}
+  .mtabs{display:flex;overflow-x:auto;gap:4px;padding:8px 4%;border-bottom:1px solid var(--w5)}
+}
+@media(min-width:901px){.mtabs{display:none}}
 </style>
 </head>
 <body>
 <div class="topbar">
   <a href="https://www.padel-craft.com/">padel-craft.com</a>
-  <span>Internal OS · Island of Ireland</span>
+  <span>Internal OS · v0.1 prototype</span>
 </div>
-<div class="wrap">
+<nav>
+  <a class="logo" href="#"><span class="lp">Padel</span><span class="ls">·</span><span class="lc">Craft</span></a>
+  <div class="tabs" id="tabs"></div>
+  <div class="who">Founder A · on the road</div>
+</nav>
+<div class="mtabs" id="mtabs"></div>
+<main>
+  <section class="view on" id="v-road"></section>
+  <section class="view" id="v-command"></section>
+  <section class="view" id="v-tenders"></section>
+  <section class="view" id="v-blockers"></section>
+  <section class="view" id="v-install"></section>
+  <section class="view" id="v-forecast"></section>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const VIEWS = [
+  ["road","Road"],
+  ["command","Command"],
+  ["tenders","Tenders"],
+  ["blockers","Blockers"],
+  ["install","Install 90"],
+  ["forecast","Forecast"]
+];
 
-<header class="masthead">
-  <a class="logo" href="https://www.padel-craft.com/" aria-label="Padel-Craft">
-    <span class="lp">Padel</span><span class="ls">·</span><span class="lc">Craft</span>
-  </a>
-  <p class="eyebrow">Internal operating system</p>
-  <h1>A founder Command<em>that runs tenders, installs, and the forecast</em></h1>
-  <p class="subtitle">Primary audience: the two principals. Ten minutes to see what sold, what will sell, which tenders need a document, which installs are unresourced, and which blockers need a founder today.</p>
-  <div class="meta-row">
-    <span>Companion to the 90 day plan and sales OS</span>
-    <span>Working blueprint &nbsp;·&nbsp; August 2026</span>
-  </div>
-</header>
+const state = {
+  sold: { lastQ: 18, lastWeek: 2, thisWeek: 1, projectedQ: 9 },
+  forecast: { nextQ: 14, y12: 52, backlog: 48, undated: 6 },
+  nextSite: { t: "Club B · visit 14:00", m: "Direct · 2 courts · next stop" },
+  calls: [
+    { t: "Leisure C · Aoife", m: "Inbound 09:12 · call back on price", cls: "amber" },
+    { t: "Operator A · site 3", m: "Follow up today · proposal", cls: "" }
+  ],
+  blockers: [
+    { id: 1, t: "Council RFT · bid/no-bid", m: "Tender · closes in 9 days · Founder A", type: "Tender", sev: "Red", status: "Open", founder: true },
+    { id: 2, t: "Site X unpaid install?", m: "Cash · override? · Founder B", type: "Cash", sev: "Red", status: "Open", founder: true },
+    { id: 3, t: "MANZA not ordered · Site X", m: "Material · due Fri · Michael", type: "Material", sev: "Red", status: "Open", founder: false },
+    { id: 4, t: "Crew partial · week 38", m: "Crew · flex Paul?", type: "Crew", sev: "Amber", status: "Open", founder: false },
+    { id: 5, t: "Club D undated close", m: "Date Expected close or park", type: "Sales", sev: "Amber", status: "Open", founder: true }
+  ],
+  tenders: {
+    "Initial contact": [{ t: "County leisure · 6", m: "Portal notice · qualify this week" }],
+    "Qualifying": [{ t: "Hotel group · 4", m: "Site + budget · visit Wed" }],
+    "Bid / no-bid": [{ t: "Council framework", m: "Closes 9 days · Founder A", cls: "red" }],
+    "Initial document out": [{ t: "Local authority · 8", m: "Pack due Thu · Carys", cls: "amber" }],
+    "Secondary document out": [{ t: "Leisure chain · 12", m: "BAFO due 22 Sep · Founder B" }],
+    "Award": [{ t: "Won → Verbal then Booked", m: "Lost keeps the pack" }]
+  },
+  installs: [
+    ["36","Club H",2,"Install","Covered · Michael + 2","On site","—"],
+    ["37","Hotel F",1,"Coordination","Covered · Paul flex","Ordered · ETA W36","—"],
+    ["38","Site X",2,"Coordination","Partial · 1 of 3","Not ordered","Red · kit + crew"],
+    ["40","Club G",2,"Procurement","Unassigned","Ordered","Red · deposit"],
+    ["42–43","Operator A site 2",4,"Pre-contract","Unassigned","Not ordered","Amber · window TBC"]
+  ],
+  pipeline: [
+    ["Operator A site 3","Direct","Proposal",4,"40%","1.6","This Q"],
+    ["Hotel F","Direct","Verbal",1,"70%","0.7","This Q"],
+    ["Local authority","Tender","Initial document out",8,"25%","2.0","Next Q"],
+    ["Leisure chain","Tender","Secondary document out",12,"45%","5.4","Next Q"],
+    ["Club D","Direct","Proposal",4,"40%","—","Undated · leak"]
+  ],
+  form: { account: "", kind: "Client inbound", said: "", raise: false }
+};
 
-<div class="apex">
-  <p class="lbl">The governing point</p>
-  <p>The two founders live in the van and on the phone. The OS has to work <strong>between sites</strong>: log the call they just took, take the client update, triage the sales blocker, see the next site — in seconds, not at a desk. Monday Command still holds the quarter. The phone holds the day.</p>
-</div>
+function el(id){ return document.getElementById(id); }
+function toast(msg){ const t=el("toast"); t.textContent=msg; t.classList.add("on"); setTimeout(()=>t.classList.remove("on"),2200); }
+function cards(list){ return list.length ? list.map(c=>`<div class="card ${c.cls||""}"><div class="t">${c.t}</div><div class="m">${c.m}</div></div>`).join("") : `<div class="empty">None</div>`; }
 
-<!-- 01 -->
-<section id="what">
-  <p class="kicker"><span class="num">01</span> &nbsp; What this OS is</p>
-  <h2>Five desk modules. One phone. The phone is the workstation.</h2>
-  <p class="lead">The intern still sources and qualifies. Michael still delivers. Carys still chases cash. Founders are between sites most of the day — inbound calls, client updates, sales blockers. Desk Command is Monday and the rare sit-down. Everything else is a three-card phone strip plus a 20-second log form.</p>
+function renderNav(){
+  const html = VIEWS.map(([id,l])=>`<button data-v="${id}">${l}</button>`).join("");
+  el("tabs").innerHTML = html;
+  el("mtabs").innerHTML = html;
+  document.querySelectorAll(".tabs button, .mtabs button").forEach(b=>{
+    b.onclick = ()=>show(b.dataset.v);
+  });
+}
+function show(id){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+  el("v-"+id).classList.add("on");
+  document.querySelectorAll(".tabs button, .mtabs button").forEach(b=>b.classList.toggle("on", b.dataset.v===id));
+  window.scrollTo(0,0);
+}
 
-  <div class="stats">
-    <div class="stat"><div class="n">2</div><div class="l">founders, mostly moving; the OS must work in a car park</div></div>
-    <div class="stat"><div class="n">20 sec</div><div class="l">to log a call or client update before the next site</div></div>
-    <div class="stat"><div class="n">3</div><div class="l">phone cards: next site, calls to return, my red blockers</div></div>
-    <div class="stat"><div class="n">10 min</div><div class="l">desk Command once a week — not every morning</div></div>
-  </div>
+function myRed(){ return state.blockers.filter(b=>b.status==="Open" && b.sev==="Red" && b.founder); }
+function openBlockers(){ return state.blockers.filter(b=>b.status!=="Cleared"); }
 
-  <div class="mod-strip">
-    <div class="mod"><div class="tag">00 Road</div><h3>Between sites</h3><p>Phone strip: next site, calls to return, red blockers they own. Log inbound, log update, raise blocker. WhatsApp is not the record.</p></div>
-    <div class="mod"><div class="tag">01 Sold</div><h3>Courts booked</h3><p>Last quarter, last week, this week, projected this quarter. Actuals from Booked date; projection from weighted pipeline.</p></div>
-    <div class="mod"><div class="tag">02 Forecast</div><h3>Next Q and 12 months</h3><p>Weighted courts from live opportunities. Undated close dates are a leak, not silently included.</p></div>
-    <div class="mod"><div class="tag">03 Tenders</div><h3>Document path</h3><p>Initial contact → qualify → initial document out → secondary document out. Deadlines on the record.</p></div>
-    <div class="mod"><div class="tag">04–05</div><h3>Blockers · Install 90</h3><p>Triage on the phone. Full 90-day crew and kit board when they sit down, or when a red card demands it.</p></div>
-  </div>
-
-  <div class="cols" style="margin-top:22px;">
-    <div class="tool">
-      <div class="tag">In</div>
-      <h3>The OS does</h3>
-      <p>Give founders a phone they can run between sites, and a Monday Command for the quarter. Capture every founder call and client update on the record. Progress tenders through two document gates. Surface blockers with an owner. Show install load, crew, and materials for 90 days. Translate the pipeline into a forecast.</p>
-    </div>
-    <div class="tool">
-      <div class="tag">Out</div>
-      <h3>The OS does not</h3>
-      <p>Replace Xero, run VAT, source leads for the founders, auto-close deals, or become a chief-of-staff company OS. Academy and tours stay off this spine.</p>
-    </div>
-  </div>
-</section>
-
-<!-- 02 -->
-<section id="stack">
-  <p class="kicker"><span class="num">02</span> &nbsp; Stack and anti-goals</p>
-  <h2>Buy the ledger, compose the OS, build only the agent</h2>
-  <div class="answer">
-    <p>Do not start a custom app. IT-immature teams fail on auth, backups, and the intern becoming a bottleneck. Founders live on the phone. The record is Airtable. Xero is for when they sit down. WhatsApp and voicemail are capture, never the system of record.</p>
-  </div>
-
-  <table class="data">
-    <thead><tr><th>Layer</th><th>Choice</th><th>Job</th><th>Not this</th></tr></thead>
-    <tbody>
-      <tr><td><b>System of record</b></td><td>Airtable (one base)</td><td>Ten tables, founder Command plus drill-downs. Intern can schema without a repo. Baserow is the later self-host exit.</td><td>Salesforce, HubSpot enterprise, a second spreadsheet per function</td></tr>
-      <tr><td><b>Command dashboard</b></td><td>Airtable Interfaces</td><td>Desk: sold, forecast, tenders, 90-day installs. Phone: Between-sites strip.</td><td>A custom mobile app</td></tr>
-      <tr><td><b>On-the-road capture</b></td><td>Airtable form on the home screen</td><td>Log call / client update / raise blocker in 20 seconds. Optional: voice note to a Carys/intern WhatsApp inbox they type into the same form</td><td>Leaving it in chat, or a native app</td></tr>
-      <tr><td><b>Notify</b></td><td>Airtable notification or SMS on Red blocker assigned to a founder</td><td>Only Red + Founder action, and “your site in 90 minutes”. Not intern outreach</td><td>A Slack rollout, or pinging founders for every Activity row</td></tr>
-      <tr><td><b>Money</b></td><td>Xero</td><td>Invoices, VAT, bank rec. Airtable stores commercial <i>status</i> and the Xero invoice number</td><td>Custom invoicing, job-costing, or treating Airtable as the ledger</td></tr>
-      <tr><td><b>Files / tenders</b></td><td>Google Drive</td><td>One folder per opportunity and per project. Link on the record</td><td>Attachments scattered in WhatsApp</td></tr>
-      <tr><td><b>Outreach agent</b></td><td>Intern-built scripts</td><td>Writes Activity rows against high-headroom Accounts. Stops at Conversation</td><td>AI that “runs sales” or auto-creates Booked</td></tr>
-      <tr><td><b>Field</b></td><td>Phone camera → Drive</td><td>Quality photos on Complete. Status stays in Airtable</td><td>A mobile installer app</td></tr>
-      <tr><td><b>Calendar / mail</b></td><td>Google Workspace</td><td>Site visits and proposal dates on the Opportunity</td><td>A new inbox or project tool as a system of record</td></tr>
-    </tbody>
-  </table>
-  <p class="legend">Cost target: tens of euros per user per month. Graduate to a thin read-model UI only if Interfaces fail the weekly meeting after eight weeks of logged data. That UI reads Airtable and Xero. It is not a second CRM.</p>
-
-  <h3>Locked anti-goals</h3>
-  <ul class="tight">
-    <li>Full Salesforce / HubSpot with a consultant</li>
-    <li>Custom invoicing, VAT, or job-costing</li>
-    <li>Custom mobile app or installer app</li>
-    <li>WhatsApp groups as the sales or install record</li>
-    <li>AI that runs sales or emails founders unstructured names</li>
-    <li>Sheets + Trello + WhatsApp as parallel systems of record</li>
-    <li>Chief of staff “company OS” before the ops lead and intern are live</li>
-    <li>Academy, tours, showroom tenancy, or US multi-entity modules in this spine</li>
-  </ul>
-</section>
-
-<!-- 03 -->
-<section id="spine">
-  <p class="kicker"><span class="num">03</span> &nbsp; Information architecture</p>
-  <h2>Account is the parent. Forecast, blockers, crew, and kit hang off the same deals</h2>
-  <p>Penetration still ranks outreach. For founders, the useful objects are: what is booked, what is weighted to book, which tender document is next, which blocker is red, and whether the next 90 days of installs have people and materials.</p>
-
-  <div class="spine">
-    <div class="spine-node a">
-      <div class="sn">01</div>
-      <h4>Account</h4>
-      <p>Who they are. Capacity vs deployed. Priority falls out of headroom.</p>
-    </div>
-    <div class="spine-node b">
-      <div class="sn">02</div>
-      <h4>Opportunity</h4>
-      <p>Direct close or tender document path. Booked date and win weight feed the forecast.</p>
-    </div>
-    <div class="spine-node c">
-      <div class="sn">03</div>
-      <h4>Project</h4>
-      <p>Install window, crew coverage, material lines. The 90-day board.</p>
-    </div>
-    <div class="spine-node d">
-      <div class="sn">04</div>
-      <h4>Blocker</h4>
-      <p>One triage list. Tender, install, kit, crew, cash. Founder action flag.</p>
-    </div>
-    <div class="spine-node e">
-      <div class="sn">05</div>
-      <h4>Invoice / maintain</h4>
-      <p>Xero chase and aftercare. Cash blockers land on Command.</p>
-    </div>
-  </div>
-  <p class="legend">CrewMember, CrewAssignment, and MaterialLine are child tables of Project. Activity is intern outreach <i>and</i> the founder road log. WeeklyScorecard is Monday only.</p>
-
-  <div class="funnel">
-    <div class="fn-row head"><div>Stage</div><div>Per week</div><div>Relative volume</div><div>Owner</div></div>
-    <div class="fn-row"><div>Outreach</div><div>200</div><div><div class="fn-bar" style="width:100%"></div></div><div><span class="own o-lg">Lead generation</span></div></div>
-    <div class="fn-row"><div>Conversations</div><div>20</div><div><div class="fn-bar" style="width:42%"></div></div><div><span class="own o-lg">Lead generation</span></div></div>
-    <div class="fn-row"><div>Qualified</div><div>6</div><div><div class="fn-bar" style="width:24%"></div></div><div><span class="own o-lg">Lead generation</span></div></div>
-    <div class="handoff"><div class="line"></div>handoff pack required before founders see the record<div class="line"></div></div>
-    <div class="fn-row"><div>Site visit</div><div>3.6</div><div><div class="fn-bar" style="width:18%;background:var(--people)"></div></div><div><span class="own o-fd">Founders + Michael</span></div></div>
-    <div class="fn-row"><div>Proposal / tender</div><div>2.9</div><div><div class="fn-bar" style="width:14%;background:var(--people)"></div></div><div><span class="own o-fd">Founders</span></div></div>
-    <div class="fn-row"><div>Verbal</div><div>1.3</div><div><div class="fn-bar" style="width:8%;background:var(--people)"></div></div><div><span class="own o-fd">Founders</span></div></div>
-    <div class="fn-row"><div>Booked</div><div>0.9</div><div><div class="fn-bar" style="width:5%;background:var(--people)"></div></div><div><span class="own o-fd">Founders</span></div></div>
-    <div class="handoff"><div class="line"></div>Booked creates Project + deposit invoice event → Michael<div class="line"></div></div>
-  </div>
-  <p class="legend">Opening benchmarks from the sales OS. Recalibrate from logged data after eight weeks. Pace line for Command: 60 today → 70 booked by December 2026 → 180 by December 2027. The operating model’s 150-court figure is an install/output horizon; do not run two targets on the scorecard.</p>
-</section>
-
-<!-- 04 schema -->
-<section id="schema">
-  <p class="kicker"><span class="num">04</span> &nbsp; Schema the intern stands up</p>
-  <h2>Ten tables, field types, and who fills them</h2>
-  <p>One Airtable base named <b>Padel-Craft OS</b>. Sheet equivalent for weeks 1–2: one Google Sheet, ten tabs, same column names. Formula columns can wait until Airtable. <span class="own o-lg">Intern</span> owns schema and Demand. Do not add fields without a named owner who will fill them weekly.</p>
-
-  <h3>Table 1 — Account <span class="own o-lg">intern populates</span> <span class="own o-fd">founder owns key accounts</span></h3>
-  <p>The penetration engine. Outreach queues and the Command attack list sort here.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options / formula</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Name</code></td><td>Single line</td><td>Legal or trading name</td><td class="req">Yes</td></tr>
-      <tr><td><code>Type</code></td><td>Single select</td><td>Club · Multi-site operator · Leisure chain · Public / local authority · Hotel / resort · Other</td><td class="req">Yes</td></tr>
-      <tr><td><code>Sites</code></td><td>Long text</td><td>Site names and towns, one per line</td><td class="opt">If multi-site</td></tr>
-      <tr><td><code>Capacity courts</code></td><td>Number</td><td>Ultimate court count the site(s) could hold</td><td class="req">Yes</td></tr>
-      <tr><td><code>Deployed courts</code></td><td>Number</td><td>Courts already in the ground, any supplier</td><td class="req">Yes, default 0</td></tr>
-      <tr><td><code>Padel-Craft deployed</code></td><td>Number</td><td>Our courts only. Feeds repeat-purchase</td><td class="req">Yes, default 0</td></tr>
-      <tr><td><code>Penetration %</code></td><td>Formula</td><td><code>IF(Capacity, Deployed / Capacity, BLANK())</code></td><td class="opt">Computed</td></tr>
-      <tr><td><code>Headroom</code></td><td>Formula</td><td><code>Capacity − Deployed</code></td><td class="opt">Computed</td></tr>
-      <tr><td><code>Priority</code></td><td>Formula</td><td>High if Headroom ≥ 8 or (Capacity ≥ 8 and Penetration &lt; 25%). Medium if Headroom ≥ 3. Else Low</td><td class="opt">Computed</td></tr>
-      <tr><td><code>Owner</code></td><td>Single select</td><td>Founder A · Founder B · Unassigned</td><td class="opt">Key accounts only</td></tr>
-      <tr><td><code>Repeat purchase</code></td><td>Checkbox</td><td>True if they bought a second court from us</td><td class="opt">Set on win</td></tr>
-      <tr><td><code>Reference willing</code></td><td>Checkbox</td><td>US proof set</td><td class="opt">After Complete</td></tr>
-      <tr><td><code>Last install quality</code></td><td>Single select</td><td>High · Medium · Low · Not yet installed</td><td class="opt">After Complete</td></tr>
-      <tr><td><code>Drive folder</code></td><td>URL</td><td>Account root in Drive</td><td class="opt">When first touched</td></tr>
-      <tr><td><code>Notes</code></td><td>Long text</td><td></td><td class="opt">—</td></tr>
-    </tbody>
-  </table>
-  <div class="callout"><p>Priority is data, not memory. Intern outreach and founder site visits both open sorted by Priority then Headroom descending.</p></div>
-
-  <h3>Table 2 — Opportunity <span class="own o-lg">intern to Qualified</span> <span class="own o-fd">founders after handoff</span></h3>
-  <p>Pipeline register A. One opportunity = one site motion. Path splits Direct vs Tender on the same record; do not duplicate tables.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options / formula</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr class="grp"><td colspan="4">Core</td></tr>
-      <tr><td><code>Opportunity ID</code></td><td>Autonumber</td><td>Prefix OPC-</td><td class="req">Yes</td></tr>
-      <tr><td><code>Account</code></td><td>Link → Account</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Site / location</code></td><td>Single line</td><td>The specific site for this deal</td><td class="req">Yes at Qualified</td></tr>
-      <tr><td><code>Contact name</code></td><td>Single line</td><td></td><td class="req">Yes at Qualified</td></tr>
-      <tr><td><code>Contact email</code></td><td>Email</td><td></td><td class="req">Yes at Qualified</td></tr>
-      <tr><td><code>Contact phone</code></td><td>Phone</td><td></td><td class="opt">—</td></tr>
-      <tr><td><code>Courts (n)</code></td><td>Number</td><td></td><td class="req">Yes at Qualified</td></tr>
-      <tr><td><code>Model</code></td><td>Single select</td><td>Indoor · Outdoor · Panoramic · Other</td><td class="opt">By proposal</td></tr>
-      <tr><td><code>Est. value</code></td><td>Currency EUR</td><td></td><td class="opt">By proposal</td></tr>
-      <tr><td><code>Stage</code></td><td>Single select</td><td>Outreach · Conversation · Qualified · Site visit · Proposal/Tender · Verbal · Booked · Lost · Parked</td><td class="req">Yes</td></tr>
-      <tr><td><code>Path</code></td><td>Single select</td><td>Direct · Tender/procurement</td><td class="req">Yes from Qualified</td></tr>
-      <tr><td><code>Probability</code></td><td>Single select</td><td>Low · Medium · High — bands only until week 8 data</td><td class="opt">After Site visit</td></tr>
-      <tr><td><code>Stage entered</code></td><td>Date</td><td>Set on every stage change</td><td class="req">Yes</td></tr>
-      <tr><td><code>Days in stage</code></td><td>Formula</td><td><code>DATETIME_DIFF(TODAY(), {Stage entered}, 'days')</code></td><td class="opt">Computed</td></tr>
-      <tr><td><code>Stuck?</code></td><td>Formula</td><td>True if Days in stage &gt; 14 and Stage not in Booked, Lost, Parked</td><td class="opt">Computed</td></tr>
-      <tr><td><code>Next action</code></td><td>Single line</td><td>Verb + object. Not a status</td><td class="req">Yes if live</td></tr>
-      <tr><td><code>Next action date</code></td><td>Date</td><td></td><td class="req">Yes if live</td></tr>
-      <tr><td><code>Owner</code></td><td>Single select</td><td>Intern · Founder A · Founder B · Michael · Carys</td><td class="req">Yes</td></tr>
-      <tr><td><code>Expected close</code></td><td>Date</td><td>Required for forecast. Blank = undated leak on Command</td><td class="req">From Site visit / Qualifying</td></tr>
-      <tr><td><code>Booked date</code></td><td>Date</td><td>Set when Stage becomes Booked. Feeds last week / this week / last quarter</td><td class="req">On Booked</td></tr>
-      <tr><td><code>Win weight</code></td><td>Percent</td><td>Default from stage table below. Founder may override</td><td class="req">From Qualified</td></tr>
-      <tr><td><code>Weighted courts</code></td><td>Formula</td><td><code>Courts × Win weight</code></td><td class="opt">Computed</td></tr>
-      <tr><td><code>Weighted value</code></td><td>Formula</td><td><code>Est. value × Win weight</code></td><td class="opt">Computed</td></tr>
-      <tr><td><code>Drive folder</code></td><td>URL</td><td>Child of Account folder</td><td class="req">Yes at Qualified</td></tr>
-      <tr><td><code>Notes</code></td><td>Long text</td><td></td><td class="opt">—</td></tr>
-      <tr class="grp"><td colspan="4">Handoff pack — intern must complete before Stage = Qualified is visible to founders</td></tr>
-      <tr><td><code>Handoff ready</code></td><td>Checkbox</td><td>Blocks Close interface until checked</td><td class="req">To enter Qualified</td></tr>
-      <tr><td><code>Real site?</code></td><td>Checkbox</td><td>Identified location, not a fishing enquiry</td><td class="req">Handoff</td></tr>
-      <tr><td><code>Budget?</code></td><td>Checkbox</td><td>Budget exists or a path to one</td><td class="req">Handoff</td></tr>
-      <tr><td><code>Intent?</code></td><td>Checkbox</td><td>Decision in this planning cycle</td><td class="req">Handoff</td></tr>
-      <tr><td><code>Why qualified</code></td><td>Long text</td><td>Two to four sentences. Not “keen”</td><td class="req">Handoff</td></tr>
-      <tr><td><code>Suggested visit window</code></td><td>Single line</td><td>e.g. week of 8 Sep, Tue/Thu mornings</td><td class="req">Handoff</td></tr>
-      <tr class="grp"><td colspan="4">Tender / procurement — Path = Tender. Founder-facing document path, not a generic proposal column</td></tr>
-      <tr><td><code>Tender stage</code></td><td>Single select</td><td>Initial contact · Qualifying · Bid/no-bid · Initial document out · Secondary document out · Award pending · Won · Lost · No-bid</td><td class="req">If tender</td></tr>
-      <tr><td><code>Buyer</code></td><td>Single line</td><td>Contracting authority if different from Account</td><td class="req">If tender</td></tr>
-      <tr><td><code>Portal</code></td><td>Single select</td><td>eTenders · Private RFT · Framework · Other</td><td class="req">If tender</td></tr>
-      <tr><td><code>Closing datetime</code></td><td>Date &amp; time</td><td>Final submission / award clock. Empty = leak</td><td class="req">From Qualifying</td></tr>
-      <tr><td><code>Bid / no-bid</code></td><td>Single select</td><td>Pending · Bid · No-bid</td><td class="req">Founder, before any pack is drafted</td></tr>
-      <tr><td><code>Initial pack due</code></td><td>Date</td><td>First tender document out</td><td class="req">If Bid</td></tr>
-      <tr><td><code>Initial pack sent</code></td><td>Date</td><td>Blank until Drive pack is actually issued</td><td class="req">To leave Initial document out</td></tr>
-      <tr><td><code>Secondary pack due</code></td><td>Date</td><td>BAFO / stage-2 / revised pack. Blank if single-stage</td><td class="opt">When buyer issues stage 2</td></tr>
-      <tr><td><code>Secondary pack sent</code></td><td>Date</td><td></td><td class="req">If secondary due</td></tr>
-      <tr><td><code>Next tender deadline</code></td><td>Formula</td><td>Earliest of: pack dues still unsent, then Closing datetime</td><td class="opt">Computed</td></tr>
-      <tr><td><code>Pack owner</code></td><td>Single select</td><td>Founder A · Founder B · Carys</td><td class="req">If Bid</td></tr>
-      <tr><td><code>Clarification dates</code></td><td>Long text</td><td>Dates and questions</td><td class="opt">—</td></tr>
-      <tr><td><code>Tender outcome</code></td><td>Single select</td><td>Pending · Won · Lost · Withdrawn</td><td class="opt">On award</td></tr>
-    </tbody>
-  </table>
-  <div class="warn"><p><b>Close filter.</b> Founder Close view shows only records where Stage is Qualified or later <i>and</i> Handoff ready is checked. Intern never passes a name on WhatsApp.</p></div>
-
-  <h3>Table 3 — Activity <span class="own o-lg">intern outreach</span> <span class="own o-fd">founder calls and client updates</span></h3>
-  <p>One table, two jobs. Intern/agent rows are Kind = Outreach. Founder rows are the between-sites log: inbound calls, outbound callbacks, client updates from the road. If it happened on the phone and changed a deal, it is a row here before they start the engine.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options / formula</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Date</code></td><td>Date &amp; time</td><td>Default now</td><td class="req">Yes</td></tr>
-      <tr><td><code>Kind</code></td><td>Single select</td><td>Outreach · Founder call · Client inbound · Site update</td><td class="req">Yes</td></tr>
-      <tr><td><code>Direction</code></td><td>Single select</td><td>In · Out · n/a</td><td class="req">If a call</td></tr>
-      <tr><td><code>Logged by</code></td><td>Single select</td><td>Intern · Founder A · Founder B · Michael · Carys</td><td class="req">Yes</td></tr>
-      <tr><td><code>Account</code></td><td>Link → Account</td><td>Type-ahead on the phone form</td><td class="req">Yes</td></tr>
-      <tr><td><code>Contact</code></td><td>Single line</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Channel</code></td><td>Single select</td><td>Phone · WhatsApp · Email · LinkedIn · In person · Other</td><td class="req">Yes</td></tr>
-      <tr><td><code>Outcome</code></td><td>Single select</td><td>Outreach: Sent · No reply · Conversation · Not a fit · Qualified created · Bounce. Road: Connected · Voicemail · Call back · Update logged · Blocker raised · Visit moved · Verbal</td><td class="req">Yes</td></tr>
-      <tr><td><code>What they said</code></td><td>Long text</td><td>Two sentences max. The phone form is this field plus Account</td><td class="req">If Kind ≠ Outreach</td></tr>
-      <tr><td><code>Follow up date</code></td><td>Date</td><td>Feeds Calls to return on the phone strip</td><td class="opt">If Call back or Connected</td></tr>
-      <tr><td><code>Raise blocker?</code></td><td>Checkbox</td><td>If true, create Blocker (Type Sales/Tender/Install from a second select)</td><td class="opt">—</td></tr>
-      <tr><td><code>Blocker</code></td><td>Link → Blocker</td><td></td><td class="req">If raised</td></tr>
-      <tr><td><code>Opportunity</code></td><td>Link → Opportunity</td><td></td><td class="req">If converted or a live deal</td></tr>
-      <tr><td><code>Project</code></td><td>Link → Project</td><td>Site update on a live install</td><td class="opt">Site update</td></tr>
-    </tbody>
-  </table>
-  <div class="callout"><p><b>Phone form (home screen).</b> Four fields only: Account (search), Kind (call in / call out / client update), What they said, Raise blocker? Everything else defaults: now, this founder, Channel = Phone. If they cannot search Account while driving, they send a voice note to the OS inbox (Carys or intern) who submits the same form. The founder does not “catch up on Friday.”</p></div>
-
-  <h3>Table 4 — WeeklyScorecard <span class="own o-fd">founders read</span> <span class="own o-ca">Carys or intern fills Friday</span></h3>
-  <p>One row per ISO week. Roll up from Activity and Opportunity; paste counts until automations exist.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Weekly target (provisional)</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Week starting</code></td><td>Date</td><td>Monday</td><td class="req">Yes</td></tr>
-      <tr><td><code>Outreach</code></td><td>Number</td><td>200</td><td class="req">Yes</td></tr>
-      <tr><td><code>Conversations</code></td><td>Number</td><td>20</td><td class="req">Yes</td></tr>
-      <tr><td><code>Qualified created</code></td><td>Number</td><td>6</td><td class="req">Yes</td></tr>
-      <tr><td><code>Site visits</code></td><td>Number</td><td>3.6 → round to 4 booked visits</td><td class="req">Yes</td></tr>
-      <tr><td><code>Proposals issued</code></td><td>Number</td><td>2.9 → round to 3</td><td class="req">Yes</td></tr>
-      <tr><td><code>Verbals</code></td><td>Number</td><td>1.3</td><td class="req">Yes</td></tr>
-      <tr><td><code>Projects booked</code></td><td>Number</td><td>0.9</td><td class="req">Yes</td></tr>
-      <tr><td><code>Courts booked</code></td><td>Number</td><td>≈2.2 (engine year; ~0.5 through Dec 2026)</td><td class="req">Yes</td></tr>
-      <tr><td><code>Cumulative courts</code></td><td>Number</td><td>Running total vs 180</td><td class="req">Yes</td></tr>
-      <tr><td><code>Pace vs 180</code></td><td>Single select</td><td>Ahead · On · Behind</td><td class="req">Yes</td></tr>
-      <tr><td><code>Red flags</code></td><td>Long text</td><td>Stuck deals, WIP breach, unpaid deposits</td><td class="opt">If any</td></tr>
-      <tr><td><code>Courts last week</code></td><td>Number</td><td>From Booked date rollup — paste until formula exists</td><td class="req">Yes</td></tr>
-      <tr><td><code>Weighted next 12 mo</code></td><td>Number</td><td>Friday snapshot of forecast, for the meeting archive</td><td class="req">Yes</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Table 5 — Project <span class="own o-mi">Michael</span></h3>
-  <p>Live projects tracker D. Created when Opportunity Stage becomes Booked. First use is the 60 sold / 12 installed gap.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options / formula</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Project</code></td><td>Autonumber / name</td><td>Account + site + courts</td><td class="req">Yes</td></tr>
-      <tr><td><code>Account</code></td><td>Link → Account</td><td>Lookup from Opportunity</td><td class="req">Yes</td></tr>
-      <tr><td><code>Opportunity</code></td><td>Link → Opportunity</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Courts</code></td><td>Number</td><td>Lookup</td><td class="req">Yes</td></tr>
-      <tr><td><code>Contract value</code></td><td>Currency EUR</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Stage</code></td><td>Single select</td><td>Pre-contract · Procurement · Coordination · Install · Complete</td><td class="req">Yes</td></tr>
-      <tr><td><code>Deposit status</code></td><td>Single select</td><td>Not invoiced · Invoiced · Partial · Paid · Overdue</td><td class="req">Yes</td></tr>
-      <tr><td><code>Groundworks status</code></td><td>Single select</td><td>Not started · Client · Contractor · Ready · Blocked</td><td class="req">From Procurement</td></tr>
-      <tr><td><code>MANZA order status</code></td><td>Single select</td><td>Not ordered · Ordered · Confirmed · Shipped · On site · Issue</td><td class="req">From Procurement</td></tr>
-      <tr><td><code>Delivery date</code></td><td>Date</td><td></td><td class="opt">When known</td></tr>
-      <tr><td><code>Install window start</code></td><td>Date</td><td></td><td class="opt">From Coordination</td></tr>
-      <tr><td><code>Install window end</code></td><td>Date</td><td></td><td class="opt">From Coordination</td></tr>
-      <tr><td><code>In next 90 days?</code></td><td>Formula</td><td>True if window overlaps today → today+90 and Stage ≠ Complete</td><td class="opt">Computed</td></tr>
-      <tr><td><code>Crew lead</code></td><td>Link → CrewMember</td><td>Usually Michael or Paul</td><td class="req">14 days before window</td></tr>
-      <tr><td><code>Crew days needed</code></td><td>Number</td><td>Headcount × days on site</td><td class="req">From Coordination</td></tr>
-      <tr><td><code>Crew days assigned</code></td><td>Rollup</td><td>Sum of CrewAssignment days</td><td class="opt">Computed</td></tr>
-      <tr><td><code>Resource status</code></td><td>Formula</td><td>Unassigned · Partial · Covered · Overbooked</td><td class="opt">Computed</td></tr>
-      <tr><td><code>Materials status</code></td><td>Formula</td><td>Worst MaterialLine status on this project</td><td class="opt">Computed</td></tr>
-      <tr><td><code>Issues / risks</code></td><td>Long text</td><td>If it needs a founder, also create a Blocker</td><td class="opt">If any</td></tr>
-      <tr><td><code>Owner</code></td><td>Single select</td><td>Default Michael</td><td class="req">Yes</td></tr>
-      <tr><td><code>Drive folder</code></td><td>URL</td><td>Project pack</td><td class="req">Yes</td></tr>
-      <tr class="grp"><td colspan="4">Quality pack — required to leave Install for Complete. US underwriter set; capture from the next install, do not retrofit</td></tr>
-      <tr><td><code>Photo set</code></td><td>Checkbox</td><td>Corners, nets, turf, lighting, snags. Files in Drive</td><td class="req">Complete</td></tr>
-      <tr><td><code>Snag list</code></td><td>Long text</td><td>Empty is allowed if none</td><td class="req">Complete</td></tr>
-      <tr><td><code>Founder sign-off</code></td><td>Checkbox</td><td>Retained founder quality gate</td><td class="req">Complete</td></tr>
-      <tr><td><code>Reference eligible</code></td><td>Checkbox</td><td>Set with founder</td><td class="opt">After sign-off</td></tr>
-    </tbody>
-  </table>
-  <div class="warn"><p><b>Install block.</b> Delivery view flags any project in Install or Coordination where Deposit status is not Paid. Michael does not start install on an unpaid deposit without a founder override note in Issues.</p></div>
-
-  <h3>Table 6 — InvoiceEvent <span class="own o-ca">Carys</span> <span class="own o-fd">founders own cash exceptions</span></h3>
-  <p>Commercial status only. The invoice itself is created in Xero. Paste the number. No Xero API in the first 90 days.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Type</code></td><td>Single select</td><td>Deposit · Milestone · Final · Retention · Maintenance</td><td class="req">Yes</td></tr>
-      <tr><td><code>Project</code></td><td>Link → Project</td><td>Blank if maintenance-only</td><td class="req">If court sale</td></tr>
-      <tr><td><code>Maintenance contract</code></td><td>Link → MaintenanceContract</td><td></td><td class="req">If Type = Maintenance</td></tr>
-      <tr><td><code>Amount</code></td><td>Currency EUR</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Due date</code></td><td>Date</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Xero invoice no.</code></td><td>Single line</td><td>Pasted from Xero</td><td class="req">Once issued</td></tr>
-      <tr><td><code>Paid?</code></td><td>Checkbox</td><td>Synced by Carys from Xero, Friday</td><td class="req">Yes</td></tr>
-      <tr><td><code>Owner</code></td><td>Single select</td><td>Default Carys</td><td class="req">Yes</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Table 7 — MaintenanceContract <span class="own o-mt">Paul</span></h3>
-  <p>Created after Project Complete, or sold into the existing installed base. Recurring monthly stream; crew doubles as install flex.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Account</code></td><td>Link → Account</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Site</code></td><td>Single line</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Project</code></td><td>Link → Project</td><td>If born from an install</td><td class="opt">—</td></tr>
-      <tr><td><code>Plan</code></td><td>Single select</td><td>Monthly · Quarterly · Ad hoc · Not on plan</td><td class="req">Yes</td></tr>
-      <tr><td><code>Monthly value</code></td><td>Currency EUR</td><td>0 if ad hoc</td><td class="req">Yes</td></tr>
-      <tr><td><code>Next visit</code></td><td>Date</td><td></td><td class="req">If on plan</td></tr>
-      <tr><td><code>Technician</code></td><td>Single select</td><td>Paul · Tech 2 · Tech 3 · Tech 4 · Unassigned</td><td class="opt">—</td></tr>
-      <tr><td><code>Flex to install this week</code></td><td>Checkbox</td><td>Peak install capacity</td><td class="opt">Weekly</td></tr>
-      <tr><td><code>Status</code></td><td>Single select</td><td>Active · Paused · Churned · Prospect</td><td class="req">Yes</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Table 8 — Blocker <span class="own o-fd">founders triage</span> <span class="own o-mi">Michael / Carys create</span></h3>
-  <p>One list. If it is not on this table, Command does not know it exists. Create a Blocker instead of burying risk in Notes.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options / formula</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Title</code></td><td>Single line</td><td>Verb + object, e.g. “MANZA not ordered for Site X”</td><td class="req">Yes</td></tr>
-      <tr><td><code>Type</code></td><td>Single select</td><td>Tender · Sales · Install · Material · Crew · Cash · Groundworks · Other</td><td class="req">Yes</td></tr>
-      <tr><td><code>Severity</code></td><td>Single select</td><td>Red · Amber</td><td class="req">Yes</td></tr>
-      <tr><td><code>Opportunity</code></td><td>Link → Opportunity</td><td></td><td class="opt">If tender</td></tr>
-      <tr><td><code>Project</code></td><td>Link → Project</td><td></td><td class="opt">If install / kit / crew</td></tr>
-      <tr><td><code>Owner</code></td><td>Single select</td><td>Founder A · Founder B · Michael · Carys · Intern · Paul</td><td class="req">Yes</td></tr>
-      <tr><td><code>Founder action?</code></td><td>Checkbox</td><td>True = sits on Command red strip. Default true if Severity = Red</td><td class="req">Yes</td></tr>
-      <tr><td><code>Due</code></td><td>Date</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Status</code></td><td>Single select</td><td>Open · Waiting on other · Cleared</td><td class="req">Yes</td></tr>
-      <tr><td><code>Next move</code></td><td>Single line</td><td>The action the owner takes next, not a diagnosis</td><td class="req">Yes if Open</td></tr>
-    </tbody>
-  </table>
-  <div class="warn"><p><b>Auto-create (manual on the sheet, automation in Airtable).</b> Tender pack due in 7 days and not sent. Bid/no-bid still Pending with closing in 10 days. Material line Not ordered with install start in 21 days. Resource status Unassigned/Partial with install start in 14 days. Deposit Overdue. Opportunity Stuck &gt; 14 days.</p></div>
-
-  <h3>Table 9 — CrewMember <span class="own o-mi">Michael</span></h3>
-  <p>The roster. Maintenance techs appear here so they can flex onto installs.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Name</code></td><td>Single line</td><td>Michael · Paul · named techs · third-party crew</td><td class="req">Yes</td></tr>
-      <tr><td><code>Role</code></td><td>Single select</td><td>Ops lead · Maintenance lead · Technician · Third party</td><td class="req">Yes</td></tr>
-      <tr><td><code>Weekly capacity days</code></td><td>Number</td><td>Typically 5; third party as contracted</td><td class="req">Yes</td></tr>
-      <tr><td><code>Available this week</code></td><td>Checkbox</td><td>Untick for leave</td><td class="req">Yes</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Table 10 — CrewAssignment <span class="own o-mi">Michael</span></h3>
-  <p>Who is on which install, which days. This is the scheduling element for the installation team. Overlap on the same person in the same week = Overbooked on Project and a Crew blocker.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Project</code></td><td>Link → Project</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Person</code></td><td>Link → CrewMember</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Start</code></td><td>Date</td><td>Must sit inside the install window</td><td class="req">Yes</td></tr>
-      <tr><td><code>End</code></td><td>Date</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Days</code></td><td>Formula</td><td>Working days Start→End</td><td class="opt">Computed</td></tr>
-      <tr><td><code>Role on job</code></td><td>Single select</td><td>Lead · Installer · Flex from maintenance · Third party</td><td class="req">Yes</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Table 11 — MaterialLine <span class="own o-mi">Michael</span> <span class="own o-ca">Carys on orders</span></h3>
-  <p>Have they been ordered? One row per kit item per project. MANZA court kit is always a row. Turf, lighting, fencing as needed. Founders see the worst status on Install 90, not a warehouse system.</p>
-  <table class="data">
-    <thead><tr><th>Field</th><th>Type</th><th>Options</th><th>Required</th></tr></thead>
-    <tbody>
-      <tr><td><code>Project</code></td><td>Link → Project</td><td></td><td class="req">Yes</td></tr>
-      <tr><td><code>Item</code></td><td>Single select</td><td>Court kit (MANZA) · Turf · Lighting · Fencing / pads · Other</td><td class="req">Yes</td></tr>
-      <tr><td><code>Supplier</code></td><td>Single line</td><td>Default MANZA for court kit</td><td class="req">Yes</td></tr>
-      <tr><td><code>Status</code></td><td>Single select</td><td>Not required · Not ordered · Ordered · Confirmed · ETA · On site · Issue</td><td class="req">Yes</td></tr>
-      <tr><td><code>Ordered date</code></td><td>Date</td><td></td><td class="req">Once Ordered</td></tr>
-      <tr><td><code>ETA</code></td><td>Date</td><td>Must precede install window start</td><td class="req">Once Ordered</td></tr>
-      <tr><td><code>On site date</code></td><td>Date</td><td></td><td class="opt">When received</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Opening win weights (recalibrate after 8 weeks)</h3>
-  <p>Forecast uses <code>Weighted courts</code>, not hope. Founders may override Win weight on a named deal (large tender) but the default must stay on the record.</p>
-  <table class="data">
-    <thead><tr><th>Stage / tender stage</th><th>Win weight</th><th>In forecast?</th></tr></thead>
-    <tbody>
-      <tr><td>Outreach, Conversation, Lost, Parked, No-bid</td><td>0%</td><td>No</td></tr>
-      <tr><td>Qualified · Tender Initial contact</td><td>10% · 5%</td><td>Yes, if Expected close is dated</td></tr>
-      <tr><td>Site visit · Tender Qualifying / Bid pending</td><td>25% · 10%</td><td>Yes</td></tr>
-      <tr><td>Direct Proposal · Tender Initial document out</td><td>40% · 25%</td><td>Yes</td></tr>
-      <tr><td>Tender Secondary document out · Award pending</td><td>45% · 55%</td><td>Yes</td></tr>
-      <tr><td>Verbal</td><td>70%</td><td>Yes</td></tr>
-      <tr><td>Booked</td><td>100%</td><td>Committed — counted in Sold, not re-forecast</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- 05 rules -->
-<section id="rules">
-  <p class="kicker"><span class="num">05</span> &nbsp; Handoffs, WIP, and path rules</p>
-  <h2>Three handoffs. Two WIP caps. A tender document path. A blocker rule</h2>
-
-  <h3>Handoff 1 — Qualified → founders</h3>
-  <p>Intern may set Stage to Qualified only when all of these are true: Real site, Budget, Intent, Courts (n), Why qualified, Suggested visit window, Drive folder, Handoff ready. Close view ignores the row until Handoff ready. Default Owner then becomes Founder A or B by key-account map, else round-robin.</p>
-
-  <h3>Handoff 2 — Booked → Michael</h3>
-  <p>Founder sets Stage to Booked and Booked date. Automation or Carys creates: Project at Pre-contract, InvoiceEvent Type = Deposit, a MaterialLine for Court kit (MANZA) at Not ordered, Drive project folder. Owner = Michael. Next actions: confirm deposit in Xero, set install window, assign crew, order kit. The project appears on Install 90 as soon as a window exists.</p>
-
-  <h3>Handoff 3 — Complete → Paul</h3>
-  <p>Michael cannot set Complete until Photo set, Snag list, and Founder sign-off. Then: update Account Deployed and Padel-Craft deployed; set Last install quality; create MaintenanceContract at Status = Prospect (or Active if they signed on handover). Paul’s Aftercare view is the installed base, including not-on-plan.</p>
-
-  <h3>WIP limits (product features, not slogans)</h3>
-  <table class="data">
-    <thead><tr><th>Limit</th><th>Cap</th><th>What happens when hit</th></tr></thead>
-    <tbody>
-      <tr><td>Open proposals per closer</td><td>5 records in Proposal/Tender or Verbal per Founder A / Founder B</td><td>No new Site visit is assigned to that closer until they close, lose, or park one. Command shows red.</td></tr>
-      <tr><td>Site visits this week</td><td>Split three ways across two founders + Michael, about 1 each at target pace (max 4 calendar visits in a week unless a founder frees a slot)</td><td>Intern stops booking visits. Excess qualified wait on the Close board.</td></tr>
-      <tr><td>Stuck</td><td>14 days in one live stage</td><td>Listed first in the weekly meeting. Next action date must move or the deal is Parked.</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Direct vs tender document path</h3>
-  <div class="cols">
-    <div class="tool">
-      <div class="tag">Direct</div>
-      <h3>Quote path</h3>
-      <p>Site visit → proposal (model, budget, timeline) → verbal → booked deposit. Tender fields stay blank. Typical leisure club and private operator.</p>
-    </div>
-    <div class="tool">
-      <div class="tag">Tender / procurement</div>
-      <h3>Two document gates</h3>
-      <p>Initial contact → Qualifying → Bid/no-bid (founder, before Carys drafts) → <b>Initial document out</b> (pack sent + date) → wait / clarification → <b>Secondary document out</b> when the buyer issues stage 2 or BAFO → Award pending → Won maps to Verbal then Booked. A tender with no next deadline is a leak. Single-stage RFTs leave Secondary pack due blank.</p>
-    </div>
-  </div>
-
-  <h3>Sold and forecast numbers Command must show</h3>
-  <table class="data">
-    <thead><tr><th>Number</th><th>Definition</th><th>Source</th></tr></thead>
-    <tbody>
-      <tr><td><b>Last quarter</b></td><td>Sum of Courts (n) where Booked date falls in the previous calendar quarter</td><td>Opportunity</td></tr>
-      <tr><td><b>Last week</b></td><td>Sum of Courts (n) where Booked date falls in the previous ISO week</td><td>Opportunity</td></tr>
-      <tr><td><b>This week</b></td><td>Sum of Courts (n) where Booked date falls in the current ISO week</td><td>Opportunity</td></tr>
-      <tr><td><b>Projected this quarter</b></td><td>Courts already booked this calendar quarter + weighted courts of live deals with Expected close in this quarter</td><td>Booked date + Weighted courts</td></tr>
-      <tr><td><b>Next quarter</b></td><td>Weighted courts of live deals with Expected close in the next calendar quarter</td><td>Weighted courts</td></tr>
-      <tr><td><b>Next 12 months</b></td><td>Weighted courts of live deals with Expected close in the next 365 days. Booked-not-yet-installed is shown separately as committed backlog, not double-counted</td><td>Weighted courts + Project</td></tr>
-      <tr><td><b>Undated leak</b></td><td>Live Qualified-or-later with blank Expected close. Not included in forecast. Count and courts shown in red until dated</td><td>Opportunity</td></tr>
-    </tbody>
-  </table>
-  <div class="callout"><p>Show courts and euro value side by side. Recalibrate weights after eight weeks of Booked outcomes. Until then, treat the 12-month number as a planning range, not a promise.</p></div>
-</section>
-
-<!-- 06 screens -->
-<section id="screens">
-  <p class="kicker"><span class="num">06</span> &nbsp; Founder modules, then the rest of the team</p>
-  <h2>Phone between sites. Desk on Monday. Team views write in.</h2>
-  <p>Airtable Interfaces, not extra bases. Founders’ default is the Between-sites phone strip. Desk Command is the weekly meeting and the rare sit-down. Tender desk, Install 90, and Forecast open from a card — not as a morning tour.</p>
-
-  <!-- Road -->
-  <div class="screen">
-    <div class="screen-bar"><span>Between sites</span><span class="who">Phone · two founders · all day</span></div>
-    <div class="screen-body">
-      <p class="sans" style="font-size:13px;color:var(--muted);margin:0 0 10px;">This is the product they actually use. Three lists, four buttons. If it needs more, it waits for a red blocker or Monday. Designed for a thumb at a traffic light, not a laptop in the office.</p>
+function renderRoad(){
+  el("v-road").innerHTML = `
+    <div class="kicker">00 · Between sites</div>
+    <h1>The phone holds the day<em>Three cards. Four buttons. Then drive.</em></h1>
+    <p class="sub">Log the call, take the client update, triage your red blockers, see the next site. Desk Command waits for Monday.</p>
+    <div class="road">
       <div class="phone">
-        <div class="screen-bar"><span>Padel-Craft · Road</span><span class="who">Founder A</span></div>
-        <div class="screen-body">
-          <div class="colh">Next site</div>
-          <div class="card"><div class="t">Club B · visit 14:00</div><div class="m">Direct · 2 courts · 38 min from here</div></div>
-          <div class="colh">Calls to return</div>
-          <div class="card stuck"><div class="t">Leisure C · Aoife</div><div class="m">Inbound 09:12 · “call back on price”</div></div>
-          <div class="card"><div class="t">Operator A · site 3</div><div class="m">Follow up today · proposal</div></div>
-          <div class="colh">My red blockers</div>
-          <div class="card block"><div class="t">Council · bid/no-bid</div><div class="m">Closes 9 days · decide or park</div></div>
-          <div class="card block"><div class="t">Site X unpaid install?</div><div class="m">Override? · 10 seconds</div></div>
-          <a class="big-btn pri">Log inbound call</a>
-          <a class="big-btn">Log outbound / callback</a>
-          <a class="big-btn">Client update</a>
-          <a class="big-btn">Raise blocker</a>
+        <div class="pbar"><span>Padel-Craft · Road</span><span>Founder A</span></div>
+        <div class="pbody">
+          <div class="col"><h3>Next site</h3>${cards([state.nextSite])}</div>
+          <div class="col"><h3>Calls to return</h3>${cards(state.calls)}</div>
+          <div class="col"><h3>My red blockers</h3>${cards(myRed().map(b=>({t:b.t,m:b.m,cls:"red"})))}</div>
+          <button class="btn pri" onclick="show('blockers')">Triage blockers</button>
         </div>
       </div>
-      <div class="cols" style="margin-top:12px;">
-        <div class="tool">
-          <div class="tag">Calls and updates</div>
-          <h3>Every client phone touch is a row</h3>
-          <p>Inbound, outbound, WhatsApp voice note — Kind = Founder call or Client inbound. What they said is two sentences. Follow up date creates Calls to return. Raise blocker? ticks through to the triage list so the next stop is not “I must remember.”</p>
-        </div>
-        <div class="tool">
-          <div class="tag">Triage on the move</div>
-          <h3>Red blockers they own, only</h3>
-          <p>Not the whole company list. Three actions: Next move (type), Waiting on other, Cleared. Sales blockers from a call use Type = Tender or Other (sales). Install noise from a client on a live site uses Type = Install and can notify Michael without the founder becoming the site supervisor.</p>
-        </div>
+      <div class="panel">
+        <div class="kicker" style="margin-bottom:8px">Log in 20 seconds</div>
+        <h3 style="text-transform:uppercase;letter-spacing:.08em;font-size:13px;margin-bottom:8px">Call or client update</h3>
+        <label>Account</label>
+        <input id="f-acc" placeholder="Club, operator, council…" value="${state.form.account}">
+        <label>Kind</label>
+        <select id="f-kind">
+          <option>Client inbound</option>
+          <option>Founder call</option>
+          <option>Site update</option>
+        </select>
+        <label>What they said</label>
+        <textarea id="f-said" placeholder="Two sentences max">${state.form.said}</textarea>
+        <label><input type="checkbox" id="f-raise" style="width:auto;margin-right:8px"> Raise a sales blocker</label>
+        <button class="btn pri" style="margin-top:16px" onclick="logCall()">Log it</button>
+        <p class="sub" style="margin:14px 0 0;font-size:12px">Driving? Voice-note the OS inbox. Carys files this same form within an hour. Do not batch Sunday.</p>
       </div>
-      <div class="warn"><p><b>Driving rule.</b> If they cannot type, they send a voice note to the dedicated OS inbox. Carys or the intern submits the phone form within one hour. A call that only exists in a founder’s head at 18:00 is a leak. Do not batch “I’ll log it Sunday.”</p></div>
+    </div>`;
+}
+
+function logCall(){
+  const acc = el("f-acc").value.trim() || "Unknown account";
+  const kind = el("f-kind").value;
+  const said = el("f-said").value.trim() || "Update logged from the road";
+  const raise = el("f-raise").checked;
+  state.calls.unshift({ t: acc + " · " + kind, m: said, cls: raise ? "red" : "amber" });
+  if (raise) {
+    state.blockers.unshift({ id: Date.now(), t: acc + " · from call", m: said, type: "Sales", sev: "Red", status: "Open", founder: true });
+  }
+  el("f-acc").value = ""; el("f-said").value = ""; el("f-raise").checked = false;
+  toast(raise ? "Logged · blocker raised" : "Call logged");
+  renderAll();
+  show("road");
+}
+
+function renderCommand(){
+  const s = state.sold, f = state.forecast;
+  const red = openBlockers().filter(b=>b.sev==="Red").length;
+  const packs = 2, unres = 3, kit = 2;
+  el("v-command").innerHTML = `
+    <div class="kicker">01 · Monday desk</div>
+    <h1>Command<em>Sold, forecast, tenders, blockers, installs.</em></h1>
+    <p class="sub">Ten minutes. Act from the cards. No side lists.</p>
+    <div class="band">Sold — courts booked</div>
+    <div class="row k4">
+      <div class="kpi"><div class="v">${s.lastQ}</div><div class="l">Last quarter</div></div>
+      <div class="kpi"><div class="v">${s.lastWeek}</div><div class="l">Last week</div></div>
+      <div class="kpi"><div class="v">${s.thisWeek}</div><div class="l">This week</div></div>
+      <div class="kpi warn"><div class="v">${s.projectedQ}</div><div class="l">Projected this quarter</div></div>
     </div>
-  </div>
-
-  <!-- Command -->
-  <div class="screen">
-    <div class="screen-bar"><span>Command</span><span class="who">Two founders · Monday sit-down · 10 minutes</span></div>
-    <div class="screen-body">
-      <div class="band-lbl">Sold — courts booked</div>
-      <div class="kpi-row">
-        <div class="kpi"><div class="v">18</div><div class="k">Last quarter</div></div>
-        <div class="kpi"><div class="v">2</div><div class="k">Last week</div></div>
-        <div class="kpi ok"><div class="v">1</div><div class="k">This week</div></div>
-        <div class="kpi warn"><div class="v">9</div><div class="k">Projected this quarter</div></div>
-      </div>
-      <div class="band-lbl">Forecast — weighted pipeline, dated Expected close only</div>
-      <div class="kpi-row">
-        <div class="kpi"><div class="v">14</div><div class="k">Next quarter weighted</div></div>
-        <div class="kpi"><div class="v">52</div><div class="k">Next 12 months weighted</div></div>
-        <div class="kpi"><div class="v">48</div><div class="k">Committed backlog · sold not installed</div></div>
-        <div class="kpi red"><div class="v">6</div><div class="k">Undated leak · courts</div></div>
-      </div>
-      <div class="band-lbl">Triage — act, do not browse</div>
-      <div class="kpi-row">
-        <div class="kpi red"><div class="v">4</div><div class="k">Red blockers · founder action</div></div>
-        <div class="kpi warn"><div class="v">2</div><div class="k">Tender packs due this week</div></div>
-        <div class="kpi red"><div class="v">3</div><div class="k">Installs in 90d unresourced</div></div>
-        <div class="kpi warn"><div class="v">2</div><div class="k">Materials not ordered · 90d</div></div>
-      </div>
-      <div class="board cols4">
-        <div>
-          <div class="colh">Blockers · red first</div>
-          <div class="card block"><div class="t">MANZA not ordered · Site X</div><div class="m">Material · due Fri · Michael · founder if slips</div></div>
-          <div class="card block"><div class="t">Council RFT · bid/no-bid</div><div class="m">Tender · closes 9 days · Founder A</div></div>
-          <div class="card stuck"><div class="t">Deposit overdue · Club G</div><div class="m">Cash · Carys · install blocked</div></div>
-        </div>
-        <div>
-          <div class="colh">Tenders · next document</div>
-          <div class="card stuck"><div class="t">Local authority · 8 courts</div><div class="m">Initial pack due Thu · Carys drafting</div></div>
-          <div class="card"><div class="t">Leisure framework · 12</div><div class="m">Secondary pack due 22 Sep · Founder B</div></div>
-          <div class="card"><div class="t">Hotel group · 4</div><div class="m">Qualifying · visit Wed</div></div>
-        </div>
-        <div>
-          <div class="colh">Install 90 · notify</div>
-          <div class="card"><div class="t">Club H · 2 · week 36</div><div class="m">Crew covered · kit On site</div></div>
-          <div class="card block"><div class="t">Site X · 2 · week 38</div><div class="m">Partial crew · kit Not ordered</div></div>
-          <div class="card stuck"><div class="t">Club G · 2 · week 40</div><div class="m">Window set · deposit overdue</div></div>
-        </div>
-        <div>
-          <div class="colh">Forecast movers</div>
-          <div class="card"><div class="t">Operator A · 4 · 40%</div><div class="m">Direct proposal · close this Q · 1.6 wtd</div></div>
-          <div class="card"><div class="t">Council · 8 · 25%</div><div class="m">Initial doc out · close next Q · 2.0 wtd</div></div>
-          <div class="card stuck"><div class="t">Club D · 4 · undated</div><div class="m">Date the close or park it</div></div>
-        </div>
-      </div>
-      <p class="legend" style="margin-top:10px;">Each card is a link to Tender desk, Blockers, Install 90, or Forecast. Meeting uses this view only — no side lists. Numbers above are illustrative; live Command is a rollup.</p>
+    <div class="band">Forecast — weighted, dated close only</div>
+    <div class="row k4">
+      <div class="kpi"><div class="v">${f.nextQ}</div><div class="l">Next quarter weighted</div></div>
+      <div class="kpi"><div class="v">${f.y12}</div><div class="l">Next 12 months weighted</div></div>
+      <div class="kpi"><div class="v">${f.backlog}</div><div class="l">Sold not installed</div></div>
+      <div class="kpi bad"><div class="v">${f.undated}</div><div class="l">Undated leak · courts</div></div>
     </div>
-  </div>
-
-  <!-- Tender -->
-  <div class="screen">
-    <div class="screen-bar"><span>Tender desk</span><span class="who">Founders · Carys · large material tenders</span></div>
-    <div class="screen-body">
-      <p class="sans" style="font-size:13px;color:var(--muted);margin:0 0 10px;">Path = Tender. Sorted by Next tender deadline. Bid/no-bid is a founder field; Carys does not draft a pack on Pending. Progress is the document, not a conversation note.</p>
-      <div class="board cols6">
-        <div>
-          <div class="colh">Initial contact</div>
-          <div class="card"><div class="t">County leisure · 6</div><div class="m">Portal notice · qualify this week</div></div>
-        </div>
-        <div>
-          <div class="colh">Qualifying</div>
-          <div class="card"><div class="t">Hotel group · 4</div><div class="m">Site + budget + intent · visit Wed</div></div>
-        </div>
-        <div>
-          <div class="colh">Bid / no-bid</div>
-          <div class="card block"><div class="t">Council framework</div><div class="m">Closes 9 days · Founder A decision</div></div>
-        </div>
-        <div>
-          <div class="colh">Initial document out</div>
-          <div class="card stuck"><div class="t">Local authority · 8</div><div class="m">Pack due Thu · Drive folder · Carys</div></div>
-        </div>
-        <div>
-          <div class="colh">Secondary document out</div>
-          <div class="card"><div class="t">Leisure chain · 12</div><div class="m">BAFO due 22 Sep · Founder B</div></div>
-        </div>
-        <div>
-          <div class="colh">Award / won / lost</div>
-          <div class="card"><div class="t">Won → Verbal then Booked</div><div class="m">Lost keeps the pack for the next one</div></div>
-        </div>
-      </div>
+    <div class="band">Triage</div>
+    <div class="row k4">
+      <div class="kpi bad"><div class="v">${red}</div><div class="l">Red blockers</div></div>
+      <div class="kpi warn"><div class="v">${packs}</div><div class="l">Tender packs due this week</div></div>
+      <div class="kpi bad"><div class="v">${unres}</div><div class="l">Installs in 90d unresourced</div></div>
+      <div class="kpi warn"><div class="v">${kit}</div><div class="l">Materials not ordered</div></div>
     </div>
-  </div>
+    <div class="cols c4">
+      <div class="col"><h3>Blockers · red first</h3>${cards(openBlockers().slice(0,3).map(b=>({t:b.t,m:b.m,cls:b.sev==="Red"?"red":"amber"})))}</div>
+      <div class="col"><h3>Tenders · next document</h3>${cards([{t:"Local authority · 8",m:"Initial pack due Thu",cls:"amber"},{t:"Leisure chain · 12",m:"Secondary pack due 22 Sep"},{t:"Hotel group · 4",m:"Qualifying · visit Wed"}])}</div>
+      <div class="col"><h3>Install 90 · notify</h3>${cards([{t:"Club H · week 36",m:"Crew covered · kit on site"},{t:"Site X · week 38",m:"Partial crew · kit not ordered",cls:"red"},{t:"Club G · week 40",m:"Deposit overdue",cls:"amber"}])}</div>
+      <div class="col"><h3>Forecast movers</h3>${cards([{t:"Operator A · 4 · 40%",m:"Direct proposal · this Q · 1.6 wtd"},{t:"Council · 8 · 25%",m:"Initial doc out · next Q · 2.0 wtd"},{t:"Club D · 4 · undated",m:"Date the close or park it",cls:"amber"}])}</div>
+    </div>`;
+}
 
-  <!-- Blockers -->
-  <div class="screen">
-    <div class="screen-bar"><span>Blocker triage</span><span class="who">Founders · identify, assign, clear</span></div>
-    <div class="screen-body">
-      <p class="sans" style="font-size:13px;color:var(--muted);margin:0 0 10px;">Open + Waiting only. Red with Founder action first. Clearing is a status change plus a Next move, not a chat message. If it is still true on Friday, it is still Open.</p>
-      <div class="board cols4">
-        <div>
-          <div class="colh">Red · founder today</div>
-          <div class="card block"><div class="t">Bid/no-bid · council</div><div class="m">Tender · Founder A · due tomorrow</div></div>
-          <div class="card block"><div class="t">Override unpaid install?</div><div class="m">Cash · Site X · Founder B</div></div>
-        </div>
-        <div>
-          <div class="colh">Amber · this week</div>
-          <div class="card stuck"><div class="t">Crew partial · week 38</div><div class="m">Crew · Michael · flex Paul?</div></div>
-          <div class="card stuck"><div class="t">Club D undated close</div><div class="m">Tender/direct · date or park</div></div>
-        </div>
-        <div>
-          <div class="colh">Waiting on other</div>
-          <div class="card"><div class="t">Groundworks · Club G</div><div class="m">Client · review Fri</div></div>
-        </div>
-        <div>
-          <div class="colh">Cleared this week</div>
-          <div class="card"><div class="t">Archive</div><div class="m">Proof the list moves, not just grows</div></div>
-        </div>
-      </div>
+function renderTenders(){
+  const cols = Object.entries(state.tenders).map(([name,list])=>`
+    <div class="col"><h3>${name}</h3>${cards(list)}</div>`).join("");
+  el("v-tenders").innerHTML = `
+    <div class="kicker">03 · Tender desk</div>
+    <h1>Two document gates<em>Initial pack out. Secondary pack out.</em></h1>
+    <p class="sub">Large material tenders from first contact through award. Bid/no-bid is a founder field. Carys does not draft on Pending.</p>
+    <div class="cols c6">${cols}</div>`;
+}
+
+function renderBlockers(){
+  const rows = openBlockers().map(b=>`
+    <tr>
+      <td><strong style="color:var(--w)">${b.t}</strong><div style="color:var(--w3);font-size:12px;margin-top:4px">${b.m}</div></td>
+      <td><span class="tag">${b.type}</span></td>
+      <td style="color:${b.sev==="Red"?"var(--danger)":"var(--amber)"};font-weight:700">${b.sev}</td>
+      <td>
+        <button class="btn sm" onclick="triage(${b.id},'Waiting on other')">Waiting</button>
+        <button class="btn sm pri" onclick="triage(${b.id},'Cleared')">Clear</button>
+      </td>
+    </tr>`).join("");
+  el("v-blockers").innerHTML = `
+    <div class="kicker">04 · Triage</div>
+    <h1>Identify. Assign. Clear.<em>If it is not on this list, Command does not know it exists.</em></h1>
+    <p class="sub">Red with founder action first. Clearing is a status change, not a chat message.</p>
+    <table>
+      <thead><tr><th>Blocker</th><th>Type</th><th>Severity</th><th>Act</th></tr></thead>
+      <tbody>${rows || `<tr><td colspan="4" class="empty">All clear</td></tr>`}</tbody>
+    </table>`;
+}
+
+function triage(id, status){
+  const b = state.blockers.find(x=>x.id===id);
+  if(!b) return;
+  b.status = status;
+  toast(status === "Cleared" ? "Blocker cleared" : "Waiting on other");
+  renderAll();
+  show("blockers");
+}
+
+function renderInstall(){
+  const rows = state.installs.map(r=>`<tr>${r.map((c,i)=>`<td${i===6&&c.startsWith("Red")?` style="color:var(--danger);font-weight:700"`:""}>${c}</td>`).join("")}</tr>`).join("");
+  el("v-install").innerHTML = `
+    <div class="kicker">05 · Next 90 days</div>
+    <h1>How the installs are going<em>Crew. Materials ordered or not. Windows.</em></h1>
+    <p class="sub">Every live project whose install window overlaps the next 90 days. Founders notify from here; Michael fills crew and kit.</p>
+    <div class="row k5">
+      <div class="kpi"><div class="v">7</div><div class="l">Projects in 90 days</div></div>
+      <div class="kpi"><div class="v">14</div><div class="l">Courts in those windows</div></div>
+      <div class="kpi"><div class="v">4</div><div class="l">Crew covered</div></div>
+      <div class="kpi bad"><div class="v">3</div><div class="l">Crew partial / none</div></div>
+      <div class="kpi warn"><div class="v">2</div><div class="l">Kit not ordered</div></div>
     </div>
-  </div>
+    <table>
+      <thead><tr><th>Week</th><th>Project</th><th>Courts</th><th>Stage</th><th>Crew</th><th>Materials</th><th>Blocker</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
 
-  <!-- Install 90 -->
-  <div class="screen">
-    <div class="screen-bar"><span>Install 90</span><span class="who">Founders notify · Michael schedules crew and materials</span></div>
-    <div class="screen-body">
-      <p class="sans" style="font-size:13px;color:var(--muted);margin:0 0 10px;">Every live project whose install window overlaps the next 90 days. Status, crew, kit on one row. This is how founders see “how they are all going” without walking the site.</p>
-      <div class="kpi-row five">
-        <div class="kpi"><div class="v">7</div><div class="k">Projects in 90 days</div></div>
-        <div class="kpi"><div class="v">14</div><div class="k">Courts in those windows</div></div>
-        <div class="kpi ok"><div class="v">4</div><div class="k">Crew covered</div></div>
-        <div class="kpi red"><div class="v">3</div><div class="k">Crew partial / none</div></div>
-        <div class="kpi warn"><div class="v">2</div><div class="k">Kit not ordered</div></div>
-      </div>
-      <table class="data">
-        <thead><tr><th>Week</th><th>Project</th><th>Courts</th><th>Stage</th><th>Crew</th><th>Materials</th><th>Blocker</th></tr></thead>
-        <tbody>
-          <tr><td>36</td><td>Club H</td><td>2</td><td>Install</td><td>Covered · Michael + 2</td><td>Court kit On site</td><td>—</td></tr>
-          <tr><td>37</td><td>Hotel F</td><td>1</td><td>Coordination</td><td>Covered · Paul flex</td><td>Ordered · ETA W36</td><td>—</td></tr>
-          <tr><td>38</td><td>Site X</td><td>2</td><td>Coordination</td><td>Partial · 1 of 3</td><td>Not ordered</td><td>Red · kit + crew</td></tr>
-          <tr><td>40</td><td>Club G</td><td>2</td><td>Procurement</td><td>Unassigned</td><td>Ordered</td><td>Red · deposit</td></tr>
-          <tr><td>42–43</td><td>Operator A site 2</td><td>4</td><td>Pre-contract</td><td>Unassigned</td><td>Not ordered</td><td>Amber · window TBC</td></tr>
-        </tbody>
-      </table>
-      <div class="cols" style="margin-top:8px;">
-        <div class="tool">
-          <div class="tag">Crew schedule</div>
-          <h3>Who is where</h3>
-          <p>Calendar of CrewAssignment. A person cannot sit on two projects the same day. Maintenance flex shows as Paul / techs with Flex to install. Third-party crews are rows, not a side WhatsApp.</p>
-        </div>
-        <div class="tool">
-          <div class="tag">Materials schedule</div>
-          <h3>Ordered or not</h3>
-          <p>MaterialLine per project. Founders care about Not ordered / Issue / ETA after install start. Carys or Michael ticks Ordered and pastes ETA. MANZA court kit is always a line; turf and lighting as needed.</p>
-        </div>
-      </div>
+function renderForecast(){
+  const rows = state.pipeline.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("");
+  el("v-forecast").innerHTML = `
+    <div class="kicker">02 · Pipeline</div>
+    <h1>What will sell<em>This quarter, next quarter, twelve months.</em></h1>
+    <p class="sub">Weighted courts from live deals with a dated Expected close. Undated rows are a leak — they do not inflate the 12-month number.</p>
+    <div class="row k4">
+      <div class="kpi warn"><div class="v">${state.sold.projectedQ}</div><div class="l">Projected this quarter</div></div>
+      <div class="kpi"><div class="v">${state.forecast.nextQ}</div><div class="l">Next quarter weighted</div></div>
+      <div class="kpi"><div class="v">${state.forecast.y12}</div><div class="l">Next 12 months weighted</div></div>
+      <div class="kpi bad"><div class="v">${state.forecast.undated}</div><div class="l">Undated leak · courts</div></div>
     </div>
-  </div>
+    <table>
+      <thead><tr><th>Deal</th><th>Path</th><th>Stage</th><th>Courts</th><th>Weight</th><th>Wtd courts</th><th>Close</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
 
-  <!-- Forecast -->
-  <div class="screen">
-    <div class="screen-bar"><span>Forecast</span><span class="who">Founders · pipeline → next quarter and 12 months</span></div>
-    <div class="screen-body">
-      <p class="sans" style="font-size:13px;color:var(--muted);margin:0 0 10px;">Each live deal is one row: courts, weight, weighted courts, expected close quarter. Totals at the top match Command. Date the undated rows or park them — they must not inflate the 12-month number.</p>
-      <table class="data">
-        <thead><tr><th>Deal</th><th>Path</th><th>Stage</th><th>Courts</th><th>Weight</th><th>Wtd courts</th><th>Close</th></tr></thead>
-        <tbody>
-          <tr><td>Operator A site 3</td><td>Direct</td><td>Proposal</td><td>4</td><td>40%</td><td>1.6</td><td>This Q</td></tr>
-          <tr><td>Hotel F</td><td>Direct</td><td>Verbal</td><td>1</td><td>70%</td><td>0.7</td><td>This Q</td></tr>
-          <tr><td>Local authority</td><td>Tender</td><td>Initial document out</td><td>8</td><td>25%</td><td>2.0</td><td>Next Q</td></tr>
-          <tr><td>Leisure chain</td><td>Tender</td><td>Secondary document out</td><td>12</td><td>45%</td><td>5.4</td><td>Next Q</td></tr>
-          <tr><td>Club D</td><td>Direct</td><td>Proposal</td><td>4</td><td>40%</td><td>—</td><td>Undated · leak</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Demand -->
-  <div class="screen">
-    <div class="screen-bar"><span>Demand</span><span class="who">Intern · daily · not a founder screen</span></div>
-    <div class="screen-body">
-      <p class="sans" style="font-size:13px;color:var(--muted);margin:0 0 10px;">Default action is an Activity row, not a deal. Queue is High then Medium priority Accounts. Founders never open this unless the intern is out.</p>
-      <div class="board cols4">
-        <div>
-          <div class="colh">Outreach queue</div>
-          <div class="card"><div class="t">Operator A · site 2</div><div class="m">High · 22 headroom</div></div>
-        </div>
-        <div>
-          <div class="colh">Follow ups today</div>
-          <div class="card"><div class="t">Leisure C · Aoife</div><div class="m">Conversation · LinkedIn</div></div>
-        </div>
-        <div>
-          <div class="colh">Qualify</div>
-          <div class="card"><div class="t">Handoff pack</div><div class="m">Site · budget · intent · courts · why · visit · Drive</div></div>
-        </div>
-        <div>
-          <div class="colh">Today’s counts</div>
-          <div class="card"><div class="t">Sent / 200</div><div class="m">Conversations / 20 · Qualified / 6</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Close -->
-  <div class="screen">
-    <div class="screen-bar"><span>Close</span><span class="who">Founders · direct deals only on this board</span></div>
-    <div class="screen-body">
-      <p class="sans" style="font-size:13px;color:var(--muted);margin:0 0 10px;">Handoff ready, Path = Direct, Stage ≥ Qualified. Tenders live on Tender desk so document gates are not mixed with quotes. Booked here creates Project, deposit InvoiceEvent, and a court-kit MaterialLine at Not ordered.</p>
-      <div class="board cols4">
-        <div>
-          <div class="colh">Site visit</div>
-          <div class="card"><div class="t">Operator A · 4 courts</div><div class="m">Founder A · Thu</div></div>
-        </div>
-        <div>
-          <div class="colh">Proposal</div>
-          <div class="card stuck"><div class="t">Club D · Direct</div><div class="m">18 days · date Expected close</div></div>
-        </div>
-        <div>
-          <div class="colh">Verbal</div>
-          <div class="card"><div class="t">Hotel F · 1 court</div><div class="m">Deposit this week</div></div>
-        </div>
-        <div>
-          <div class="colh">Booked</div>
-          <div class="card"><div class="t">→ Project + kit line</div><div class="m">Leaves for Install 90</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Delivery -->
-  <div class="screen">
-    <div class="screen-bar"><span>Delivery</span><span class="who">Michael · writes the 90-day board</span></div>
-    <div class="screen-body">
-      <div class="board cols5">
-        <div>
-          <div class="colh">Pre-contract</div>
-          <div class="card"><div class="t">Hotel F · 1</div><div class="m">Deposit invoiced</div></div>
-        </div>
-        <div>
-          <div class="colh">Procurement</div>
-          <div class="card"><div class="t">Club G · 2</div><div class="m">Kit Ordered · groundworks Client</div></div>
-        </div>
-        <div>
-          <div class="colh">Coordination</div>
-          <div class="card block"><div class="t">Site X · 2</div><div class="m">Window W38 · crew Partial · kit Not ordered</div></div>
-        </div>
-        <div>
-          <div class="colh">Install</div>
-          <div class="card"><div class="t">Club H · 2</div><div class="m">Covered · photos on Complete</div></div>
-        </div>
-        <div>
-          <div class="colh">Complete</div>
-          <div class="card"><div class="t">Quality pack</div><div class="m">Sign-off · reference · → Paul</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Aftercare -->
-  <div class="screen">
-    <div class="screen-bar"><span>Aftercare</span><span class="who">Paul · maintenance · flex into Install 90</span></div>
-    <div class="screen-body">
-      <div class="board cols4">
-        <div>
-          <div class="colh">On plan</div>
-          <div class="card"><div class="t">Club H</div><div class="m">Monthly · next 4 Sep · Paul</div></div>
-        </div>
-        <div>
-          <div class="colh">Not on plan</div>
-          <div class="card"><div class="t">Installed base</div><div class="m">Sell-in · Prospect</div></div>
-        </div>
-        <div>
-          <div class="colh">This week’s visits</div>
-          <div class="card"><div class="t">Two sites</div><div class="m">Tech 2 / Tech 3</div></div>
-        </div>
-        <div>
-          <div class="colh">Flex to install</div>
-          <div class="card"><div class="t">Available this week</div><div class="m">Feeds CrewAssignment when Michael pulls</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 07 Monday -->
-<section id="monday">
-  <p class="kicker"><span class="num">07</span> &nbsp; How we run Monday</p>
-  <h2>One meeting, one scorecard, named owners</h2>
-
-  <div class="monday">
-    <h3>Who opens what</h3>
-    <div class="role-open">
-      <div class="r">Intern</div><div class="d">Demand. Hit 200 / 20 / 6. No founder ping except via Handoff ready.</div>
-      <div class="r">Founders</div><div class="d">Phone: Between sites, all day — log calls, client updates, own red blockers, next site. Desk: Command on Monday only. No Demand. No outbound list.</div>
-      <div class="r">Carys</div><div class="d">OS inbox: type founder voice notes into the phone form within an hour. Tender packs on Bid. Xero chase. Friday scorecard.</div>
-      <div class="r">Michael</div><div class="d">Delivery + Install 90. Windows, CrewAssignment, MaterialLine. Raise blockers; do not hide them in notes.</div>
-      <div class="r">Paul</div><div class="d">Aftercare. Penetrate installed base. Flag flex-to-install before the meeting.</div>
-    </div>
-
-    <h3 style="margin-top:22px;">Weekly pipeline meeting · 30 to 45 minutes</h3>
-    <p class="sans" style="font-size:13px;color:var(--muted);margin:0 0 10px;">Same slot each week. Founders + Michael + intern (Carys if cash or a pack is due). Run on Command only.</p>
-    <ol class="agenda">
-      <li><b>Sold.</b> Last quarter, last week, this week, projected this quarter. One glance at whether the quarter is alive.</li>
-      <li><b>Forecast.</b> Weighted next quarter and 12 months. Date or park every undated leak. Recalibrate weights only after week 8.</li>
-      <li><b>Tenders.</b> Every pack due in 14 days. Bid/no-bid decisions. Initial document out and secondary document out with owners.</li>
-      <li><b>Blockers.</b> Red first. Assign or clear. Nothing stays as a note.</li>
-      <li><b>Road log.</b> Unlogged founder calls this week (Activity Kind = Founder call / Client inbound vs their actual week). If the inbox is backing up, the OS is not on the phone yet.</li>
-      <li><b>Install 90.</b> How each live install is going. Crew coverage and materials ordered-or-not for the next 90 days. Unresourced windows become Crew or Material blockers before the meeting ends.</li>
-    </ol>
-    <p class="sans" style="font-size:13px;color:var(--muted);margin:14px 0 0;">When a WIP limit is hit the answer is close, lose, or park — not add. That is what keeps founders out of firefighting.</p>
-  </div>
-</section>
-
-<!-- 08 gantt -->
-<section id="gantt">
-  <p class="kicker"><span class="num">08</span> &nbsp; 90 day tooling sequence</p>
-  <h2>Behind the two hires, not instead of them</h2>
-  <p>People remain the critical path (ops lead and intern in weeks 1–3). This is workstream 7 from the 90 day plan: CRM, pipeline, scheduling. Weeks are tooling weeks, aligned to that Gantt (roughly week 3 to 9 for systems).</p>
-
-  <div class="gantt">
-    <div class="g-head">
-      <div></div>
-      <div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div><div>W7</div><div>W8</div><div>W9</div>
-    </div>
-    <div class="g-row"><div class="g-name">Sheet OS · same columns</div><div class="g-barwrap"><div class="bar" style="background:var(--people);grid-column:1/3;"></div></div></div>
-    <div class="g-row"><div class="g-name">Phone strip + 20-second log form</div><div class="g-barwrap"><div class="bar" style="background:var(--people);grid-column:1/5;"></div></div></div>
-    <div class="g-row"><div class="g-name">Command: sold, forecast, blockers</div><div class="g-barwrap"><div class="bar" style="background:var(--sales);grid-column:3/6;"></div></div></div>
-    <div class="g-row"><div class="g-name">Tender desk · two document gates</div><div class="g-barwrap"><div class="bar" style="background:var(--amber);grid-column:3/7;"></div></div></div>
-    <div class="g-row"><div class="g-name">Install 90 · crew + material lines</div><div class="g-barwrap"><div class="bar" style="background:var(--deliver);grid-column:5/8;"></div></div></div>
-    <div class="g-row"><div class="g-name">Quality pack + maintenance</div><div class="g-barwrap"><div class="bar" style="background:var(--maint);grid-column:7/10;"></div></div></div>
-    <div class="g-row"><div class="g-name">Agent writes Activity · human qualifies</div><div class="g-barwrap"><div class="bar" style="background:var(--found);grid-column:4/10;"></div></div></div>
-    <div class="g-row"><div class="g-name">Recalibrate win weights from 8 weeks</div><div class="g-barwrap"><div class="bar" style="background:var(--ink);grid-column:8/10;"></div></div></div>
-  </div>
-
-  <h3>Week 1–2 — disposable sheet OS</h3>
-  <p>One Google Sheet, tabs matching section 04 including Blocker, Crew, and MaterialLine. Intern and Michael type on day one. Founders get a phone bookmark: a Google Form or Airtable form with Account, Kind, What they said, Raise blocker. Voice notes go to Carys until the form is muscle memory.</p>
-
-  <h3>Week 3–5 — Command, tenders, forecast</h3>
-  <p>Migrate. Build the Between-sites Interface (phone) first, then desk Command, Tender desk, and Close. Encode Handoff ready, Stuck, and undated Expected close as a leak. Founders stop using WhatsApp as the deal record.</p>
-
-  <h3>Week 5–7 — Install 90, crew, materials, cash</h3>
-  <p>On Booked, create Project, deposit InvoiceEvent, and a court-kit MaterialLine at Not ordered. CrewAssignment fills the 90-day board. Unpaid deposit, unresourced crew, and unordered kit raise Blockers. No Xero API — paste invoice numbers.</p>
-
-  <h3>Week 7–9 — quality and aftercare</h3>
-  <p>Quality checkboxes on Complete. MaintenanceContract for first recurring offers. Flex-to-install still writes into CrewAssignment.</p>
-
-  <h3>Week 8+ — resize win weights</h3>
-  <p>Replace opening weights with measured conversion. Only then treat the 12-month forecast as a planning number you would show an underwriter. If Command already runs Monday, do not start a custom UI.</p>
-
-  <div class="warn">
-    <p><b>Out of 90 days:</b> custom app, marketing automation suite, inventory ERP, academy/tours modules, US multi-entity, CoS company OS. Academy and tours stay founder-sponsored on a calendar, not in this spine.</p>
-  </div>
-</section>
-
-<!-- 09 agent -->
-<section id="agent">
-  <p class="kicker"><span class="num">09</span> &nbsp; Lead-generation agent</p>
-  <h2>Build this, not a prettier dashboard</h2>
-  <p>The intern’s product is outbound at scale into Airtable. The dashboard is Interfaces.</p>
-  <ul class="tight">
-    <li>Read Account sorted by Priority, then Headroom. Skip Low unless a founder tagged Owner.</li>
-    <li>Personalise outreach. Log every send and reply as Activity. Outcome must be one of the select values.</li>
-    <li>Stop at Conversation. A human ticks Real site / Budget / Intent and Handoff ready.</li>
-    <li>Never set Stage to Booked, never create a Project, never email founders a raw name.</li>
-    <li>If the agent cannot write a clean Activity row, it is not in production.</li>
-  </ul>
-  <div class="callout">
-    <p>Keep the agent stateless against Account. No separate prospect database. The scarce output is six genuinely qualified opportunities a week, not two hundred emails.</p>
-  </div>
-</section>
-
-<!-- 10 success -->
-<section id="success">
-  <p class="kicker"><span class="num">10</span> &nbsp; Success bar, end of 90 days</p>
-  <h2>The phone holds the day or the OS has failed</h2>
-  <ul class="tight">
-    <li>Founders run the day from Between sites: next site, calls to return, own red blockers.</li>
-    <li>A founder call or client update is an Activity row within the hour (typed or via OS inbox). Not Sunday batching. Not WhatsApp-as-record.</li>
-    <li>Raise blocker? on the phone form creates a Blocker. Sales blockers from calls are visible on Command Monday.</li>
-    <li>Weekly meeting uses desk Command only. No side lists.</li>
-    <li>Every live tender has a Tender stage and a next document deadline, or it is a leak.</li>
-    <li>Initial document out and secondary document out are dates on the record, not emails.</li>
-    <li>Open blockers have an owner, a due date, and a next move. Red ones have Founder action ticked.</li>
-    <li>Every project in the next 90 days shows crew coverage and whether kit is ordered.</li>
-    <li>Sold strip shows last quarter, last week, this week, projected this quarter from Booked date.</li>
-    <li>Next quarter and 12-month weighted forecasts exist; undated Expected close is visible as a leak.</li>
-    <li>Founders do not source leads. Quality pack is in use on new Completes.</li>
-  </ul>
-</section>
-
-<footer>
-  <span>Padel-Craft Limited · Internal operating system · companion to the 90 day plan and sales OS</span>
-  <span>Draft for stand-up · August 2026 · no application code in this phase</span>
-</footer>
-
-</div>
+function renderAll(){
+  renderRoad(); renderCommand(); renderTenders(); renderBlockers(); renderInstall(); renderForecast();
+}
+renderNav();
+renderAll();
+show("road");
+</script>
 </body>
 </html>
