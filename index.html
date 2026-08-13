@@ -35,12 +35,10 @@ select{-webkit-appearance:none;appearance:none}
 .lp{font-weight:300;letter-spacing:.22em;text-transform:uppercase;font-size:15px}
 .ls{color:var(--w4);margin:0 4px;font-size:15px}
 .lc{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:15px}
-.tabs{display:flex;gap:4px;flex:1;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
+.tabs{display:flex;gap:4px;flex:1;min-width:0;flex-wrap:wrap;overflow:visible}
 .tabs button{flex:0 0 auto;background:transparent;border:1px solid transparent;color:var(--w3);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:10px 10px;min-height:44px;border-radius:1px;cursor:pointer}
-.tabs button.on,.tabs button:hover,.tabs button:active,.mtabs button:active{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.06)}
+.tabs button.on,.tabs button:hover,.tabs button:active{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.06)}
 .who{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);font-weight:600;white-space:nowrap}
-.mtabs{display:none}
 main{padding:28px 4% 64px;max-width:1280px;margin:0 auto}
 .view{display:none}
 .view.on{display:block}
@@ -138,21 +136,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .sub{margin-bottom:18px}
 }
 @media(max-width:1100px){
-  .topbar,.tabs{display:none}
-  .topnav{min-height:52px}
-  main{padding:18px 4% calc(128px + env(safe-area-inset-bottom))}
-  .mtabs{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;gap:2px;padding:6px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:rgba(6,15,28,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--w5);pointer-events:auto}
-  .mtabs button{min-width:0;width:100%;min-height:44px;background:transparent;border:1px solid transparent;color:var(--w3);font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 2px;border-radius:1px;cursor:pointer;pointer-events:auto}
-  .mtabs button.on{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.08)}
-  .toast{left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:calc(112px + env(safe-area-inset-bottom));text-align:center}
-  body.kb-open .mtabs{display:none}
-  body.kb-open main{padding-bottom:24px}
-  body.kb-open .toast{bottom:24px}
-}
-@media(max-width:1100px) and (min-width:640px){
-  .mtabs{grid-template-columns:repeat(9,1fr)}
-  main{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
-  .toast{bottom:calc(72px + env(safe-area-inset-bottom))}
+  .topbar{display:none}
+  .topnav{flex-wrap:wrap;min-height:52px;padding-bottom:8px}
+  .logo{width:100%;min-height:44px;align-items:center}
+  .tabs{display:grid;grid-template-columns:repeat(3,1fr);width:100%;flex:none;gap:4px}
+  .tabs button{width:100%;min-height:44px;font-size:9px;letter-spacing:.08em;padding:8px 4px}
+  main{padding:18px 4% 32px}
 }
 </style>
 </head>
@@ -160,7 +149,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div class="topbar">
   <a href="https://www.padel-craft.com/">padel-craft.com</a>
   <span class="who">Founder A · on the road</span>
-  <span>Internal OS · v0.10</span>
+  <span>Internal OS · v0.11</span>
 </div>
 <nav class="topnav">
   <a class="logo" href="#"><span class="lp">Padel</span><span class="ls">·</span><span class="lc">Craft</span></a>
@@ -177,7 +166,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   <section class="view" id="v-report"></section>
   <section class="view" id="v-club"></section>
 </main>
-<nav class="mtabs" id="mtabs" aria-label="Mobile"></nav>
 <div class="toast" id="toast"></div>
 <div class="sheet" id="sheet">
   <div class="sheet-card">
@@ -215,6 +203,7 @@ const RATE_CARD = [
 const LEAD_TYPES = ["Intern outbound","Inbound","Portal","Referral","Repeat"];
 const QUAL_STAGES = ["Outreach","Conversation","Qualifying","Qualified"];
 const TENDER_STAGES = ["Initial contact","Qualifying","Bid / no-bid","Initial document out","Secondary document out","Award"];
+const CREW = ["Michael","Paul","Tech 2","Tech 3","Third party"];
 const WEEKS = ["17 Aug","24 Aug","31 Aug","7 Sep","14 Sep","21 Sep","28 Sep","5 Oct","12 Oct","19 Oct","26 Oct","2 Nov"];
 
 const defaults = {
@@ -595,15 +584,14 @@ function onNavClick(e){
   show(b.dataset.v);
 }
 function renderNav(){
-  el("tabs").innerHTML = VIEWS.map(([id,l])=>`<button type="button" data-v="${id}">${l}</button>`).join("");
-  el("mtabs").innerHTML = VIEWS.map(([id,l,s])=>`<button type="button" data-v="${id}">${s||l}</button>`).join("");
+  el("tabs").innerHTML = VIEWS.map(([id,l,s])=>`<button type="button" data-v="${id}">${isPhone()?(s||l):l}</button>`).join("");
 }
 function show(id){
   const pane = el("v-"+id);
   if (!pane) return;
   document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
   pane.classList.add("on");
-  document.querySelectorAll(".tabs button, .mtabs button").forEach(b => b.classList.toggle("on", b.dataset.v===id));
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.v===id));
   window.scrollTo(0,0);
 }
 function myRed(){ return state.blockers.filter(b => b.status==="Open" && b.sev==="Red" && b.founder); }
@@ -1482,12 +1470,13 @@ function renderClub(){
 }
 
 function renderAll(){
-  renderRoad(); renderCommand(); renderLeads(); renderTenders(); renderBlockers(); renderInstall(); renderForecast(); renderReport(); renderClub();
+  [renderRoad, renderCommand, renderLeads, renderTenders, renderBlockers, renderInstall, renderForecast, renderReport, renderClub].forEach(fn => {
+    try { fn(); } catch (err) { console.error(err); }
+  });
   wrapScrollX(document.querySelector("main"));
 }
 renderNav();
 el("tabs").addEventListener("click", onNavClick);
-el("mtabs").addEventListener("click", onNavClick);
 renderAll();
 bindKeyboard();
 show(isPhone() ? "road" : "command");
