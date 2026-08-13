@@ -30,15 +30,17 @@ button{appearance:none;-webkit-appearance:none}
 select{-webkit-appearance:none;appearance:none}
 .topbar{min-height:34px;background:var(--n0);border-bottom:1px solid var(--w5);display:flex;align-items:center;justify-content:flex-end;gap:18px;padding:0 4%;font-size:10.5px;letter-spacing:.08em;color:var(--w3);font-weight:500}
 .topbar a{color:var(--w3);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
-nav{min-height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 4%;border-bottom:1px solid var(--w5);background:rgba(6,15,28,.97);position:sticky;top:0;z-index:20}
-.logo{display:flex;align-items:baseline;text-decoration:none}
+.topnav{min-height:64px;display:flex;align-items:center;gap:16px;padding:0 4%;border-bottom:1px solid var(--w5);background:rgba(6,15,28,.97);position:sticky;top:0;z-index:20}
+.logo{display:flex;align-items:baseline;text-decoration:none;flex:0 0 auto}
 .lp{font-weight:300;letter-spacing:.22em;text-transform:uppercase;font-size:15px}
 .ls{color:var(--w4);margin:0 4px;font-size:15px}
 .lc{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:15px}
-.tabs{display:flex;gap:4px;flex-wrap:wrap}
-.tabs button{background:transparent;border:1px solid transparent;color:var(--w3);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:10px 10px;min-height:44px;border-radius:1px;cursor:pointer}
-.tabs button.on,.tabs button:hover{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.06)}
-.who{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);font-weight:600}
+.tabs{display:flex;gap:4px;flex:1;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;background:transparent;border:1px solid transparent;color:var(--w3);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:10px 10px;min-height:44px;border-radius:1px;cursor:pointer}
+.tabs button.on,.tabs button:hover,.tabs button:active,.mtabs button:active{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.06)}
+.who{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);font-weight:600;white-space:nowrap}
+.mtabs{display:none}
 main{padding:28px 4% 64px;max-width:1280px;margin:0 auto}
 .view{display:none}
 .view.on{display:block}
@@ -120,9 +122,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .fb p{color:var(--w2);font-size:13px;font-weight:400}
 @media(max-width:900px){
   .row.k2,.row.k3,.row.k4,.row.k5,.cols.c2,.cols.c4,.cols.c5,.cols.c6,.road{grid-template-columns:1fr}
-  .topbar,nav > .who,.tabs{display:none}
-  nav{min-height:52px;position:sticky;top:0}
-  main{padding:18px 4% calc(88px + env(safe-area-inset-bottom))}
   .kicker{flex-wrap:wrap;row-gap:8px}
   .sheet-link{margin-left:0}
   .sheet{padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));-webkit-overflow-scrolling:touch}
@@ -137,27 +136,35 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .paper{padding:16px}
   h1{font-size:26px}
   .sub{margin-bottom:18px}
-  .mtabs{display:flex;position:fixed;top:auto;left:0;right:0;bottom:0;z-index:30;justify-content:flex-start;align-items:stretch;min-height:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;gap:2px;padding:6px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:rgba(6,15,28,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--w5);border-bottom:none;scrollbar-width:none}
-  .mtabs::-webkit-scrollbar{display:none}
-  .mtabs button{flex:0 0 auto;min-width:64px;min-height:48px;scroll-snap-align:center;background:transparent;border:1px solid transparent;color:var(--w3);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;border-radius:1px;cursor:pointer}
+}
+@media(max-width:1100px){
+  .topbar,.tabs{display:none}
+  .topnav{min-height:52px}
+  main{padding:18px 4% calc(128px + env(safe-area-inset-bottom))}
+  .mtabs{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;gap:2px;padding:6px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:rgba(6,15,28,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--w5);pointer-events:auto}
+  .mtabs button{min-width:0;width:100%;min-height:44px;background:transparent;border:1px solid transparent;color:var(--w3);font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 2px;border-radius:1px;cursor:pointer;pointer-events:auto}
   .mtabs button.on{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.08)}
-  .toast{left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:calc(72px + env(safe-area-inset-bottom));text-align:center}
+  .toast{left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:calc(112px + env(safe-area-inset-bottom));text-align:center}
   body.kb-open .mtabs{display:none}
   body.kb-open main{padding-bottom:24px}
   body.kb-open .toast{bottom:24px}
 }
-@media(min-width:901px){.mtabs{display:none}}
+@media(max-width:1100px) and (min-width:640px){
+  .mtabs{grid-template-columns:repeat(9,1fr)}
+  main{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+  .toast{bottom:calc(72px + env(safe-area-inset-bottom))}
+}
 </style>
 </head>
 <body>
 <div class="topbar">
   <a href="https://www.padel-craft.com/">padel-craft.com</a>
-  <span>Internal OS · v0.9</span>
+  <span class="who">Founder A · on the road</span>
+  <span>Internal OS · v0.10</span>
 </div>
-<nav>
+<nav class="topnav">
   <a class="logo" href="#"><span class="lp">Padel</span><span class="ls">·</span><span class="lc">Craft</span></a>
   <div class="tabs" id="tabs"></div>
-  <div class="who">Founder A · on the road</div>
 </nav>
 <main>
   <section class="view on" id="v-road"></section>
@@ -562,7 +569,7 @@ function downloadOpenSheet(){
   toast("Opens in Excel or Google Sheets");
 }
 
-function isPhone(){ return window.matchMedia("(max-width:900px)").matches; }
+function isPhone(){ return window.matchMedia("(max-width:1100px)").matches; }
 function wrapScrollX(root){
   (root||document).querySelectorAll("table").forEach(t => {
     if (t.parentElement && t.parentElement.classList.contains("scroll-x")) return;
@@ -581,19 +588,22 @@ function bindKeyboard(){
   window.visualViewport.addEventListener("resize", sync);
   window.visualViewport.addEventListener("scroll", sync);
 }
+function onNavClick(e){
+  const b = e.target.closest("button[data-v]");
+  if (!b) return;
+  e.preventDefault();
+  show(b.dataset.v);
+}
 function renderNav(){
   el("tabs").innerHTML = VIEWS.map(([id,l])=>`<button type="button" data-v="${id}">${l}</button>`).join("");
   el("mtabs").innerHTML = VIEWS.map(([id,l,s])=>`<button type="button" data-v="${id}">${s||l}</button>`).join("");
-  document.querySelectorAll(".tabs button, .mtabs button").forEach(b => { b.onclick = () => show(b.dataset.v); });
 }
 function show(id){
+  const pane = el("v-"+id);
+  if (!pane) return;
   document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
-  el("v-"+id).classList.add("on");
+  pane.classList.add("on");
   document.querySelectorAll(".tabs button, .mtabs button").forEach(b => b.classList.toggle("on", b.dataset.v===id));
-  if (isPhone()) {
-    const on = document.querySelector(".mtabs button.on");
-    if (on) on.scrollIntoView({ inline:"center", block:"nearest" });
-  }
   window.scrollTo(0,0);
 }
 function myRed(){ return state.blockers.filter(b => b.status==="Open" && b.sev==="Red" && b.founder); }
@@ -1476,6 +1486,8 @@ function renderAll(){
   wrapScrollX(document.querySelector("main"));
 }
 renderNav();
+el("tabs").addEventListener("click", onNavClick);
+el("mtabs").addEventListener("click", onNavClick);
 renderAll();
 bindKeyboard();
 show(isPhone() ? "road" : "command");
