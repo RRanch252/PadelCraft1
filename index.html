@@ -102,7 +102,7 @@ textarea{min-height:72px;resize:vertical}
 <body>
 <div class="topbar">
   <a href="https://www.padel-craft.com/">padel-craft.com</a>
-  <span>Internal OS · v0.5</span>
+  <span>Internal OS · v0.6</span>
 </div>
 <nav>
   <a class="logo" href="#"><span class="lp">Padel</span><span class="ls">·</span><span class="lc">Craft</span></a>
@@ -132,7 +132,14 @@ const VIEWS = [
   ["report","Report"],
   ["club","Club"]
 ];
-const WEEKS = ["17 Aug","24 Aug","31 Aug","7 Sep","14 Sep","21 Sep","28 Sep","5 Oct","12 Oct","19 Oct","26 Oct","2 Nov"];
+const GP_FLOOR = 0.24;
+const RATE_CARD = [
+  { sku: "PC-OUT", name: "Outdoor court · GreenSet supply & install", unit: "court", price: 46000 },
+  { sku: "PC-IN", name: "Indoor / covered extra", unit: "court", price: 14000 },
+  { sku: "PC-LED", name: "LED lighting 300 lux", unit: "court", price: 8000 },
+  { sku: "PC-M12", name: "Maintenance 12 months", unit: "court", price: 1800 },
+  { sku: "PC-M24", name: "Maintenance 24 months", unit: "court", price: 3200 }
+];
 const CREW = ["Michael","Paul","Tech 2","Tech 3","Third party"];
 
 const defaults = {
@@ -173,9 +180,34 @@ const defaults = {
     { deal: "Club D", path: "Direct", stage: "Proposal", courts: 4, w: 0, close: "Undated" }
   ],
   drafts: [
-    { id: "la-rft", title: "Local authority RFT — initial pack", account: "Local authority", version: "v1", stage: "Initial document out", file: "tenders/local-authority-rft-v1.md", uploadedBy: "Carys", date: "11 Aug 2026", status: "Awaiting founder", excerpt: "Method statement, 8-court programme, GreenSet Carbon spec, 12-week install window, exclusions for groundworks.", feedback: [] },
-    { id: "lc-bafo", title: "Leisure chain — secondary / BAFO", account: "Leisure chain", version: "v1", stage: "Secondary document out", file: "tenders/leisure-chain-bafo-v1.md", uploadedBy: "Carys", date: "8 Aug 2026", status: "Changes requested", excerpt: "Revised price for 12 courts across 3 sites. Staging plan and maintenance offer added.", feedback: [{ by: "Founder B", date: "8 Aug", text: "Cut mobilisation 8%. Cap maintenance at 24 months. Name Michael as delivery lead. Strike the September start — Install 90 is full. Split price per site; do not bundle lighting until halls are confirmed." }] },
-    { id: "cf-out", title: "Council framework — outline", account: "Council framework", version: "v0", stage: "Bid / no-bid", file: "tenders/council-framework-outline.md", uploadedBy: "Intern", date: "12 Aug 2026", status: "Draft", excerpt: "Notice summary only. No pack until bid/no-bid.", feedback: [] }
+    {
+      id: "la-rft", title: "Local authority RFT", account: "Local authority", version: "v1",
+      stage: "Initial document out", uploadedBy: "Carys", date: "11 Aug 2026",
+      status: "Awaiting founder", spec: "Locked · standard outdoor pack", specOk: true,
+      feedback: [],
+      lines: [
+        { sku: "PC-OUT", name: "Outdoor court · GreenSet supply & install", qty: 8, card: 46000, quoted: 43700, cost: 32800 },
+        { sku: "PC-LED", name: "LED lighting 300 lux", qty: 8, card: 8000, quoted: 7600, cost: 4800 },
+        { sku: "PC-M24", name: "Maintenance 24 months", qty: 8, card: 3200, quoted: 3040, cost: 1400 }
+      ]
+    },
+    {
+      id: "lc-bafo", title: "Leisure chain BAFO", account: "Leisure chain", version: "v1",
+      stage: "Secondary document out", uploadedBy: "Carys", date: "8 Aug 2026",
+      status: "Changes requested", spec: "Locked · lighting excluded", specOk: true,
+      feedback: [{ by: "Founder B", date: "8 Aug", text: "11% off card puts GP at 20%, below the 24% floor. Hold discount at 6% or cut mobilisation in the cost, not the price. Do not bundle lighting." }],
+      lines: [
+        { sku: "PC-OUT", name: "Outdoor court · GreenSet supply & install", qty: 12, card: 46000, quoted: 40940, cost: 33500 },
+        { sku: "PC-M24", name: "Maintenance 24 months", qty: 12, card: 3200, quoted: 2848, cost: 1400 }
+      ]
+    },
+    {
+      id: "cf-out", title: "Council framework", account: "Council framework", version: "v0",
+      stage: "Bid / no-bid", uploadedBy: "Intern", date: "12 Aug 2026",
+      status: "Draft", spec: "Not locked · outline only", specOk: false,
+      feedback: [],
+      lines: []
+    }
   ],
   selectedDraft: "la-rft",
   form: { account: "", kind: "Client inbound", said: "", raise: false },
@@ -268,7 +300,7 @@ let horizon = 12;
 try {
   const saved = JSON.parse(localStorage.getItem("pcos-v2") || "null");
   if (saved) {
-    if (saved.drafts) state.drafts = saved.drafts;
+    if (saved.drafts && saved.drafts[0] && saved.drafts[0].lines) state.drafts = saved.drafts;
     if (saved.blockers) state.blockers = saved.blockers;
     if (saved.calls) state.calls = saved.calls;
     if (saved.selectedDraft) state.selectedDraft = saved.selectedDraft;
@@ -602,21 +634,87 @@ function renderCommand(){
     <div class="band">Triage</div>
     <div class="row k5">
       <div class="kpi bad"><div class="v">${red}</div><div class="l">Red blockers</div></div>
-      <div class="kpi warn"><div class="v">2</div><div class="l">Tender packs due this week</div></div>
+      <div class="kpi warn"><div class="v">${state.drafts.filter(d=>{const x=dealCommercial(d); return x && x.gpPct<GP_FLOOR && d.status!=="Commercial approved";}).length}</div><div class="l">Commercials below 24% GP</div></div>
       <div class="kpi bad"><div class="v">${state.jobs.filter(j=>!j.crew.length).length}</div><div class="l">Unresourced installs</div></div>
       <div class="kpi warn"><div class="v">${state.jobs.filter(j=>j.kit==="Not ordered").length}</div><div class="l">Kit not ordered</div></div>
       <div class="kpi bad" style="cursor:pointer" onclick="show('report')"><div class="v">${eurk(state.xero.chase.filter(i=>i.age>0).reduce((a,i)=>a+i.amount,0))}</div><div class="l">Xero overdue · chase</div></div>
     </div>
     <div class="cols c4">
       <div class="col"><h3>Blockers · red first</h3>${cards(openBlockers().slice(0,3).map(b=>({t:b.t,m:b.m,cls:b.sev==="Red"?"red":"amber"})))}</div>
-      <div class="col"><h3>Tenders · next document</h3>${cards([{t:"Local authority · 8",m:"Initial pack due Thu",cls:"amber"},{t:"Leisure chain · 12",m:"Secondary pack due 22 Sep"}])}</div>
+      <div class="col"><h3>Commercials to approve</h3>${cards(state.drafts.filter(d=>d.status==="Awaiting founder"||d.status==="Changes requested").map(d=>{
+        const c = dealCommercial(d);
+        return c
+          ? { t: d.account+" · "+c.qty+" courts", m: "−"+Math.round(c.disc*100)+"% off card · GP "+Math.round(c.gpPct*100)+"%", cls: c.gpPct<GP_FLOOR?"red":"amber" }
+          : { t: d.account, m: "No commercial yet", cls: "amber" };
+      }))}</div>
       <div class="col"><h3>Install 90</h3>${cards(state.jobs.filter(j=>j.risk).map(j=>({t:j.name,m:j.risk+" · "+j.kit,cls:"red"})))}</div>
-      <div class="col"><h3>Drafts awaiting you</h3>${cards(state.drafts.filter(d=>d.status==="Awaiting founder").map(d=>({t:d.title,m:d.uploadedBy+" · "+d.date,cls:"amber"})))}</div>
+      <div class="col"><h3>Dublin club</h3>${cards([{t:"Waitlist 43 / week",m:"Peak indoor · expand, do not discount 19:00",cls:"amber"}])}</div>
     </div>`;
 }
 
 function draftById(){ return state.drafts.find(d => d.id===state.selectedDraft) || state.drafts[0]; }
 function selectDraft(id){ state.selectedDraft = id; persist(); renderAll(); show("tenders"); }
+function dealCommercial(d){
+  if (!d || !d.lines || !d.lines.length) return null;
+  const card = d.lines.reduce((a,l)=>a+l.card*l.qty,0);
+  const quoted = d.lines.reduce((a,l)=>a+l.quoted*l.qty,0);
+  const cost = d.lines.reduce((a,l)=>a+l.cost*l.qty,0);
+  const qty = d.lines.filter(l=>l.sku==="PC-OUT"||l.sku==="PC-IN").reduce((a,l)=>a+l.qty,0) || d.lines[0].qty;
+  return { card, quoted, cost, disc: card?1-quoted/card:0, gp: quoted-cost, gpPct: quoted?(quoted-cost)/quoted:0, qty };
+}
+function downloadBlob(name, text){
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 500);
+}
+function rateCardText(){
+  return "Padel-Craft rate card · August 2026\nPrices ex-VAT. Founder approval required below 24% GP.\n\n"+RATE_CARD.map(r=>r.sku+"\t"+r.name+"\t€"+r.price.toLocaleString("en-IE")+" / "+r.unit).join("\n");
+}
+function commercialText(d){
+  const c = dealCommercial(d);
+  if (!c) return d.account+" — no commercial yet. Bid/no-bid first.\n";
+  const lines = d.lines.map(l=>[l.sku, l.name, l.qty, l.card, l.quoted, l.cost, l.quoted-l.cost].join("\t")).join("\n");
+  return [
+    "Padel-Craft commercial one-pager",
+    d.account+" · "+d.version+" · "+d.date,
+    "Spec: "+d.spec,
+    "",
+    "Rate card total\t"+c.card,
+    "Discount off card\t"+(c.disc*100).toFixed(1)+"%",
+    "Quoted\t"+c.quoted,
+    "Estimated cost\t"+c.cost,
+    "Estimated GP\t"+c.gp+" ("+(c.gpPct*100).toFixed(1)+"%)",
+    "Floor\t"+(GP_FLOOR*100)+"%",
+    "",
+    "SKU\tLine\tQty\tCard\tQuoted\tCost\tGP",
+    lines,
+    "",
+    "Approve the three numbers. The standard pack is boilerplate once spec is locked."
+  ].join("\n");
+}
+function standardPackText(d){
+  return [
+    "Padel-Craft standard proposal pack  ·  template v3",
+    "Account: "+d.account,
+    "This pack is standardised. Do not rewrite it for a founder review.",
+    "",
+    "1. Cover and company",
+    "2. Scope — outdoor GreenSet court, fencing, nets, as rate card SKU PC-OUT",
+    "3. Exclusions — groundworks by others unless priced",
+    "4. Programme — typical 1 week per two courts after groundworks ready",
+    "5. Quality and snag process",
+    "6. Maintenance option — 12 or 24 months as priced",
+    "7. Commercial — see the one-pager. That is the document to approve.",
+    "",
+    "Spec status: "+d.spec
+  ].join("\n");
+}
+function downloadRateCard(){ downloadBlob("padel-craft-rate-card-aug-2026.txt", rateCardText()); toast("Rate card downloaded"); }
+function downloadCommercial(){ const d=draftById(); downloadBlob("commercial-"+d.id+".txt", commercialText(d)); toast("Commercial one-pager downloaded"); }
+function downloadStandard(){ const d=draftById(); downloadBlob("standard-pack-"+d.id+".txt", standardPackText(d)); toast("Standard pack downloaded"); }
 function addFeedback(){
   const box = el("fb-text");
   const text = (box && box.value.trim()) || "";
@@ -624,66 +722,112 @@ function addFeedback(){
   const d = draftById();
   d.feedback.push({ by: "Founder A", date: "13 Aug", text });
   d.status = "Changes requested";
-  persist(); toast("Feedback sent to the team"); renderAll(); show("tenders");
+  persist(); toast("Commercial sent back"); renderAll(); show("tenders");
 }
 function markIssue(){
   const d = draftById();
-  d.status = "Clear to issue";
-  persist(); toast("Clear to issue"); renderAll(); show("tenders");
+  const c = dealCommercial(d);
+  if (!c) { toast("No commercial to approve"); return; }
+  d.status = "Commercial approved";
+  persist(); toast(c.gpPct<GP_FLOOR ? "Approved below floor — noted" : "Commercial approved"); renderAll(); show("tenders");
 }
 function uploadDraft(){
-  const title = (el("up-title") && el("up-title").value.trim()) || "Untitled pack";
+  const title = (el("up-title") && el("up-title").value.trim()) || "Untitled";
   const who = (el("up-who") && el("up-who").value) || "Carys";
   const stage = (el("up-stage") && el("up-stage").value) || "Initial document out";
-  const fileEl = el("up-file");
-  const fname = (fileEl && fileEl.files[0] && fileEl.files[0].name) || "pack.pdf";
+  const qty = parseInt(el("up-qty") && el("up-qty").value, 10) || 2;
+  const disc = (parseFloat(el("up-disc") && el("up-disc").value) || 0) / 100;
+  const card = 46000, quoted = Math.round(card*(1-disc)), cost = 32800;
   const id = "d"+Date.now();
-  state.drafts.unshift({ id, title, account: title, version: "v1", stage, file: "tenders/"+fname, uploadedBy: who, date: "13 Aug 2026", status: "Awaiting founder", excerpt: "Uploaded from the team. Open the file in the repository path shown.", feedback: [] });
+  state.drafts.unshift({
+    id, title, account: title, version: "v1", stage, uploadedBy: who, date: "13 Aug 2026",
+    status: "Awaiting founder", spec: "Locked · standard outdoor pack", specOk: true, feedback: [],
+    lines: [{ sku: "PC-OUT", name: "Outdoor court · GreenSet supply & install", qty, card, quoted, cost }]
+  });
   state.selectedDraft = id;
-  persist(); toast("Draft in the repository"); renderAll(); show("tenders");
+  persist(); toast("Commercial in for approval"); renderAll(); show("tenders");
 }
 
 function renderTenders(){
   const cols = Object.entries(state.tenders).map(([name,list]) => `<div class="col"><h3>${name}</h3>${cards(list)}</div>`).join("");
   const d = draftById();
-  const list = state.drafts.map(x => `
-    <div class="card ${x.id===d.id?"on":""}" onclick="selectDraft('${x.id}')">
+  const c = dealCommercial(d);
+  const list = state.drafts.map(x => {
+    const xc = dealCommercial(x);
+    const m = xc ? "−"+Math.round(xc.disc*100)+"% · GP "+Math.round(xc.gpPct*100)+"% · "+x.status : x.status+" · no commercial";
+    return `<div class="card ${x.id===d.id?"on":""} ${xc && xc.gpPct<GP_FLOOR?"red":""}" onclick="selectDraft('${x.id}')">
       <div class="t">${esc(x.title)}</div>
-      <div class="m">${esc(x.uploadedBy)} · ${esc(x.version)} · ${esc(x.status)}</div>
-    </div>`).join("");
-  const thread = d.feedback.length ? d.feedback.map(f => `<div class="fb"><div class="who">${esc(f.by)} · ${esc(f.date)}</div><p>${esc(f.text)}</p></div>`).join("") : `<div class="empty">No founder feedback yet.</div>`;
+      <div class="m">${esc(m)}</div>
+    </div>`;
+  }).join("");
+  const thread = d.feedback.length ? d.feedback.map(f => `<div class="fb"><div class="who">${esc(f.by)} · ${esc(f.date)}</div><p>${esc(f.text)}</p></div>`).join("") : `<div class="empty">No commercial notes yet.</div>`;
+  const lineRows = (d.lines||[]).map(l => {
+    const gp = (l.quoted-l.cost)*l.qty;
+    const disc = l.card ? (1-l.quoted/l.card) : 0;
+    return `<tr>
+      <td>${esc(l.name)}</td><td>${l.qty}</td>
+      <td>${eur(l.card)}</td><td>${Math.round(disc*100)}%</td>
+      <td>${eur(l.quoted)}</td><td>${eur(l.cost)}</td>
+      <td>${eur(gp)}</td>
+    </tr>`;
+  }).join("");
+  const kpis = c ? `
+    <div class="row k3">
+      <div class="kpi"><div class="v">${eurk(c.card)}</div><div class="l">Rate card</div></div>
+      <div class="kpi ${c.disc>0.08?"warn":""}"><div class="v">${Math.round(c.disc*100)}%</div><div class="l">Discount off card</div></div>
+      <div class="kpi ${c.gpPct<GP_FLOOR?"bad":""}"><div class="v">${eurk(c.gp)}</div><div class="l">Est. GP · ${Math.round(c.gpPct*100)}%${c.gpPct<GP_FLOOR?" · below 24% floor":""}</div></div>
+    </div>` : `<p class="sub">No commercial. Take bid/no-bid before a pack.</p>`;
   el("v-tenders").innerHTML = `
     <div class="kicker">03 · Tender desk</div>
-    <h1>Two document gates<em>Then the draft repository.</em></h1>
-    <p class="sub">Team uploads packs here. You mark changes or clear to issue. In production these files live under tenders/ in the PadelCraft1 repo.</p>
+    <h1>Approve the commercial<em>Rate card. Discount. Gross profit.</em></h1>
+    <p class="sub">Once spec is locked, the pack is the standard template. You are not reviewing prose. Download the one-pager, check the three numbers, approve or send back.</p>
     <div class="cols c6">${cols}</div>
-    <div class="band">Draft repository</div>
+    <div class="band">Commercials in for approval</div>
     <div class="cols c2">
       <div>
         ${list}
         <div class="panel" style="margin-top:12px">
-          <div class="kicker" style="margin-bottom:4px">Team upload</div>
-          <label>Title</label><input id="up-title" placeholder="Account — initial or secondary pack">
+          <div class="kicker" style="margin-bottom:4px">Team: put a commercial in</div>
+          <label>Account</label><input id="up-title" placeholder="Club or council">
+          <label>Courts</label><input id="up-qty" type="number" value="2">
+          <label>Discount % off card</label><input id="up-disc" type="number" value="0">
           <label>Uploaded by</label>
           <select id="up-who"><option>Carys</option><option>Intern</option><option>Michael</option></select>
           <label>Gate</label>
           <select id="up-stage"><option>Initial document out</option><option>Secondary document out</option><option>Bid / no-bid</option></select>
-          <label>File</label><input id="up-file" type="file">
-          <button class="btn pri" style="margin-top:14px" onclick="uploadDraft()">Add to repository</button>
+          <button class="btn pri" style="margin-top:14px" onclick="uploadDraft()">Submit commercial</button>
         </div>
       </div>
-      <div class="panel">
-        <div class="kicker" style="margin-bottom:8px">${esc(d.stage)}</div>
-        <h3 style="text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">${esc(d.title)}</h3>
-        <p class="sub" style="margin-bottom:10px">${esc(d.file)} · ${esc(d.uploadedBy)} · ${esc(d.date)} · <span class="tag">${esc(d.status)}</span></p>
-        <p class="sub">${esc(d.excerpt)}</p>
-        <div class="band">Your feedback to the team</div>
+      <div>
+        <div class="kicker" style="margin-bottom:8px">${esc(d.stage)} · ${esc(d.status)}</div>
+        <h3 style="text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">${esc(d.title)}</h3>
+        <p class="sub" style="margin-bottom:12px">${esc(d.spec)} · ${esc(d.uploadedBy)} · ${esc(d.date)}</p>
+        ${kpis}
+        ${c ? `<table>
+          <thead><tr><th>Line</th><th>Qty</th><th>Card</th><th>Disc</th><th>Quoted</th><th>Cost</th><th>GP</th></tr></thead>
+          <tbody>${lineRows}
+            <tr><td>Total</td><td></td><td>${eur(c.card)}</td><td>${Math.round(c.disc*100)}%</td><td>${eur(c.quoted)}</td><td>${eur(c.cost)}</td><td>${eur(c.gp)}</td></tr>
+          </tbody>
+        </table>` : ""}
+        <div class="band">Download</div>
+        <button class="btn sm pri" onclick="downloadCommercial()">Commercial one-pager</button>
+        <button class="btn sm" onclick="downloadStandard()">Standard pack (boilerplate)</button>
+        <button class="btn sm" onclick="downloadRateCard()">Rate card</button>
+        <div class="band">Send back or approve</div>
         ${thread}
-        <label>Change request</label>
-        <textarea id="fb-text" placeholder="What to change. Be specific — section, number, site."></textarea>
-        <button class="btn pri" style="margin-top:10px" onclick="addFeedback()">Send changes</button>
-        <button class="btn" onclick="markIssue()">Clear to issue</button>
+        <label>If you send it back — say which number</label>
+        <textarea id="fb-text" placeholder="Discount, GP, or a line. Not the method statement."></textarea>
+        <button class="btn pri" style="margin-top:10px" onclick="addFeedback()">Send commercial back</button>
+        <button class="btn" onclick="markIssue()">${c && c.gpPct<GP_FLOOR?"Approve below floor":"Approve commercial"}</button>
       </div>
+    </div>
+    <div class="paper" style="margin-top:16px">
+      <h3>Rate card · August 2026</h3>
+      <p class="note">Ex-VAT. Same card on every commercial. Discount is the only variable you approve, plus the GP that falls out of it.</p>
+      <table>
+        <thead><tr><th>SKU</th><th>Line</th><th>Price</th></tr></thead>
+        <tbody>${RATE_CARD.map(r=>`<tr><td>${r.sku}</td><td>${esc(r.name)}</td><td>${eur(r.price)} / ${r.unit}</td></tr>`).join("")}</tbody>
+      </table>
     </div>`;
 }
 
