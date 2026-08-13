@@ -12,6 +12,7 @@
   --n0:#060F1C;--n1:#0B1C30;--n2:#0F2540;--n3:#163050;--n4:#1E3D62;
   --w:#fff;--w2:rgba(255,255,255,.85);--w3:rgba(255,255,255,.55);--w4:rgba(255,255,255,.25);--w5:rgba(255,255,255,.08);
   --f:'Montserrat',sans-serif;--amber:#E8C07A;--danger:#E07A6A;--ok:#8FB8E8;
+  --paper:#F4F1EA;--ink:#0B1C30;--mute:#5C6570;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--n1);color:var(--w);font-family:var(--f);font-size:15px;font-weight:300;line-height:1.5;min-height:100%}
@@ -25,7 +26,7 @@ nav{height:64px;display:flex;align-items:center;justify-content:space-between;pa
 .ls{color:var(--w4);margin:0 4px;font-size:15px}
 .lc{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:15px}
 .tabs{display:flex;gap:4px;flex-wrap:wrap}
-.tabs button{background:transparent;border:1px solid transparent;color:var(--w3);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;border-radius:1px;cursor:pointer}
+.tabs button{background:transparent;border:1px solid transparent;color:var(--w3);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:8px 8px;border-radius:1px;cursor:pointer}
 .tabs button.on,.tabs button:hover{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.06)}
 .who{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);font-weight:600}
 main{padding:28px 4% 64px;max-width:1280px;margin:0 auto}
@@ -35,17 +36,20 @@ main{padding:28px 4% 64px;max-width:1280px;margin:0 auto}
 .kicker:before{content:"";width:28px;height:1px;background:var(--w4)}
 h1{font-size:clamp(22px,3vw,34px);font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:.97;margin-bottom:8px}
 h1 em{font-style:normal;display:block;color:var(--w2)}
-.sub{color:var(--w3);font-weight:300;max-width:640px;margin-bottom:28px;line-height:1.7}
+.sub{color:var(--w3);font-weight:300;max-width:720px;margin-bottom:28px;line-height:1.7}
 .row{display:grid;gap:10px;margin-bottom:16px}
+.row.k2{grid-template-columns:1.3fr .7fr}
+.row.k3{grid-template-columns:repeat(3,1fr)}
 .row.k4{grid-template-columns:repeat(4,1fr)}
 .row.k5{grid-template-columns:repeat(5,1fr)}
-.kpi{background:var(--n0);border:1px solid var(--w5);padding:16px 16px;border-radius:1px}
+.kpi{background:var(--n0);border:1px solid var(--w5);padding:16px;border-radius:1px}
 .kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1}
 .kpi .l{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--w3);margin-top:6px}
 .kpi.warn .v{color:var(--amber)}
 .kpi.bad .v{color:var(--danger)}
 .band{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);margin:18px 0 10px}
 .cols{display:grid;gap:10px}
+.cols.c2{grid-template-columns:280px 1fr}
 .cols.c4{grid-template-columns:repeat(4,1fr)}
 .cols.c6{grid-template-columns:repeat(6,1fr)}
 .col h3{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--w3);font-weight:700;margin-bottom:8px}
@@ -55,6 +59,7 @@ h1 em{font-style:normal;display:block;color:var(--w2)}
 .card .m{font-size:11px;color:var(--w3);margin-top:3px}
 .card.red{border-color:rgba(224,122,106,.45);background:rgba(224,122,106,.1)}
 .card.amber{border-color:rgba(232,192,122,.35);background:rgba(232,192,122,.08)}
+.card.on{border-color:var(--w);background:var(--n3)}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--w3);font-weight:700;padding:8px 8px 8px 0;border-bottom:1px solid var(--w4)}
 td{padding:10px 8px 10px 0;border-bottom:1px solid var(--w5);vertical-align:top;font-weight:400;color:var(--w2)}
@@ -73,8 +78,21 @@ textarea{min-height:72px;resize:vertical}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--w);color:var(--n0);padding:12px 18px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:1px;display:none;z-index:50}
 .toast.on{display:block}
 .empty{color:var(--w4);font-size:12px;padding:8px 0}
+.paper{background:var(--paper);color:var(--ink);padding:22px 24px;border-radius:1px;margin-bottom:16px}
+.paper h3{font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin:0 0 4px;color:var(--ink)}
+.paper .note{font-size:11.5px;color:var(--mute);font-weight:400;margin:0 0 14px;line-height:1.45;max-width:none}
+.paper svg{display:block;max-width:100%;height:auto}
+.paper table th{color:#5C6570;border-bottom-color:rgba(11,28,48,.25)}
+.paper table td{color:#0B1C30;border-bottom-color:rgba(11,28,48,.12);font-weight:400}
+.paper .heat th{color:#5C6570;border:none;text-align:center;font-size:8.5px;letter-spacing:.06em;padding:4px 2px;font-weight:600}
+.paper .heat td{text-align:center;font-size:9px;font-weight:600;padding:5px 2px;border:1px solid rgba(11,28,48,.08)}
+.paper .heat td.lab{text-align:left;border:none;padding-left:0;font-size:10px;color:#0B1C30}
+.kpi{cursor:default}
+.fb{border-top:1px solid var(--w5);padding:10px 0}
+.fb .who{color:var(--amber);margin-bottom:4px}
+.fb p{color:var(--w2);font-size:13px;font-weight:400}
 @media(max-width:900px){
-  .row.k4,.row.k5,.cols.c4,.cols.c6,.road{grid-template-columns:1fr}
+  .row.k2,.row.k3,.row.k4,.row.k5,.cols.c2,.cols.c4,.cols.c6,.road{grid-template-columns:1fr}
   .tabs{display:none}
   .mtabs{display:flex;overflow-x:auto;gap:4px;padding:8px 4%;border-bottom:1px solid var(--w5)}
 }
@@ -84,7 +102,7 @@ textarea{min-height:72px;resize:vertical}
 <body>
 <div class="topbar">
   <a href="https://www.padel-craft.com/">padel-craft.com</a>
-  <span>Internal OS · v0.1 prototype</span>
+  <span>Internal OS · v0.5</span>
 </div>
 <nav>
   <a class="logo" href="#"><span class="lp">Padel</span><span class="ls">·</span><span class="lc">Craft</span></a>
@@ -99,6 +117,8 @@ textarea{min-height:72px;resize:vertical}
   <section class="view" id="v-blockers"></section>
   <section class="view" id="v-install"></section>
   <section class="view" id="v-forecast"></section>
+  <section class="view" id="v-report"></section>
+  <section class="view" id="v-club"></section>
 </main>
 <div class="toast" id="toast"></div>
 <script>
@@ -108,11 +128,15 @@ const VIEWS = [
   ["tenders","Tenders"],
   ["blockers","Blockers"],
   ["install","Install 90"],
-  ["forecast","Forecast"]
+  ["forecast","Forecast"],
+  ["report","Report"],
+  ["club","Club"]
 ];
+const WEEKS = ["17 Aug","24 Aug","31 Aug","7 Sep","14 Sep","21 Sep","28 Sep","5 Oct","12 Oct","19 Oct","26 Oct","2 Nov"];
+const CREW = ["Michael","Paul","Tech 2","Tech 3","Third party"];
 
-const state = {
-  sold: { lastQ: 18, lastWeek: 2, thisWeek: 1, projectedQ: 9 },
+const defaults = {
+  sold: { lastQ: 18, lastWeek: 2, thisWeek: 1, projectedQ: 9, weekly: [1,0,2,1,0,2,1,1] },
   forecast: { nextQ: 14, y12: 52, backlog: 48, undated: 6 },
   nextSite: { t: "Club B · visit 14:00", m: "Direct · 2 courts · next stop" },
   calls: [
@@ -134,44 +158,381 @@ const state = {
     "Secondary document out": [{ t: "Leisure chain · 12", m: "BAFO due 22 Sep · Founder B" }],
     "Award": [{ t: "Won → Verbal then Booked", m: "Lost keeps the pack" }]
   },
-  installs: [
-    ["36","Club H",2,"Install","Covered · Michael + 2","On site","—"],
-    ["37","Hotel F",1,"Coordination","Covered · Paul flex","Ordered · ETA W36","—"],
-    ["38","Site X",2,"Coordination","Partial · 1 of 3","Not ordered","Red · kit + crew"],
-    ["40","Club G",2,"Procurement","Unassigned","Ordered","Red · deposit"],
-    ["42–43","Operator A site 2",4,"Pre-contract","Unassigned","Not ordered","Amber · window TBC"]
+  jobs: [
+    { name: "Club H", courts: 2, start: 0, dur: 1, crew: ["Michael","Tech 2","Tech 3"], kit: "On site", risk: "" },
+    { name: "Hotel F", courts: 1, start: 1, dur: 1, crew: ["Paul"], kit: "Ordered", risk: "" },
+    { name: "Site X", courts: 2, start: 2, dur: 2, crew: ["Michael","Tech 2"], kit: "Not ordered", risk: "kit + crew" },
+    { name: "Club G", courts: 2, start: 3, dur: 2, crew: ["Michael","Paul"], kit: "Ordered", risk: "deposit" },
+    { name: "Operator A site 2", courts: 4, start: 7, dur: 3, crew: [], kit: "Not ordered", risk: "window TBC" }
   ],
   pipeline: [
-    ["Operator A site 3","Direct","Proposal",4,"40%","1.6","This Q"],
-    ["Hotel F","Direct","Verbal",1,"70%","0.7","This Q"],
-    ["Local authority","Tender","Initial document out",8,"25%","2.0","Next Q"],
-    ["Leisure chain","Tender","Secondary document out",12,"45%","5.4","Next Q"],
-    ["Club D","Direct","Proposal",4,"40%","—","Undated · leak"]
+    { deal: "Operator A site 3", path: "Direct", stage: "Proposal", courts: 4, w: 0.40, close: "This Q" },
+    { deal: "Hotel F", path: "Direct", stage: "Verbal", courts: 1, w: 0.70, close: "This Q" },
+    { deal: "Local authority", path: "Tender", stage: "Initial document out", courts: 8, w: 0.25, close: "Next Q" },
+    { deal: "Leisure chain", path: "Tender", stage: "Secondary document out", courts: 12, w: 0.45, close: "Next Q" },
+    { deal: "Club D", path: "Direct", stage: "Proposal", courts: 4, w: 0, close: "Undated" }
   ],
-  form: { account: "", kind: "Client inbound", said: "", raise: false }
+  drafts: [
+    { id: "la-rft", title: "Local authority RFT — initial pack", account: "Local authority", version: "v1", stage: "Initial document out", file: "tenders/local-authority-rft-v1.md", uploadedBy: "Carys", date: "11 Aug 2026", status: "Awaiting founder", excerpt: "Method statement, 8-court programme, GreenSet Carbon spec, 12-week install window, exclusions for groundworks.", feedback: [] },
+    { id: "lc-bafo", title: "Leisure chain — secondary / BAFO", account: "Leisure chain", version: "v1", stage: "Secondary document out", file: "tenders/leisure-chain-bafo-v1.md", uploadedBy: "Carys", date: "8 Aug 2026", status: "Changes requested", excerpt: "Revised price for 12 courts across 3 sites. Staging plan and maintenance offer added.", feedback: [{ by: "Founder B", date: "8 Aug", text: "Cut mobilisation 8%. Cap maintenance at 24 months. Name Michael as delivery lead. Strike the September start — Install 90 is full. Split price per site; do not bundle lighting until halls are confirmed." }] },
+    { id: "cf-out", title: "Council framework — outline", account: "Council framework", version: "v0", stage: "Bid / no-bid", file: "tenders/council-framework-outline.md", uploadedBy: "Intern", date: "12 Aug 2026", status: "Draft", excerpt: "Notice summary only. No pack until bid/no-bid.", feedback: [] }
+  ],
+  selectedDraft: "la-rft",
+  form: { account: "", kind: "Client inbound", said: "", raise: false },
+  xero: {
+    asOf: "13 Aug 2026",
+    courtsNow: 60,
+    target12: 180,
+    openMar: 256000,
+    balance: 214000,
+    deposits90: 186000,
+    inflows30: 76000,
+    outflows30: 98000,
+    rev6: 486000,
+    gp6: 126000,
+    gm6: 0.26,
+    rev6proj: 612000,
+    gp6proj: 177000,
+    gm6proj: 0.29,
+    monthsAct: ["Mar","Apr","May","Jun","Jul","Aug"],
+    inAct:  [82000,61000,94000,48000,110000,76000],
+    outAct: [71000,88000,79000,92000,85000,98000],
+    monthsProj: ["Sep","Oct","Nov","Dec","Jan","Feb"],
+    inProj:  [118000,96000,142000,88000,74000,91000],
+    outProj: [104000,121000,98000,86000,79000,84000],
+    chase: [
+      { no: "INV-1041", who: "Club G", type: "Deposit", amount: 25200, age: 18, due: "Overdue 18d" },
+      { no: "INV-1038", who: "Site X", type: "Milestone", amount: 18400, age: 9, due: "Overdue 9d" },
+      { no: "INV-1022", who: "Operator A", type: "Retention", amount: 6800, age: 41, due: "Overdue 41d" },
+      { no: "INV-1048", who: "Club H", type: "Maintenance", amount: 440, age: 12, due: "Overdue 12d" },
+      { no: "INV-1044", who: "Hotel F", type: "Deposit", amount: 12600, age: -5, due: "Due 18 Aug" },
+      { no: "INV-1051", who: "Tours · Sep group", type: "Tour", amount: 4800, age: -11, due: "Due 24 Aug" }
+    ],
+    streams: [
+      { name: "Court install", last: 468000, next: 522000, gm: 0.28, state: "Live · includes 1 repeat site" },
+      { name: "Maintenance", last: 12000, next: 28000, gm: 0.62, state: "2 of 12 installed on a monthly plan" },
+      { name: "Academy", last: 0, next: 22000, gm: 0.40, state: "First cohort September · 8 of 12 places" },
+      { name: "Tours", last: 6000, next: 32000, gm: 0.35, state: "Group of 16 · 9 booked · founders sponsor" },
+      { name: "Showroom offset", last: 0, next: 8000, gm: 0.90, state: "Partners + events vs €2k/mo rent · base not open" }
+    ],
+    verticals: {
+      installed: 12,
+      onPlan: 2,
+      mrr: 1100,
+      academyPlaces: 8,
+      academyCap: 12,
+      tourBooked: 9,
+      tourCap: 16,
+      showroomRentMo: 2000,
+      offsetMo: 0,
+      repeatSites: 1
+    }
+  },
+  club: {
+    name: "Padel-Craft Dublin",
+    weekOf: "10–16 Aug 2026",
+    courts: 8,
+    indoor: 2,
+    hours: ["08","09","10","11","12","13","14","15","16","17","18","19","20","21"],
+    days: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+    heat: [
+      [26,24,34,38,44,48,42,40,58,78,91,95,89,50],
+      [28,25,36,40,46,50,44,42,60,80,92,96,90,48],
+      [27,24,35,39,45,49,43,41,59,79,93,95,88,46],
+      [29,26,37,41,47,51,45,43,62,82,94,97,91,52],
+      [24,22,32,36,40,44,48,52,64,86,96,98,94,68],
+      [58,68,78,84,82,76,74,70,76,84,90,88,72,44],
+      [52,62,74,80,78,70,64,58,62,70,74,66,50,28]
+    ],
+    rate: [22,22,22,22,28,28,28,28,28,38,38,38,38,28],
+    ppc:  [2.6,2.5,2.8,3.0,3.2,3.3,3.1,3.2,3.5,3.8,3.9,3.9,3.8,3.5],
+    fohHours: [33,33,33,33,36,40,30],
+    coachHours: [16,18,20,22,28,36,18],
+    waitlist: [7,9,8,10,6,2,1],
+    indoorUtil: 0.84,
+    outdoorUtil: 0.54,
+    gmvMix: { court: 0.68, academy: 0.12, fb: 0.11, retail: 0.05, other: 0.04 },
+    labourPct: 0.22,
+    playtomicTop: 3531,
+    expansion: [
+      { t: "Add 2 indoor courts", m: "Mon–Thu 18:00–21:00 waitlist 34 parties/week. Ireland is a Playtomic hotspot: expand capacity, do not discount peak.", cls: "amber" },
+      { t: "Cover outdoor 5–6", m: "Outdoor weekly util 54% vs indoor 84%. Winter evenings are the leak. A roof recovers peak without a new site.", cls: "amber" },
+      { t: "Academy 09:00–12:00", m: "Weekday mornings sit at ~30%. Heartlands pattern: fill the valley with academy, do not add courts for midday.", cls: "" },
+      { t: "Hold F&B spend/visit", m: "Court is 68% of GMV (Playtomic average). F&B 11% — below holistic clubs. Cafe covers after play, not more outdoor courts.", cls: "" }
+    ]
+  }
 };
 
+let state = JSON.parse(JSON.stringify(defaults));
+let horizon = 12;
+try {
+  const saved = JSON.parse(localStorage.getItem("pcos-v2") || "null");
+  if (saved) {
+    if (saved.drafts) state.drafts = saved.drafts;
+    if (saved.blockers) state.blockers = saved.blockers;
+    if (saved.calls) state.calls = saved.calls;
+    if (saved.selectedDraft) state.selectedDraft = saved.selectedDraft;
+    if (saved.horizon === 6 || saved.horizon === 12) horizon = saved.horizon;
+  }
+} catch (e) {}
+
+function persist(){ localStorage.setItem("pcos-v2", JSON.stringify({ drafts: state.drafts, blockers: state.blockers, calls: state.calls, selectedDraft: state.selectedDraft, horizon })); }
 function el(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c])); }
+function eur(n){ const s = n<0?"−":""; return s+"€"+Math.abs(Math.round(n)).toLocaleString("en-IE"); }
+function eurk(n){ const s = n<0?"−":""; return s+"€"+Math.abs(Math.round(n/1000))+"k"; }
 function toast(msg){ const t=el("toast"); t.textContent=msg; t.classList.add("on"); setTimeout(()=>t.classList.remove("on"),2200); }
-function cards(list){ return list.length ? list.map(c=>`<div class="card ${c.cls||""}"><div class="t">${c.t}</div><div class="m">${c.m}</div></div>`).join("") : `<div class="empty">None</div>`; }
+function cards(list){ return list.length ? list.map(c=>`<div class="card ${c.cls||""}"><div class="t">${esc(c.t)}</div><div class="m">${esc(c.m)}</div></div>`).join("") : `<div class="empty">None</div>`; }
 
 function renderNav(){
   const html = VIEWS.map(([id,l])=>`<button data-v="${id}">${l}</button>`).join("");
   el("tabs").innerHTML = html;
   el("mtabs").innerHTML = html;
-  document.querySelectorAll(".tabs button, .mtabs button").forEach(b=>{
-    b.onclick = ()=>show(b.dataset.v);
-  });
+  document.querySelectorAll(".tabs button, .mtabs button").forEach(b => { b.onclick = () => show(b.dataset.v); });
 }
 function show(id){
-  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
   el("v-"+id).classList.add("on");
-  document.querySelectorAll(".tabs button, .mtabs button").forEach(b=>b.classList.toggle("on", b.dataset.v===id));
+  document.querySelectorAll(".tabs button, .mtabs button").forEach(b => b.classList.toggle("on", b.dataset.v===id));
   window.scrollTo(0,0);
 }
+function myRed(){ return state.blockers.filter(b => b.status==="Open" && b.sev==="Red" && b.founder); }
+function openBlockers(){ return state.blockers.filter(b => b.status!=="Cleared"); }
 
-function myRed(){ return state.blockers.filter(b=>b.status==="Open" && b.sev==="Red" && b.founder); }
-function openBlockers(){ return state.blockers.filter(b=>b.status!=="Cleared"); }
+/* —— Tufte charts: paper, thin ink, labels on the data, no chartjunk —— */
+function svgPace(){
+  const W=640,H=200,p={l:36,r:16,t:16,b:28};
+  const x = t => p.l + t*(W-p.l-p.r);
+  const y = v => p.t + (1-(v-60)/120)*(H-p.t-p.b);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cumulative courts booked versus 180 target">
+    <line x1="${p.l}" y1="${y(60)}" x2="${p.l}" y2="${y(180)}" stroke="#0B1C30" stroke-width="1"/>
+    <line x1="${p.l}" y1="${y(60)}" x2="${W-p.r}" y2="${y(60)}" stroke="#0B1C30" stroke-width="1"/>
+    <text x="${p.l-6}" y="${y(60)+3}" text-anchor="end" font-size="10" fill="#5C6570">60</text>
+    <text x="${p.l-6}" y="${y(120)+3}" text-anchor="end" font-size="10" fill="#5C6570">120</text>
+    <text x="${p.l-6}" y="${y(180)+3}" text-anchor="end" font-size="10" fill="#5C6570">180</text>
+    <line x1="${p.l}" y1="${y(120)}" x2="${W-p.r}" y2="${y(120)}" stroke="#0B1C30" stroke-width="0.4" stroke-dasharray="2 3" opacity=".35"/>
+    <polyline fill="none" stroke="#0B1C30" stroke-width="1.4" points="${x(0)},${y(60)} ${x(.24)},${y(70)} ${x(1)},${y(180)}"/>
+    <circle cx="${x(0)}" cy="${y(60)}" r="3" fill="#0B1C30"/>
+    <circle cx="${x(.24)}" cy="${y(70)}" r="3" fill="#0B1C30"/>
+    <circle cx="${x(1)}" cy="${y(180)}" r="3" fill="#0B1C30"/>
+    <text x="${x(0)+8}" y="${y(60)-8}" font-size="11" font-weight="600" fill="#0B1C30">60 today</text>
+    <text x="${x(.24)+8}" y="${y(70)-8}" font-size="11" font-weight="600" fill="#0B1C30">70 Dec 2026</text>
+    <text x="${x(1)}" y="${y(180)-10}" text-anchor="end" font-size="11" font-weight="700" fill="#0B1C30">180 Dec 2027</text>
+    <text x="${p.l}" y="${H-6}" font-size="10" fill="#5C6570">Aug 2026</text>
+    <text x="${W-p.r}" y="${H-6}" text-anchor="end" font-size="10" fill="#5C6570">Dec 2027</text>
+  </svg>`;
+}
+function svgSpark(vals){
+  const W=220,H=48,max=Math.max(...vals,2);
+  const pts = vals.map((v,i)=>`${8+i*((W-16)/(vals.length-1))},${H-8-(v/max)*(H-16)}`).join(" ");
+  const last = vals[vals.length-1];
+  return `<svg viewBox="0 0 ${W} ${H}" width="220" height="48" aria-label="Weekly courts booked">
+    <polyline fill="none" stroke="#0B1C30" stroke-width="1.2" points="${pts}"/>
+    <circle cx="${8+(vals.length-1)*((W-16)/(vals.length-1))}" cy="${H-8-(last/max)*(H-16)}" r="2.5" fill="#0B1C30"/>
+  </svg>`;
+}
+function svgQuarter(){
+  const booked = 3, weighted = 6, gap = 0;
+  const items = [
+    ["Booked this quarter so far", booked, "#0B1C30"],
+    ["Weighted still to close this Q", weighted, "#0B1C30"],
+    ["Projected this quarter", booked+weighted, "#0B1C30"]
+  ];
+  return `<svg viewBox="0 0 420 110" aria-label="This quarter composition">
+    ${items.map((it,i)=>{
+      const y=18+i*32;
+      const w=it[1]*18;
+      return `<text x="0" y="${y}" font-size="11" fill="#0B1C30">${it[0]}</text>
+        <line x1="0" y1="${y+8}" x2="${w}" y2="${y+8}" stroke="#0B1C30" stroke-width="6"/>
+        <text x="${w+8}" y="${y+12}" font-size="12" font-weight="700" fill="#0B1C30">${it[1]}</text>`;
+    }).join("")}
+  </svg>`;
+}
+function svgDots(){
+  const rows = state.pipeline;
+  const max = 12;
+  const H = 28 + rows.length*28;
+  const left = 168, W = 620;
+  return `<svg viewBox="0 0 ${W} ${H}" aria-label="Weighted courts by deal">
+    ${rows.map((r,i)=>{
+      const y = 20+i*28;
+      const x0 = left, x1 = left + (r.courts/max)*280, xw = left + ((r.courts*r.w)/max)*280;
+      const leak = r.close==="Undated";
+      return `<text x="0" y="${y+4}" font-size="11" fill="#0B1C30">${esc(r.deal)}</text>
+        <line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#0B1C30" stroke-width="0.6" opacity=".25"/>
+        ${leak?"":`<circle cx="${xw}" cy="${y}" r="4" fill="#0B1C30"/>
+        <text x="${xw+8}" y="${y+4}" font-size="11" font-weight="600" fill="#0B1C30">${(r.courts*r.w).toFixed(1)}</text>`}
+        ${leak?`<text x="${x0}" y="${y+4}" font-size="11" fill="#8a3a2a">undated — not in forecast</text>`:""}`;
+    }).join("")}
+    <text x="${left}" y="${H-4}" font-size="10" fill="#5C6570">dot = weighted courts · stem = raw courts</text>
+  </svg>`;
+}
+function cashPath(){
+  const x = state.xero;
+  const nets = x.inAct.map((v,i)=>v-x.outAct[i]).concat(x.inProj.map((v,i)=>v-x.outProj[i]));
+  const close = [];
+  let c = x.openMar;
+  nets.forEach(n => { c += n; close.push(c); });
+  return { labels: x.monthsAct.concat(x.monthsProj), close, split: x.monthsAct.length, nets };
+}
+function svgCash(){
+  const { labels, close, split } = cashPath();
+  const W=640, H=176, p={l:48,r:78,t:14,b:26};
+  const min = Math.min(...close) - 15000, max = Math.max(...close) + 15000;
+  const xAt = i => p.l + i*(W-p.l-p.r)/(labels.length-1);
+  const yAt = v => p.t + (1-(v-min)/(max-min))*(H-p.t-p.b);
+  const actual = close.slice(0,split).map((v,i)=>xAt(i)+","+yAt(v)).join(" ");
+  const proj = close.slice(split-1).map((v,i)=>xAt(i+split-1)+","+yAt(v)).join(" ");
+  const now = split-1;
+  const lo = close.reduce((b,v,i)=> v<close[b]?i:b, 0);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cash balance actual and next six months">
+    <line x1="${p.l}" y1="${yAt(min)}" x2="${p.l}" y2="${p.t}" stroke="#0B1C30" stroke-width="1"/>
+    <line x1="${p.l}" y1="${yAt(min)}" x2="${W-p.r}" y2="${yAt(min)}" stroke="#0B1C30" stroke-width="1"/>
+    <polyline fill="none" stroke="#0B1C30" stroke-width="1.4" points="${actual}"/>
+    <polyline fill="none" stroke="#0B1C30" stroke-width="1.2" stroke-dasharray="4 3" points="${proj}"/>
+    <circle cx="${xAt(now)}" cy="${yAt(close[now])}" r="3" fill="#0B1C30"/>
+    <circle cx="${xAt(close.length-1)}" cy="${yAt(close[close.length-1])}" r="3" fill="#0B1C30"/>
+    <text x="${xAt(now)+8}" y="${yAt(close[now])-8}" font-size="11" font-weight="700" fill="#0B1C30">${eurk(close[now])} now</text>
+    ${lo!==now?`<text x="${xAt(lo)}" y="${yAt(close[lo])+16}" font-size="10" fill="#5C6570">${labels[lo]} ${eurk(close[lo])}</text>`:""}
+    <text x="${xAt(close.length-1)+8}" y="${yAt(close[close.length-1])+4}" font-size="11" font-weight="600" fill="#0B1C30">${eurk(close[close.length-1])} Feb</text>
+    <text x="${p.l}" y="${H-4}" font-size="10" fill="#5C6570">Mar</text>
+    <text x="${xAt(now)}" y="${H-4}" font-size="10" fill="#5C6570">Aug · actual</text>
+    <text x="${W-p.r}" y="${H-4}" text-anchor="end" font-size="10" fill="#5C6570">dashed = projected</text>
+  </svg>`;
+}
+function trendWeekly(){
+  const w = state.sold.weekly;
+  return w.reduce((a,b)=>a+b,0)/w.length;
+}
+function svgTarget12(){
+  const now = state.xero.courtsNow;
+  const target = state.xero.target12;
+  const rate = trendWeekly();
+  const trendEnd = Math.round(now + rate*52);
+  const W=640, H=188, p={l:40,r:96,t:18,b:28};
+  const xAt = t => p.l + t*(W-p.l-p.r);
+  const yAt = v => p.t + (1-(v-now)/(target-now))*(H-p.t-p.b);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="180-court twelve month target versus recent booking trend">
+    <line x1="${p.l}" y1="${yAt(now)}" x2="${p.l}" y2="${yAt(target)}" stroke="#0B1C30" stroke-width="1"/>
+    <line x1="${p.l}" y1="${yAt(now)}" x2="${W-p.r}" y2="${yAt(now)}" stroke="#0B1C30" stroke-width="1"/>
+    <line x1="${p.l}" y1="${yAt(target)}" x2="${W-p.r}" y2="${yAt(target)}" stroke="#0B1C30" stroke-width="0.4" stroke-dasharray="2 3" opacity=".35"/>
+    <line x1="${p.l}" y1="${yAt(now)}" x2="${xAt(1)}" y2="${yAt(target)}" stroke="#0B1C30" stroke-width="1.5"/>
+    <line x1="${p.l}" y1="${yAt(now)}" x2="${xAt(1)}" y2="${yAt(trendEnd)}" stroke="#0B1C30" stroke-width="1.2" stroke-dasharray="5 3"/>
+    <circle cx="${p.l}" cy="${yAt(now)}" r="3" fill="#0B1C30"/>
+    <circle cx="${xAt(1)}" cy="${yAt(target)}" r="3" fill="#0B1C30"/>
+    <circle cx="${xAt(1)}" cy="${yAt(trendEnd)}" r="3" fill="#0B1C30"/>
+    <text x="${p.l+8}" y="${yAt(now)-8}" font-size="11" font-weight="600" fill="#0B1C30">${now} today</text>
+    <text x="${xAt(1)+8}" y="${yAt(target)+4}" font-size="11" font-weight="700" fill="#0B1C30">${target} required</text>
+    <text x="${xAt(1)+8}" y="${yAt(trendEnd)+4}" font-size="11" font-weight="600" fill="#0B1C30">${trendEnd} at this rate</text>
+    <text x="${xAt(1)+8}" y="${(yAt(target)+yAt(trendEnd))/2+4}" font-size="10" fill="#8a3a2a">gap ${target-trendEnd}</text>
+    <text x="${p.l}" y="${H-4}" font-size="10" fill="#5C6570">Aug 2026</text>
+    <text x="${W-p.r}" y="${H-4}" text-anchor="end" font-size="10" fill="#5C6570">Aug 2027 · 12 months</text>
+  </svg>`;
+}
+function svgStreams(){
+  const rows = state.xero.streams;
+  const max = Math.max(...rows.map(r => Math.max(r.last, r.next)), 1);
+  const left = 128, W = 640, rowH = 28, top = 22;
+  const H = top + rows.length*rowH + 18;
+  const xAt = v => left + (v/max)*360;
+  const body = rows.map((r,i)=>{
+    const y = top + i*rowH;
+    const x0 = xAt(r.last), x1 = xAt(r.next);
+    return `<text x="0" y="${y+4}" font-size="11" fill="#0B1C30">${esc(r.name)}</text>
+      <line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#0B1C30" stroke-width="1"/>
+      <circle cx="${x0}" cy="${y}" r="3" fill="#0B1C30"/>
+      <circle cx="${x1}" cy="${y}" r="3" fill="#0B1C30"/>
+      <text x="${Math.max(x0,x1)+8}" y="${y+4}" font-size="11" font-weight="600" fill="#0B1C30">${eurk(r.next)}</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Revenue by stream, last six months to next six">
+    ${body}
+    <text x="${left}" y="${H-4}" font-size="10" fill="#5C6570">left dot = last 6 months · right = next 6</text>
+  </svg>`;
+}
+function clubMetrics(){
+  const c = state.club;
+  const n = c.courts;
+  let booked = 0, avail = 0, rev = 0, playerH = 0;
+  const byDay = c.days.map((day, di) => {
+    let b = 0, r = 0, p = 0;
+    c.heat[di].forEach((u, hi) => {
+      const hours = n * u / 100;
+      b += hours;
+      r += hours * c.rate[hi];
+      p += hours * c.ppc[hi];
+    });
+    const a = n * c.hours.length;
+    booked += b; avail += a; rev += r; playerH += p;
+    const used = b;
+    return {
+      day, booked: b, avail: a, util: b / a, rev: r, adr: r / b,
+      ppc: p / b, staff: c.fohHours[di] / used, wait: c.waitlist[di],
+      coaches: c.coachHours[di] / used
+    };
+  });
+  return {
+    byDay,
+    util: booked / avail,
+    adr: rev / booked,
+    revpach: rev / avail,
+    ppc: playerH / booked,
+    staff: c.fohHours.reduce((a,b)=>a+b,0) / booked,
+    rev, booked, avail,
+    wait: c.waitlist.reduce((a,b)=>a+b,0),
+    gmvCourtMo: (rev * 52 / 12) / n
+  };
+}
+function heatTable(){
+  const c = state.club;
+  const head = `<tr><th></th>${c.hours.map(h=>`<th>${h}</th>`).join("")}<th>Day</th></tr>`;
+  const rows = c.days.map((d, di) => {
+    const avg = c.heat[di].reduce((a,b)=>a+b,0) / c.heat[di].length;
+    const cells = c.heat[di].map(u => {
+      const op = Math.max(u / 100, 0.04);
+      const col = u >= 78 ? "#F4F1EA" : "#0B1C30";
+      return `<td style="background:rgba(11,28,48,${op.toFixed(2)});color:${col}">${u}</td>`;
+    }).join("");
+    return `<tr><td class="lab">${d}</td>${cells}<td class="lab">${Math.round(avg)}%</td></tr>`;
+  }).join("");
+  return `<table class="heat">${head}${rows}</table>`;
+}
+function svgClubWeek(byDay){
+  const W = 640, H = 150, p = { l: 28, r: 16, t: 12, b: 28 };
+  const n = byDay.length;
+  const col = (W - p.l - p.r) / n;
+  const bars = byDay.map((d, i) => {
+    const x = p.l + i * col + 8;
+    const h = d.util * (H - p.t - p.b);
+    const y = H - p.b - h;
+    return `<rect x="${x}" y="${y}" width="${col-16}" height="${h}" fill="#0B1C30" opacity=".82"/>
+      <text x="${x+(col-16)/2}" y="${y-4}" text-anchor="middle" font-size="10" font-weight="700" fill="#0B1C30">${Math.round(d.util*100)}</text>
+      <text x="${x+(col-16)/2}" y="${H-10}" text-anchor="middle" font-size="10" fill="#5C6570">${d.day}</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Utilisation by day">${bars}</svg>`;
+}
+function svgGantt(rows, title){
+  const n = horizon;
+  const left = 150, top = 28, rowH = 26, colW = 48;
+  const W = left + n*colW + 8;
+  const H = top + rows.length*rowH + 8;
+  const ticks = WEEKS.slice(0,n).map((w,i)=> i%2===0 ? `<text x="${left+i*colW+4}" y="14" font-size="9" fill="#5C6570">${w}</text>
+    <line x1="${left+i*colW}" y1="${top-4}" x2="${left+i*colW}" y2="${H-4}" stroke="#0B1C30" stroke-width="0.4" opacity=".15"/>` : "").join("");
+  const bars = rows.map((r,i)=>{
+    const y = top + i*rowH + 7;
+    const segs = (r.bars || [{ start:r.start, dur:r.dur, label:r.label, risk:r.risk }])
+      .filter(b => b.dur > 0 && b.start < n)
+      .map(b => {
+        const dur = Math.min(b.dur, n - b.start);
+        const x = left + b.start*colW;
+        const w = Math.max(dur*colW - 4, 8);
+        const op = b.risk ? "0.45" : "0.82";
+        return `<rect x="${x}" y="${y}" width="${w}" height="12" fill="#0B1C30" opacity="${op}"/>
+          <text x="${x+4}" y="${y+10}" font-size="8" fill="#F4F1EA" font-weight="600">${esc(b.label||"")}</text>`;
+      }).join("");
+    return `<text x="0" y="${y+8}" font-size="11" fill="#0B1C30">${esc(r.name)}</text>${segs}`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" aria-label="${title}">${ticks}${bars}</svg>`;
+}
 
 function renderRoad(){
   el("v-road").innerHTML = `
@@ -190,55 +551,48 @@ function renderRoad(){
       </div>
       <div class="panel">
         <div class="kicker" style="margin-bottom:8px">Log in 20 seconds</div>
-        <h3 style="text-transform:uppercase;letter-spacing:.08em;font-size:13px;margin-bottom:8px">Call or client update</h3>
         <label>Account</label>
-        <input id="f-acc" placeholder="Club, operator, council…" value="${state.form.account}">
+        <input id="f-acc" placeholder="Club, operator, council…">
         <label>Kind</label>
-        <select id="f-kind">
-          <option>Client inbound</option>
-          <option>Founder call</option>
-          <option>Site update</option>
-        </select>
+        <select id="f-kind"><option>Client inbound</option><option>Founder call</option><option>Site update</option></select>
         <label>What they said</label>
-        <textarea id="f-said" placeholder="Two sentences max">${state.form.said}</textarea>
+        <textarea id="f-said" placeholder="Two sentences max"></textarea>
         <label><input type="checkbox" id="f-raise" style="width:auto;margin-right:8px"> Raise a sales blocker</label>
         <button class="btn pri" style="margin-top:16px" onclick="logCall()">Log it</button>
-        <p class="sub" style="margin:14px 0 0;font-size:12px">Driving? Voice-note the OS inbox. Carys files this same form within an hour. Do not batch Sunday.</p>
       </div>
     </div>`;
 }
-
 function logCall(){
   const acc = el("f-acc").value.trim() || "Unknown account";
   const kind = el("f-kind").value;
   const said = el("f-said").value.trim() || "Update logged from the road";
   const raise = el("f-raise").checked;
   state.calls.unshift({ t: acc + " · " + kind, m: said, cls: raise ? "red" : "amber" });
-  if (raise) {
-    state.blockers.unshift({ id: Date.now(), t: acc + " · from call", m: said, type: "Sales", sev: "Red", status: "Open", founder: true });
-  }
-  el("f-acc").value = ""; el("f-said").value = ""; el("f-raise").checked = false;
-  toast(raise ? "Logged · blocker raised" : "Call logged");
-  renderAll();
-  show("road");
+  if (raise) state.blockers.unshift({ id: Date.now(), t: acc + " · from call", m: said, type: "Sales", sev: "Red", status: "Open", founder: true });
+  persist(); toast(raise ? "Logged · blocker raised" : "Call logged"); renderAll(); show("road");
 }
 
 function renderCommand(){
   const s = state.sold, f = state.forecast;
   const red = openBlockers().filter(b=>b.sev==="Red").length;
-  const packs = 2, unres = 3, kit = 2;
   el("v-command").innerHTML = `
     <div class="kicker">01 · Monday desk</div>
-    <h1>Command<em>Sold, forecast, tenders, blockers, installs.</em></h1>
-    <p class="sub">Ten minutes. Act from the cards. No side lists.</p>
-    <div class="band">Sold — courts booked</div>
-    <div class="row k4">
-      <div class="kpi"><div class="v">${s.lastQ}</div><div class="l">Last quarter</div></div>
-      <div class="kpi"><div class="v">${s.lastWeek}</div><div class="l">Last week</div></div>
-      <div class="kpi"><div class="v">${s.thisWeek}</div><div class="l">This week</div></div>
-      <div class="kpi warn"><div class="v">${s.projectedQ}</div><div class="l">Projected this quarter</div></div>
+    <h1>Command<em>See the numbers. Then act.</em></h1>
+    <p class="sub">Charts follow Tufte: data ink only, labels on the points, no decoration. Paper well is for reading; navy is for action.</p>
+    <div class="row k2">
+      <div class="paper">
+        <h3>Pace — cumulative courts booked</h3>
+        <p class="note">Required path 60 → 70 (Dec 2026) → 180 (Dec 2027). Not a forecast; the slope in 2027 is the booking pace once the engine is running.</p>
+        ${svgPace()}
+      </div>
+      <div class="paper">
+        <h3>This quarter</h3>
+        <p class="note">Last week ${s.lastWeek} · this week ${s.thisWeek} · last quarter ${s.lastQ}. Projected this quarter is booked-to-date plus weighted remainder.</p>
+        ${svgQuarter()}
+        <p class="note" style="margin:12px 0 4px">Weekly courts booked (8 weeks)</p>
+        ${svgSpark(s.weekly)}
+      </div>
     </div>
-    <div class="band">Forecast — weighted, dated close only</div>
     <div class="row k4">
       <div class="kpi"><div class="v">${f.nextQ}</div><div class="l">Next quarter weighted</div></div>
       <div class="kpi"><div class="v">${f.y12}</div><div class="l">Next 12 months weighted</div></div>
@@ -246,35 +600,98 @@ function renderCommand(){
       <div class="kpi bad"><div class="v">${f.undated}</div><div class="l">Undated leak · courts</div></div>
     </div>
     <div class="band">Triage</div>
-    <div class="row k4">
+    <div class="row k5">
       <div class="kpi bad"><div class="v">${red}</div><div class="l">Red blockers</div></div>
-      <div class="kpi warn"><div class="v">${packs}</div><div class="l">Tender packs due this week</div></div>
-      <div class="kpi bad"><div class="v">${unres}</div><div class="l">Installs in 90d unresourced</div></div>
-      <div class="kpi warn"><div class="v">${kit}</div><div class="l">Materials not ordered</div></div>
+      <div class="kpi warn"><div class="v">2</div><div class="l">Tender packs due this week</div></div>
+      <div class="kpi bad"><div class="v">${state.jobs.filter(j=>!j.crew.length).length}</div><div class="l">Unresourced installs</div></div>
+      <div class="kpi warn"><div class="v">${state.jobs.filter(j=>j.kit==="Not ordered").length}</div><div class="l">Kit not ordered</div></div>
+      <div class="kpi bad" style="cursor:pointer" onclick="show('report')"><div class="v">${eurk(state.xero.chase.filter(i=>i.age>0).reduce((a,i)=>a+i.amount,0))}</div><div class="l">Xero overdue · chase</div></div>
     </div>
     <div class="cols c4">
       <div class="col"><h3>Blockers · red first</h3>${cards(openBlockers().slice(0,3).map(b=>({t:b.t,m:b.m,cls:b.sev==="Red"?"red":"amber"})))}</div>
-      <div class="col"><h3>Tenders · next document</h3>${cards([{t:"Local authority · 8",m:"Initial pack due Thu",cls:"amber"},{t:"Leisure chain · 12",m:"Secondary pack due 22 Sep"},{t:"Hotel group · 4",m:"Qualifying · visit Wed"}])}</div>
-      <div class="col"><h3>Install 90 · notify</h3>${cards([{t:"Club H · week 36",m:"Crew covered · kit on site"},{t:"Site X · week 38",m:"Partial crew · kit not ordered",cls:"red"},{t:"Club G · week 40",m:"Deposit overdue",cls:"amber"}])}</div>
-      <div class="col"><h3>Forecast movers</h3>${cards([{t:"Operator A · 4 · 40%",m:"Direct proposal · this Q · 1.6 wtd"},{t:"Council · 8 · 25%",m:"Initial doc out · next Q · 2.0 wtd"},{t:"Club D · 4 · undated",m:"Date the close or park it",cls:"amber"}])}</div>
+      <div class="col"><h3>Tenders · next document</h3>${cards([{t:"Local authority · 8",m:"Initial pack due Thu",cls:"amber"},{t:"Leisure chain · 12",m:"Secondary pack due 22 Sep"}])}</div>
+      <div class="col"><h3>Install 90</h3>${cards(state.jobs.filter(j=>j.risk).map(j=>({t:j.name,m:j.risk+" · "+j.kit,cls:"red"})))}</div>
+      <div class="col"><h3>Drafts awaiting you</h3>${cards(state.drafts.filter(d=>d.status==="Awaiting founder").map(d=>({t:d.title,m:d.uploadedBy+" · "+d.date,cls:"amber"})))}</div>
     </div>`;
 }
 
+function draftById(){ return state.drafts.find(d => d.id===state.selectedDraft) || state.drafts[0]; }
+function selectDraft(id){ state.selectedDraft = id; persist(); renderAll(); show("tenders"); }
+function addFeedback(){
+  const box = el("fb-text");
+  const text = (box && box.value.trim()) || "";
+  if (!text) return;
+  const d = draftById();
+  d.feedback.push({ by: "Founder A", date: "13 Aug", text });
+  d.status = "Changes requested";
+  persist(); toast("Feedback sent to the team"); renderAll(); show("tenders");
+}
+function markIssue(){
+  const d = draftById();
+  d.status = "Clear to issue";
+  persist(); toast("Clear to issue"); renderAll(); show("tenders");
+}
+function uploadDraft(){
+  const title = (el("up-title") && el("up-title").value.trim()) || "Untitled pack";
+  const who = (el("up-who") && el("up-who").value) || "Carys";
+  const stage = (el("up-stage") && el("up-stage").value) || "Initial document out";
+  const fileEl = el("up-file");
+  const fname = (fileEl && fileEl.files[0] && fileEl.files[0].name) || "pack.pdf";
+  const id = "d"+Date.now();
+  state.drafts.unshift({ id, title, account: title, version: "v1", stage, file: "tenders/"+fname, uploadedBy: who, date: "13 Aug 2026", status: "Awaiting founder", excerpt: "Uploaded from the team. Open the file in the repository path shown.", feedback: [] });
+  state.selectedDraft = id;
+  persist(); toast("Draft in the repository"); renderAll(); show("tenders");
+}
+
 function renderTenders(){
-  const cols = Object.entries(state.tenders).map(([name,list])=>`
-    <div class="col"><h3>${name}</h3>${cards(list)}</div>`).join("");
+  const cols = Object.entries(state.tenders).map(([name,list]) => `<div class="col"><h3>${name}</h3>${cards(list)}</div>`).join("");
+  const d = draftById();
+  const list = state.drafts.map(x => `
+    <div class="card ${x.id===d.id?"on":""}" onclick="selectDraft('${x.id}')">
+      <div class="t">${esc(x.title)}</div>
+      <div class="m">${esc(x.uploadedBy)} · ${esc(x.version)} · ${esc(x.status)}</div>
+    </div>`).join("");
+  const thread = d.feedback.length ? d.feedback.map(f => `<div class="fb"><div class="who">${esc(f.by)} · ${esc(f.date)}</div><p>${esc(f.text)}</p></div>`).join("") : `<div class="empty">No founder feedback yet.</div>`;
   el("v-tenders").innerHTML = `
     <div class="kicker">03 · Tender desk</div>
-    <h1>Two document gates<em>Initial pack out. Secondary pack out.</em></h1>
-    <p class="sub">Large material tenders from first contact through award. Bid/no-bid is a founder field. Carys does not draft on Pending.</p>
-    <div class="cols c6">${cols}</div>`;
+    <h1>Two document gates<em>Then the draft repository.</em></h1>
+    <p class="sub">Team uploads packs here. You mark changes or clear to issue. In production these files live under tenders/ in the PadelCraft1 repo.</p>
+    <div class="cols c6">${cols}</div>
+    <div class="band">Draft repository</div>
+    <div class="cols c2">
+      <div>
+        ${list}
+        <div class="panel" style="margin-top:12px">
+          <div class="kicker" style="margin-bottom:4px">Team upload</div>
+          <label>Title</label><input id="up-title" placeholder="Account — initial or secondary pack">
+          <label>Uploaded by</label>
+          <select id="up-who"><option>Carys</option><option>Intern</option><option>Michael</option></select>
+          <label>Gate</label>
+          <select id="up-stage"><option>Initial document out</option><option>Secondary document out</option><option>Bid / no-bid</option></select>
+          <label>File</label><input id="up-file" type="file">
+          <button class="btn pri" style="margin-top:14px" onclick="uploadDraft()">Add to repository</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="kicker" style="margin-bottom:8px">${esc(d.stage)}</div>
+        <h3 style="text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">${esc(d.title)}</h3>
+        <p class="sub" style="margin-bottom:10px">${esc(d.file)} · ${esc(d.uploadedBy)} · ${esc(d.date)} · <span class="tag">${esc(d.status)}</span></p>
+        <p class="sub">${esc(d.excerpt)}</p>
+        <div class="band">Your feedback to the team</div>
+        ${thread}
+        <label>Change request</label>
+        <textarea id="fb-text" placeholder="What to change. Be specific — section, number, site."></textarea>
+        <button class="btn pri" style="margin-top:10px" onclick="addFeedback()">Send changes</button>
+        <button class="btn" onclick="markIssue()">Clear to issue</button>
+      </div>
+    </div>`;
 }
 
 function renderBlockers(){
-  const rows = openBlockers().map(b=>`
+  const rows = openBlockers().map(b => `
     <tr>
-      <td><strong style="color:var(--w)">${b.t}</strong><div style="color:var(--w3);font-size:12px;margin-top:4px">${b.m}</div></td>
-      <td><span class="tag">${b.type}</span></td>
+      <td><strong style="color:var(--w)">${esc(b.t)}</strong><div style="color:var(--w3);font-size:12px;margin-top:4px">${esc(b.m)}</div></td>
+      <td><span class="tag">${esc(b.type)}</span></td>
       <td style="color:${b.sev==="Red"?"var(--danger)":"var(--amber)"};font-weight:700">${b.sev}</td>
       <td>
         <button class="btn sm" onclick="triage(${b.id},'Waiting on other')">Waiting</button>
@@ -283,48 +700,93 @@ function renderBlockers(){
     </tr>`).join("");
   el("v-blockers").innerHTML = `
     <div class="kicker">04 · Triage</div>
-    <h1>Identify. Assign. Clear.<em>If it is not on this list, Command does not know it exists.</em></h1>
+    <h1>Identify. Assign. Clear.</h1>
     <p class="sub">Red with founder action first. Clearing is a status change, not a chat message.</p>
     <table>
       <thead><tr><th>Blocker</th><th>Type</th><th>Severity</th><th>Act</th></tr></thead>
       <tbody>${rows || `<tr><td colspan="4" class="empty">All clear</td></tr>`}</tbody>
     </table>`;
 }
-
 function triage(id, status){
-  const b = state.blockers.find(x=>x.id===id);
-  if(!b) return;
+  const b = state.blockers.find(x => x.id===id);
+  if (!b) return;
   b.status = status;
-  toast(status === "Cleared" ? "Blocker cleared" : "Waiting on other");
-  renderAll();
-  show("blockers");
+  persist(); toast(status==="Cleared" ? "Blocker cleared" : "Waiting on other"); renderAll(); show("blockers");
+}
+
+function setHorizon(n){ horizon = n; persist(); renderAll(); show("install"); }
+function crewClashes(){
+  const out = [];
+  CREW.forEach(person => {
+    const hits = state.jobs.filter(j => j.crew.includes(person)).sort((a,b)=>a.start-b.start);
+    for (let i=0;i<hits.length;i++){
+      for (let j=i+1;j<hits.length;j++){
+        if (hits[i].start + hits[i].dur > hits[j].start) out.push(person+" · "+hits[i].name+" overlaps "+hits[j].name);
+      }
+    }
+  });
+  return out;
 }
 
 function renderInstall(){
-  const rows = state.installs.map(r=>`<tr>${r.map((c,i)=>`<td${i===6&&c.startsWith("Red")?` style="color:var(--danger);font-weight:700"`:""}>${c}</td>`).join("")}</tr>`).join("");
+  const visible = state.jobs.filter(j => j.start < horizon);
+  const projectRows = visible.map(j => ({
+    name: j.name + " · " + j.courts,
+    start: j.start, dur: j.dur,
+    label: j.crew.length ? j.crew.length + " crew" : "unresourced",
+    risk: j.risk || j.kit==="Not ordered"
+  }));
+  const resRows = CREW.map(person => ({
+    name: person,
+    bars: state.jobs.filter(j => j.crew.includes(person) && j.start < horizon).map(j => ({
+      start: j.start, dur: j.dur, label: j.name, risk: !!j.risk
+    }))
+  }));
+  const clashes = crewClashes();
+  const table = visible.map(j => `<tr>
+    <td>${esc(j.name)}</td><td>${j.courts}</td>
+    <td>${WEEKS[j.start]} → ${WEEKS[Math.min(j.start+j.dur-1,11)]}</td>
+    <td>${j.crew.length ? esc(j.crew.join(", ")) : "<span style='color:var(--danger)'>Unassigned</span>"}</td>
+    <td>${esc(j.kit)}</td>
+    <td>${j.risk ? `<span style="color:var(--danger);font-weight:700">${esc(j.risk)}</span>` : "—"}</td>
+  </tr>`).join("");
+  const endLabel = WEEKS[horizon-1];
   el("v-install").innerHTML = `
-    <div class="kicker">05 · Next 90 days</div>
-    <h1>How the installs are going<em>Crew. Materials ordered or not. Windows.</em></h1>
-    <p class="sub">Every live project whose install window overlaps the next 90 days. Founders notify from here; Michael fills crew and kit.</p>
-    <div class="row k5">
-      <div class="kpi"><div class="v">7</div><div class="l">Projects in 90 days</div></div>
-      <div class="kpi"><div class="v">14</div><div class="l">Courts in those windows</div></div>
-      <div class="kpi"><div class="v">4</div><div class="l">Crew covered</div></div>
-      <div class="kpi bad"><div class="v">3</div><div class="l">Crew partial / none</div></div>
-      <div class="kpi warn"><div class="v">2</div><div class="l">Kit not ordered</div></div>
+    <div class="kicker">05 · Next ${horizon} weeks</div>
+    <h1>Installations and resources<em>Same time axis. Projects, then people.</em></h1>
+    <p class="sub">Gantt for the next six or twelve weeks. Darker overlap on a resource row is overbooking. Fainter bars are at risk (kit, crew, or cash). Labels sit on the bars.</p>
+    <div style="margin-bottom:14px">
+      <button class="btn sm ${horizon===6?"pri":""}" onclick="setHorizon(6)">6 weeks</button>
+      <button class="btn sm ${horizon===12?"pri":""}" onclick="setHorizon(12)">12 weeks</button>
+    </div>
+    <div class="paper">
+      <h3>Projects</h3>
+      <p class="note">Each row is a site. Length is the install window. 17 Aug – ${endLabel}.</p>
+      ${svgGantt(projectRows, "Project install windows")}
+    </div>
+    <div class="paper">
+      <h3>Resources</h3>
+      <p class="note">One row per person. Two bars on the same week is a clash — ${clashes.length ? clashes.join("; ") : "none in this window"}.</p>
+      ${svgGantt(resRows, "Crew assignments")}
     </div>
     <table>
-      <thead><tr><th>Week</th><th>Project</th><th>Courts</th><th>Stage</th><th>Crew</th><th>Materials</th><th>Blocker</th></tr></thead>
-      <tbody>${rows}</tbody>
+      <thead><tr><th>Project</th><th>Courts</th><th>Window</th><th>Crew</th><th>Materials</th><th>Blocker</th></tr></thead>
+      <tbody>${table}</tbody>
     </table>`;
 }
 
 function renderForecast(){
-  const rows = state.pipeline.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("");
+  const thisQ = state.pipeline.filter(p => p.close==="This Q").reduce((a,p)=>a+p.courts*p.w,0);
+  const nextQ = state.pipeline.filter(p => p.close==="Next Q").reduce((a,p)=>a+p.courts*p.w,0);
   el("v-forecast").innerHTML = `
     <div class="kicker">02 · Pipeline</div>
-    <h1>What will sell<em>This quarter, next quarter, twelve months.</em></h1>
-    <p class="sub">Weighted courts from live deals with a dated Expected close. Undated rows are a leak — they do not inflate the 12-month number.</p>
+    <h1>What will sell<em>Weighted courts, labelled on the data.</em></h1>
+    <p class="sub">Dot is expected courts (volume × win weight). Stem is unweighted size. Club D has no Expected close, so it is excluded from the 12-month number.</p>
+    <div class="paper">
+      <h3>Contribution by deal</h3>
+      <p class="note">This quarter ${thisQ.toFixed(1)} weighted · next quarter ${nextQ.toFixed(1)} weighted · 12-month ${state.forecast.y12} (includes dated deals beyond these five).</p>
+      ${svgDots()}
+    </div>
     <div class="row k4">
       <div class="kpi warn"><div class="v">${state.sold.projectedQ}</div><div class="l">Projected this quarter</div></div>
       <div class="kpi"><div class="v">${state.forecast.nextQ}</div><div class="l">Next quarter weighted</div></div>
@@ -332,17 +794,179 @@ function renderForecast(){
       <div class="kpi bad"><div class="v">${state.forecast.undated}</div><div class="l">Undated leak · courts</div></div>
     </div>
     <table>
-      <thead><tr><th>Deal</th><th>Path</th><th>Stage</th><th>Courts</th><th>Weight</th><th>Wtd courts</th><th>Close</th></tr></thead>
-      <tbody>${rows}</tbody>
+      <thead><tr><th>Deal</th><th>Path</th><th>Stage</th><th>Courts</th><th>Weight</th><th>Wtd</th><th>Close</th></tr></thead>
+      <tbody>${state.pipeline.map(p=>`<tr>
+        <td>${esc(p.deal)}</td><td>${p.path}</td><td>${p.stage}</td><td>${p.courts}</td>
+        <td>${p.close==="Undated"?"—":Math.round(p.w*100)+"%"}</td>
+        <td>${p.close==="Undated"?"—":(p.courts*p.w).toFixed(1)}</td>
+        <td>${p.close}</td>
+      </tr>`).join("")}</tbody>
     </table>`;
 }
 
+function renderReport(){
+  const x = state.xero;
+  const { labels, close, split, nets } = cashPath();
+  const overdue = x.chase.filter(i=>i.age>0);
+  const overdueSum = overdue.reduce((a,i)=>a+i.amount,0);
+  const net30 = x.inflows30 - x.outflows30;
+  const rate = trendWeekly();
+  const trendEnd = Math.round(x.courtsNow + rate*52);
+  const needMo = (x.target12 - x.courtsNow)/12;
+  const cashRows = labels.map((m,i)=>{
+    const inn = i<split ? x.inAct[i] : x.inProj[i-split];
+    const out = i<split ? x.outAct[i] : x.outProj[i-split];
+    const kind = i<split ? "Actual" : "Projected";
+    return `<tr>
+      <td>${m}</td><td>${kind}</td>
+      <td>${eurk(inn)}</td><td>${eurk(out)}</td>
+      <td style="color:${nets[i]<0?"var(--danger)":"var(--w2)"}">${eurk(nets[i])}</td>
+      <td>${eurk(close[i])}</td>
+    </tr>`;
+  }).join("");
+  const chaseRows = x.chase.map(i=>`<tr>
+    <td>${esc(i.no)}</td>
+    <td>${esc(i.who)}</td>
+    <td>${esc(i.type)}</td>
+    <td>${eur(i.amount)}</td>
+    <td style="color:${i.age>0?"var(--danger)":"var(--amber)"};font-weight:700">${esc(i.due)}</td>
+  </tr>`).join("");
+  const v = x.verticals;
+  const streamRows = x.streams.map(s => `<tr>
+    <td>${esc(s.name)}</td>
+    <td>${s.last ? eurk(s.last) : "—"}</td>
+    <td>${eurk(s.next)}</td>
+    <td>${Math.round(s.gm*100)}%</td>
+    <td>${esc(s.state)}</td>
+  </tr>`).join("") + `<tr>
+    <td>US entry</td><td>—</td><td>—</td><td>—</td>
+    <td>18–24 months · not in this P&amp;L</td>
+  </tr>`;
+  el("v-report").innerHTML = `
+    <div class="kicker">06 · Xero · rec ${esc(x.asOf)}</div>
+    <h1>Cash, courts, and the other streams<em>Install is the engine. The rest was starved of time.</em></h1>
+    <p class="sub">From the operating model: academy, tours, maintenance, showroom offset, then more sales capacity. US is later. Directional until Carys pastes the Friday rec. Ledger stays in Xero.</p>
+    <div class="row k5">
+      <div class="kpi"><div class="v">${eurk(x.balance)}</div><div class="l">Cash now</div></div>
+      <div class="kpi"><div class="v">${eurk(x.inflows30)}</div><div class="l">Inflows · 30 days</div></div>
+      <div class="kpi bad"><div class="v">${eurk(x.outflows30)}</div><div class="l">Outflows · 30 days</div></div>
+      <div class="kpi ${net30<0?"bad":""}"><div class="v">${eurk(net30)}</div><div class="l">Net cash · 30 days</div></div>
+      <div class="kpi"><div class="v">${eurk(x.deposits90)}</div><div class="l">Deposits received · 90d</div></div>
+    </div>
+    <div class="row k2">
+      <div class="paper">
+        <h3>Cash — last six months and next six</h3>
+        <p class="note">Solid is bank rec. Dashed is projected from booked installs, deposits still due, kit, and the verticals below. Trough is the month to watch.</p>
+        ${svgCash()}
+      </div>
+      <div class="paper">
+        <h3>180 courts in 12 months</h3>
+        <p class="note">Required is +${needMo.toFixed(0)} a month from ${x.courtsNow}. Last eight weeks average ${rate.toFixed(1)} a week → ${trendEnd} by Aug 2027, not ${x.target12}. That is “added sales capacity.”</p>
+        ${svgTarget12()}
+      </div>
+    </div>
+    <div class="paper">
+      <h3>Revenue by stream — last six months → next six</h3>
+      <p class="note">Court install still dominates. Maintenance, academy, tours and showroom offset are the neglected verticals from the 90-day plan. Slope is the story; no pie.</p>
+      ${svgStreams()}
+    </div>
+    <div class="row k5">
+      <div class="kpi ${v.onPlan<v.installed?"warn":""}"><div class="v">${v.onPlan}/${v.installed}</div><div class="l">Installed on a maint. plan</div></div>
+      <div class="kpi"><div class="v">${eurk(v.mrr)}</div><div class="l">Maintenance MRR</div></div>
+      <div class="kpi"><div class="v">${v.academyPlaces}/${v.academyCap}</div><div class="l">Academy · Sep cohort</div></div>
+      <div class="kpi"><div class="v">${v.tourBooked}/${v.tourCap}</div><div class="l">Tours · group of 16</div></div>
+      <div class="kpi ${v.offsetMo<v.showroomRentMo?"warn":""}"><div class="v">${eurk(v.offsetMo)}/${eurk(v.showroomRentMo)}</div><div class="l">Showroom offset vs rent / mo</div></div>
+    </div>
+    <div class="paper">
+      <h3>P&amp;L direction by stream</h3>
+      <p class="note">Last six from Xero tracking categories. Next six: install windows + contracted maintenance + academy cohort + booked tour places + partner offset once the base is open. Repeat purchase (${v.repeatSites} of ${v.installed} sites) sits inside court install.</p>
+      <table>
+        <thead><tr><th>Stream</th><th>Last 6 months</th><th>Next 6 months</th><th>GM next</th><th>State</th></tr></thead>
+        <tbody>
+          ${streamRows}
+          <tr><td>Total</td><td>${eurk(x.rev6)}</td><td>${eurk(x.rev6proj)}</td><td>${Math.round(x.gm6proj*100)}%</td><td>Gross profit next ${eurk(x.gp6proj)} · last ${Math.round(x.gm6*100)}%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="band">Invoices to chase · ${eur(overdueSum)} overdue</div>
+    <table>
+      <thead><tr><th>Xero</th><th>Account</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody>${chaseRows}</tbody>
+    </table>
+    <div class="band">Cash by month</div>
+    <table>
+      <thead><tr><th>Month</th><th></th><th>In</th><th>Out</th><th>Net</th><th>Close</th></tr></thead>
+      <tbody>${cashRows}</tbody>
+    </table>`;
+}
+
+function renderClub(){
+  const c = state.club;
+  const m = clubMetrics();
+  const dayRows = m.byDay.map(d => `<tr>
+    <td>${d.day}</td>
+    <td>${Math.round(d.util*100)}%</td>
+    <td>${eur(d.rev)}</td>
+    <td>€${d.adr.toFixed(0)}</td>
+    <td>${d.ppc.toFixed(1)}</td>
+    <td>${d.staff.toFixed(2)}</td>
+    <td>${d.wait ? d.wait : "—"}</td>
+  </tr>`).join("");
+  el("v-club").innerHTML = `
+    <div class="kicker">07 · Owned club · ${esc(c.weekOf)}</div>
+    <h1>${esc(c.name)}<em>The court-hour engine. Not court count.</em></h1>
+    <p class="sub">${c.courts} courts (${c.indoor} indoor). Open 08:00–22:00. Playtomic 2026: GMV = hours × utilisation × rate, or players per court × frequency × ticket. Top clubs beat the bottom 5× on that system, not on more courts. Ireland sits in the UK hotspot: peak is full; expand indoor, fill mornings with programming.</p>
+    <div class="row k5">
+      <div class="kpi"><div class="v">${Math.round(m.util*100)}%</div><div class="l">Utilisation · week</div></div>
+      <div class="kpi"><div class="v">€${m.adr.toFixed(0)}</div><div class="l">Average rate achieved</div></div>
+      <div class="kpi"><div class="v">€${m.revpach.toFixed(0)}</div><div class="l">RevPACH · available hour</div></div>
+      <div class="kpi"><div class="v">${m.ppc.toFixed(1)}</div><div class="l">Players per used court</div></div>
+      <div class="kpi ${m.staff>0.45?"warn":""}"><div class="v">${m.staff.toFixed(2)}</div><div class="l">FOH staff per used court</div></div>
+    </div>
+    <div class="paper">
+      <h3>Utilisation · hour × day</h3>
+      <p class="note">Ink is occupancy. Peak evenings 91–98%. Midweek mornings are the valley. Numbers are % of 8 courts booked that hour.</p>
+      ${heatTable()}
+    </div>
+    <div class="row k2">
+      <div class="paper">
+        <h3>Utilisation by day</h3>
+        <p class="note">Weekend mornings carry Saturday. Friday night is the cap. Implied court revenue this week ${eur(m.rev)}.</p>
+        ${svgClubWeek(m.byDay)}
+      </div>
+      <div class="paper">
+        <h3>Yield and labour</h3>
+        <p class="note">RevPACH = utilisation × ADR. Staff ratio is FOH hours / booked court-hours. Coaches sit in academy GMV, not this denominator.</p>
+        <table>
+          <thead><tr><th></th><th>This week</th><th>Best-in-class read</th></tr></thead>
+          <tbody>
+            <tr><td>Court GMV / court / month</td><td>${eurk(m.gmvCourtMo)}</td><td>Playtomic top ~${eurk(c.playtomicTop)} global; hotspot flagship runs higher hours and rate</td></tr>
+            <tr><td>Indoor vs outdoor util</td><td>${Math.round(c.indoorUtil*100)}% / ${Math.round(c.outdoorUtil*100)}%</td><td>Indoor coverage is the structural lever</td></tr>
+            <tr><td>Court share of GMV</td><td>${Math.round(c.gmvMix.court*100)}%</td><td>Playtomic average 68% · academy and F&amp;B are the rest</td></tr>
+            <tr><td>Labour % of sales</td><td>${Math.round(c.labourPct*100)}%</td><td>Hold 15–25%. Peak FOH should sit near 0.3–0.4 per occupied court</td></tr>
+            <tr><td>Waitlist parties</td><td>${m.wait} / week</td><td>Unmet peak = add indoor hours, not cheaper 19:00 slots</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="band">Week · ${esc(c.name)}</div>
+    <table>
+      <thead><tr><th>Day</th><th>Util</th><th>Court revenue</th><th>ADR</th><th>Players / court</th><th>FOH / used court</th><th>Waitlist</th></tr></thead>
+      <tbody>
+        ${dayRows}
+        <tr><td>Week</td><td>${Math.round(m.util*100)}%</td><td>${eur(m.rev)}</td><td>€${m.adr.toFixed(0)}</td><td>${m.ppc.toFixed(1)}</td><td>${m.staff.toFixed(2)}</td><td>${m.wait}</td></tr>
+      </tbody>
+    </table>
+    <div class="band">Expansion · from this week’s demand shape</div>
+    <div class="cols c4">${cards(c.expansion)}</div>`;
+}
+
 function renderAll(){
-  renderRoad(); renderCommand(); renderTenders(); renderBlockers(); renderInstall(); renderForecast();
+  renderRoad(); renderCommand(); renderTenders(); renderBlockers(); renderInstall(); renderForecast(); renderReport(); renderClub();
 }
 renderNav();
 renderAll();
-show("road");
+show("command");
 </script>
 </body>
 </html>
