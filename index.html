@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060F1C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-title" content="Padel-Craft">
 <title>Padel-Craft OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,19 +20,23 @@
   --f:'Montserrat',sans-serif;--amber:#E8C07A;--danger:#E07A6A;--ok:#8FB8E8;
   --paper:#F4F1EA;--ink:#0B1C30;--mute:#5C6570;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--n1);color:var(--w);font-family:var(--f);font-size:15px;font-weight:300;line-height:1.5;min-height:100%}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--n1);-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior-y:contain}
+html,body{background:var(--n1);color:var(--w);font-family:var(--f);font-size:15px;font-weight:300;line-height:1.5;min-height:100%;min-height:100dvh}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
 a{color:inherit}
-button,select,input,textarea{font-family:var(--f)}
-.topbar{height:34px;background:var(--n0);border-bottom:1px solid var(--w5);display:flex;align-items:center;justify-content:flex-end;gap:18px;padding:0 4%;font-size:10.5px;letter-spacing:.08em;color:var(--w3);font-weight:500}
-.topbar a{color:var(--w3);text-decoration:none}
-nav{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 4%;border-bottom:1px solid var(--w5);background:rgba(6,15,28,.97);position:sticky;top:0;z-index:20}
+button,select,input,textarea{font-family:var(--f);font-size:16px;touch-action:manipulation}
+button{appearance:none;-webkit-appearance:none}
+select{-webkit-appearance:none;appearance:none}
+.topbar{min-height:34px;background:var(--n0);border-bottom:1px solid var(--w5);display:flex;align-items:center;justify-content:flex-end;gap:18px;padding:0 4%;font-size:10.5px;letter-spacing:.08em;color:var(--w3);font-weight:500}
+.topbar a{color:var(--w3);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+nav{min-height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 4%;border-bottom:1px solid var(--w5);background:rgba(6,15,28,.97);position:sticky;top:0;z-index:20}
 .logo{display:flex;align-items:baseline;text-decoration:none}
 .lp{font-weight:300;letter-spacing:.22em;text-transform:uppercase;font-size:15px}
 .ls{color:var(--w4);margin:0 4px;font-size:15px}
 .lc{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:15px}
 .tabs{display:flex;gap:4px;flex-wrap:wrap}
-.tabs button{background:transparent;border:1px solid transparent;color:var(--w3);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:8px 8px;border-radius:1px;cursor:pointer}
+.tabs button{background:transparent;border:1px solid transparent;color:var(--w3);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:10px 10px;min-height:44px;border-radius:1px;cursor:pointer}
 .tabs button.on,.tabs button:hover{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.06)}
 .who{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);font-weight:600}
 main{padding:28px 4% 64px;max-width:1280px;margin:0 auto}
@@ -57,10 +67,11 @@ h1 em{font-style:normal;display:block;color:var(--w2)}
 .band{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--w3);margin:18px 0 10px}
 .cols{display:grid;gap:10px}
 .cols.c2{grid-template-columns:280px 1fr}
+.cols.c4{grid-template-columns:repeat(4,1fr)}
 .cols.c5{grid-template-columns:repeat(5,1fr)}
 .cols.c6{grid-template-columns:repeat(6,1fr)}
 .col h3{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--w3);font-weight:700;margin-bottom:8px}
-.card{border:1px solid var(--w5);background:var(--n2);padding:10px 12px;border-radius:1px;margin-bottom:8px;cursor:pointer}
+.card{border:1px solid var(--w5);background:var(--n2);padding:10px 12px;border-radius:1px;margin-bottom:8px;cursor:pointer;min-height:44px}
 .card:hover{border-color:var(--w4)}
 .card .t{font-weight:700;font-size:13px}
 .card .m{font-size:11px;color:var(--w3);margin-top:3px}
@@ -75,13 +86,20 @@ td{padding:10px 8px 10px 0;border-bottom:1px solid var(--w5);vertical-align:top;
 .phone{border:1px solid var(--w4);background:var(--n0);border-radius:2px;overflow:hidden;max-width:360px}
 .pbar{background:var(--n0);border-bottom:1px solid var(--w5);padding:12px 14px;display:flex;justify-content:space-between;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 .pbody{padding:14px}
-.btn{display:block;width:100%;text-align:center;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:12px 8px;margin-bottom:6px;border-radius:1px;border:1px solid var(--w5);background:transparent;color:var(--w3);cursor:pointer}
+.btn{display:block;width:100%;text-align:center;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:12px 8px;margin-bottom:6px;border-radius:1px;border:1px solid var(--w5);background:transparent;color:var(--w3);cursor:pointer;min-height:44px}
 .btn.pri{background:var(--w);color:var(--n0);border-color:transparent}
-.btn.sm{display:inline-block;width:auto;padding:6px 10px;margin:6px 6px 0 0;font-size:9px}
+.btn.sm{display:inline-block;width:auto;padding:6px 10px;margin:6px 6px 0 0;font-size:9px;min-height:32px}
+.btn.voice{min-height:48px;font-size:13px}
 .panel{background:var(--n2);border:1px solid var(--w5);padding:18px;border-radius:1px}
 label{display:block;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--w3);margin:12px 0 6px}
-input,select,textarea{width:100%;background:var(--n0);border:1px solid var(--w5);color:var(--w);padding:10px 12px;border-radius:1px;font-size:13px}
-textarea{min-height:72px;resize:vertical}
+input,select,textarea{width:100%;background:var(--n0);border:1px solid var(--w5);color:var(--w);padding:12px;border-radius:1px;font-size:16px;min-height:44px;color-scheme:dark}
+textarea{min-height:88px;resize:vertical}
+input[type=checkbox]{width:22px;height:22px;min-height:22px;flex:0 0 22px;accent-color:var(--ok)}
+label:has(input[type=checkbox]){display:flex;align-items:center;gap:8px;min-height:44px;text-transform:none;letter-spacing:.04em;font-size:13px;font-weight:500}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;overscroll-behavior-x:contain}
+.scroll-x table{min-width:560px}
+.scroll-x table.heat{min-width:640px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--w);color:var(--n0);padding:12px 18px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:1px;display:none;z-index:50}
 .toast.on{display:block}
 .empty{color:var(--w4);font-size:12px;padding:8px 0}
@@ -102,8 +120,31 @@ textarea{min-height:72px;resize:vertical}
 .fb p{color:var(--w2);font-size:13px;font-weight:400}
 @media(max-width:900px){
   .row.k2,.row.k3,.row.k4,.row.k5,.cols.c2,.cols.c4,.cols.c5,.cols.c6,.road{grid-template-columns:1fr}
-  .tabs{display:none}
-  .mtabs{display:flex;overflow-x:auto;gap:4px;padding:8px 4%;border-bottom:1px solid var(--w5)}
+  .topbar,nav > .who,.tabs{display:none}
+  nav{min-height:52px;position:sticky;top:0}
+  main{padding:18px 4% calc(88px + env(safe-area-inset-bottom))}
+  .kicker{flex-wrap:wrap;row-gap:8px}
+  .sheet-link{margin-left:0}
+  .sheet{padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));-webkit-overflow-scrolling:touch}
+  .sheet-card{padding:18px 16px}
+  .sheet-bar .btn.sm{min-height:44px;padding:10px 14px}
+  .phone{max-width:none;border:none;background:transparent;overflow:visible}
+  .pbar{display:none}
+  .pbody{padding:0}
+  .btn.sm{min-height:44px;padding:10px 14px;font-size:10px}
+  .btn.voice{min-height:56px;font-size:15px;letter-spacing:.16em}
+  .paper,.panel{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .paper{padding:16px}
+  h1{font-size:26px}
+  .sub{margin-bottom:18px}
+  .mtabs{display:flex;position:fixed;top:auto;left:0;right:0;bottom:0;z-index:30;justify-content:flex-start;align-items:stretch;min-height:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;gap:2px;padding:6px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:rgba(6,15,28,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--w5);border-bottom:none;scrollbar-width:none}
+  .mtabs::-webkit-scrollbar{display:none}
+  .mtabs button{flex:0 0 auto;min-width:64px;min-height:48px;scroll-snap-align:center;background:transparent;border:1px solid transparent;color:var(--w3);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;border-radius:1px;cursor:pointer}
+  .mtabs button.on{color:var(--w);border-color:var(--w4);background:rgba(255,255,255,.08)}
+  .toast{left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:calc(72px + env(safe-area-inset-bottom));text-align:center}
+  body.kb-open .mtabs{display:none}
+  body.kb-open main{padding-bottom:24px}
+  body.kb-open .toast{bottom:24px}
 }
 @media(min-width:901px){.mtabs{display:none}}
 </style>
@@ -111,14 +152,13 @@ textarea{min-height:72px;resize:vertical}
 <body>
 <div class="topbar">
   <a href="https://www.padel-craft.com/">padel-craft.com</a>
-  <span>Internal OS · v0.8</span>
+  <span>Internal OS · v0.9</span>
 </div>
 <nav>
   <a class="logo" href="#"><span class="lp">Padel</span><span class="ls">·</span><span class="lc">Craft</span></a>
   <div class="tabs" id="tabs"></div>
   <div class="who">Founder A · on the road</div>
 </nav>
-<div class="mtabs" id="mtabs"></div>
 <main>
   <section class="view on" id="v-road"></section>
   <section class="view" id="v-command"></section>
@@ -130,6 +170,7 @@ textarea{min-height:72px;resize:vertical}
   <section class="view" id="v-report"></section>
   <section class="view" id="v-club"></section>
 </main>
+<nav class="mtabs" id="mtabs" aria-label="Mobile"></nav>
 <div class="toast" id="toast"></div>
 <div class="sheet" id="sheet">
   <div class="sheet-card">
@@ -146,15 +187,15 @@ textarea{min-height:72px;resize:vertical}
 </div>
 <script>
 const VIEWS = [
-  ["road","Road"],
-  ["command","Command"],
-  ["leads","Leads"],
-  ["tenders","Tenders"],
-  ["blockers","Blockers"],
-  ["install","Install 90"],
-  ["forecast","Forecast"],
-  ["report","Report"],
-  ["club","Club"]
+  ["road","Road","Road"],
+  ["command","Command","Desk"],
+  ["leads","Leads","Leads"],
+  ["tenders","Tenders","Bid"],
+  ["blockers","Blockers","Block"],
+  ["install","Install 90","Gantt"],
+  ["forecast","Forecast","Pipe"],
+  ["report","Report","Cash"],
+  ["club","Club","Club"]
 ];
 const GP_FLOOR = 0.24;
 const RATE_CARD = [
@@ -509,6 +550,7 @@ function openSheet(id){
   el("sheet-title").textContent = s.title;
   el("sheet-note").textContent = s.note;
   el("sheet-body").innerHTML = sheetTable(s.headers, s.rows);
+  wrapScrollX(el("sheet"));
   el("sheet").classList.add("on");
 }
 function closeSheet(){ el("sheet").classList.remove("on"); }
@@ -520,16 +562,38 @@ function downloadOpenSheet(){
   toast("Opens in Excel or Google Sheets");
 }
 
+function isPhone(){ return window.matchMedia("(max-width:900px)").matches; }
+function wrapScrollX(root){
+  (root||document).querySelectorAll("table").forEach(t => {
+    if (t.parentElement && t.parentElement.classList.contains("scroll-x")) return;
+    const w = document.createElement("div");
+    w.className = "scroll-x";
+    t.parentNode.insertBefore(w, t);
+    w.appendChild(t);
+  });
+}
+function bindKeyboard(){
+  if (!window.visualViewport) return;
+  const sync = () => {
+    const covered = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+    document.body.classList.toggle("kb-open", covered > 80);
+  };
+  window.visualViewport.addEventListener("resize", sync);
+  window.visualViewport.addEventListener("scroll", sync);
+}
 function renderNav(){
-  const html = VIEWS.map(([id,l])=>`<button data-v="${id}">${l}</button>`).join("");
-  el("tabs").innerHTML = html;
-  el("mtabs").innerHTML = html;
+  el("tabs").innerHTML = VIEWS.map(([id,l])=>`<button type="button" data-v="${id}">${l}</button>`).join("");
+  el("mtabs").innerHTML = VIEWS.map(([id,l,s])=>`<button type="button" data-v="${id}">${s||l}</button>`).join("");
   document.querySelectorAll(".tabs button, .mtabs button").forEach(b => { b.onclick = () => show(b.dataset.v); });
 }
 function show(id){
   document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
   el("v-"+id).classList.add("on");
   document.querySelectorAll(".tabs button, .mtabs button").forEach(b => b.classList.toggle("on", b.dataset.v===id));
+  if (isPhone()) {
+    const on = document.querySelector(".mtabs button.on");
+    if (on) on.scrollIntoView({ inline:"center", block:"nearest" });
+  }
   window.scrollTo(0,0);
 }
 function myRed(){ return state.blockers.filter(b => b.status==="Open" && b.sev==="Red" && b.founder); }
@@ -793,7 +857,7 @@ function renderRoad(){
       <div class="phone">
         <div class="pbar"><span>Padel-Craft · Road</span><span>Founder A</span></div>
         <div class="pbody">
-          <button class="btn pri voice" id="voice-btn" onclick="startVoice()">Voice</button>
+          <button class="btn pri voice" id="voice-btn" type="button" onclick="startVoice()">Voice</button>
           <div class="col"><h3>Next site</h3>${cards([state.nextSite])}</div>
           <div class="col"><h3>Calls to return</h3>${cards(state.calls.slice(0,3))}</div>
           <div class="col"><h3>My red blockers</h3>${cards(myRed().map(b=>({t:b.t,m:b.m,cls:"red"})))}</div>
@@ -1409,10 +1473,12 @@ function renderClub(){
 
 function renderAll(){
   renderRoad(); renderCommand(); renderLeads(); renderTenders(); renderBlockers(); renderInstall(); renderForecast(); renderReport(); renderClub();
+  wrapScrollX(document.querySelector("main"));
 }
 renderNav();
 renderAll();
-show("command");
+bindKeyboard();
+show(isPhone() ? "road" : "command");
 </script>
 </body>
 </html>
